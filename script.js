@@ -1,30 +1,37 @@
 const API_URL =
   "https://national-geographic-backend.9dnwrczbz7.workers.dev/api/posts";
 
-const postsContainer = document.querySelector("#posts");
+const postsContainer =
+  document.querySelector("#posts");
 
 let allPosts = [];
 let visiblePosts = 6;
 
 function formatDate(timestamp) {
+
   if (!timestamp) return "";
 
-  return new Date(timestamp * 1000).toLocaleDateString("ru-RU", {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  });
+  return new Date(timestamp * 1000)
+    .toLocaleDateString("ru-RU", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
 }
 
 function cleanText(text) {
+
   if (!text) {
     return "Новая публикация National Geographic";
   }
 
-  return text.replace(/\n+/g, " ").trim();
+  return text
+    .replace(/\n+/g, " ")
+    .trim();
 }
 
 function getPostLink(vkId) {
+
   if (!vkId) {
     return "https://vk.ru/national.geograph1c";
   }
@@ -40,13 +47,17 @@ function getPostLink(vkId) {
 
 function createPost(post) {
 
-  const text = cleanText(post.text);
+  const text =
+    cleanText(post.text);
 
-  const image = post.image_url;
+  const image =
+    post.image_url;
 
-  const date = formatDate(post.post_date);
+  const date =
+    formatDate(post.post_date);
 
-  const link = getPostLink(post.vk_id);
+  const link =
+    getPostLink(post.vk_id);
 
   return `
     <article class="post">
@@ -98,7 +109,9 @@ function renderPosts() {
     allPosts.slice(0, visiblePosts);
 
   postsContainer.innerHTML =
-    postsToShow.map(createPost).join("");
+    postsToShow
+      .map(createPost)
+      .join("");
 
   if (visiblePosts < allPosts.length) {
 
@@ -124,23 +137,27 @@ function renderPosts() {
   }
 }
 
-async function loadPosts() {
+async function loadPosts(showLoading = true) {
 
-  postsContainer.innerHTML = `
-    <div class="loading">
-      ЗАГРУЖАЕМ ПОСЛЕДНИЕ ПУБЛИКАЦИИ...
-    </div>
-  `;
+  if (showLoading) {
+
+    postsContainer.innerHTML = `
+      <div class="loading">
+        ЗАГРУЖАЕМ ПОСЛЕДНИЕ ПУБЛИКАЦИИ...
+      </div>
+    `;
+  }
 
   try {
 
-    const response = await fetch(API_URL, {
-      method: "GET",
-      headers: {
-        "Accept": "application/json"
-      },
-      cache: "no-store"
-    });
+    const response =
+      await fetch(API_URL, {
+        method: "GET",
+        headers: {
+          "Accept": "application/json"
+        },
+        cache: "no-store"
+      });
 
     if (!response.ok) {
       throw new Error(
@@ -148,7 +165,8 @@ async function loadPosts() {
       );
     }
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
     if (
       !data ||
@@ -159,42 +177,58 @@ async function loadPosts() {
       );
     }
 
-    allPosts = data.posts;
+    allPosts =
+      data.posts;
 
-    visiblePosts = 6;
+    if (showLoading) {
+      visiblePosts = 6;
+    }
 
     renderPosts();
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Ошибка загрузки постов:",
+      error
+    );
 
-    postsContainer.innerHTML = `
-      <div class="loading">
+    if (showLoading) {
 
-        Не удалось загрузить публикации.
+      postsContainer.innerHTML = `
+        <div class="loading">
 
-        <br><br>
+          Не удалось загрузить публикации.
 
-        <a
-          href="https://vk.ru/national.geograph1c"
-          target="_blank"
-        >
-          Открыть ВКонтакте →
-        </a>
+          <br><br>
 
-      </div>
-    `;
+          <a
+            href="https://vk.ru/national.geograph1c"
+            target="_blank"
+          >
+            Открыть ВКонтакте →
+          </a>
+
+        </div>
+      `;
+    }
   }
 }
+
+
+/* ГОД */
 
 const year =
   document.querySelector("#year");
 
 if (year) {
+
   year.textContent =
     new Date().getFullYear();
 }
+
+
+/* МОБИЛЬНОЕ МЕНЮ */
 
 const menu =
   document.querySelector("#menu");
@@ -212,7 +246,9 @@ if (menu && links) {
       links.classList.contains("open")
         ? "×"
         : "☰";
+
   };
+
 
   links
     .querySelectorAll("a")
@@ -229,4 +265,40 @@ if (menu && links) {
     });
 }
 
+
+/* ПЕРВАЯ ЗАГРУЗКА */
+
 loadPosts();
+
+
+/*
+   АВТООБНОВЛЕНИЕ
+   Каждые 5 минут
+*/
+
+setInterval(() => {
+
+  loadPosts(false);
+
+}, 5 * 60 * 1000);
+
+
+/*
+   ОБНОВЛЕНИЕ ПРИ ВОЗВРАТЕ
+   ПОЛЬЗОВАТЕЛЯ НА СТРАНИЦУ
+*/
+
+document.addEventListener(
+  "visibilitychange",
+  () => {
+
+    if (
+      document.visibilityState === "visible"
+    ) {
+
+      loadPosts(false);
+
+    }
+
+  }
+);
