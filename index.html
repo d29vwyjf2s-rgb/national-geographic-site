@@ -1,8 +1,6 @@
 <!doctype html>
 <html lang="ru">
-
 <head>
-
   <meta charset="utf-8">
 
   <meta
@@ -20,42 +18,66 @@
     content="National Geographic — природа, путешествия, животные и удивительные места планеты."
   >
 
+  <meta
+    name="mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  >
+
+  <meta
+    name="apple-mobile-web-app-title"
+    content="National Geographic"
+  >
+
+  <link
+    rel="manifest"
+    href="manifest.json"
+  >
+
+  <link
+    rel="icon"
+    href="icon-192.png"
+  >
+
   <title>National Geographic</title>
 
   <link
     rel="stylesheet"
     href="style.css"
   >
-
 </head>
-
 
 <body>
 
-
-<!-- =========================
+<!-- =====================================================
      HEADER
-========================= -->
+===================================================== -->
 
 <header class="header">
 
   <div class="nav">
 
-
     <a
       class="logo"
       href="#home"
     >
-
       <i></i>
 
       <span>
-        NATIONAL<br>
+        NATIONAL
+        <br>
         <b>GEOGRAPHIC</b>
       </span>
-
     </a>
-
 
     <button
       id="menu"
@@ -64,7 +86,6 @@
       ☰
     </button>
 
-
     <nav id="links">
 
       <a href="#home">
@@ -72,23 +93,19 @@
       </a>
 
       <a href="#latest">
-        Последние
-      </a>
-
-      <a href="#nature">
-        Природа
-      </a>
-
-      <a href="#travel">
-        Путешествия
+        Посты
       </a>
 
       <a href="#photos">
         Фото
       </a>
 
+      <a href="#geography">
+        Карта
+      </a>
+
       <a href="#about">
-        О проекте
+        О сообществе
       </a>
 
     </nav>
@@ -98,825 +115,674 @@
 </header>
 
 
-
-<!-- =========================
-     MAIN
-========================= -->
-
 <main id="home">
 
+<!-- =====================================================
+     VK COMMUNITY COVER
+===================================================== -->
 
-<!-- =========================
-     HERO
-========================= -->
+<section class="community">
 
-<section class="hero">
+  <div class="communityCover">
 
-  <div class="heroOverlay"></div>
+    <div class="coverPattern"></div>
+
+    <div class="coverText">
+      <span>NATIONAL</span>
+      <strong>GEOGRAPHIC</strong>
+    </div>
+
+  </div>
 
 
-  <div class="heroText">
+  <div class="communityInfo">
 
-    <div class="heroLabel">
-      NATIONAL GEOGRAPHIC
+    <div class="communityAvatar">
+
+      <div class="avatarFrame">
+        NG
+      </div>
+
     </div>
 
 
-    <h1>
-      Мир, который
-      <em>хочется увидеть</em>
-    </h1>
+    <div class="communityMain">
+
+      <div class="communityTitleRow">
+
+        <div>
+
+          <h1>
+            National Geographic
+            <span class="verified">✓</span>
+          </h1>
+
+          <div class="communityStatus">
+            Онлайн
+          </div>
+
+        </div>
+
+        <a
+          class="communityButton"
+          href="https://vk.ru/national.geograph1c"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          ВКонтакте ↗
+        </a>
+
+      </div>
 
 
-    <p>
-      Природа, путешествия, животные
-      и самые невероятные места нашей планеты.
-    </p>
+      <p class="communityDescription">
+        Природа, путешествия, животные
+        и самые невероятные места нашей планеты.
+      </p>
 
 
-    <div class="heroButtons">
+      <div class="communityStats">
 
-      <a
-        class="btn yellow"
-        href="#latest"
-      >
-        Смотреть материалы
-      </a>
+        <span>
+          <b id="postsCount">0</b>
+          публикаций
+        </span>
 
+        <span>
+          <b id="photosCount">0</b>
+          фотографий
+        </span>
 
-      <a
-        class="btn"
-        href="https://vk.ru/national.geograph1c"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        ВКонтакте ↗
-      </a>
+        <span>
+          <b>24/7</b>
+          обновление
+        </span>
+
+      </div>
 
     </div>
+
+  </div>
+
+
+  <div class="communityTabs">
+
+    <a
+      class="active"
+      href="#latest"
+    >
+      Публикации
+    </a>
+
+    <a href="#photos">
+      Фотографии
+    </a>
+
+    <a href="#geography">
+      География
+    </a>
+
+    <a href="#about">
+      Информация
+    </a>
 
   </div>
 
 </section>
 
 
+<!-- =====================================================
+     QUICK CATEGORIES
+===================================================== -->
 
-<!-- =========================
-     STATS
-========================= -->
-
-<section class="stats">
-
-
-  <div>
-
-    <strong id="postsCount">
-      0
-    </strong>
-
-    <span>
-      ПУБЛИКАЦИЙ
-    </span>
-
-  </div>
-
-
-  <div>
-
-    <strong id="photosCount">
-      0
-    </strong>
-
-    <span>
-      ФОТО
-    </span>
-
-  </div>
-
-
-  <div>
-
-    <strong id="categoriesCount">
-      5
-    </strong>
-
-    <span>
-      КАТЕГОРИЙ
-    </span>
-
-  </div>
-
-
-  <div>
-
-    <strong>
-      24/7
-    </strong>
-
-    <span>
-      ОБНОВЛЕНИЕ
-    </span>
-
-  </div>
-
-
-</section>
-
-
-
-<!-- =========================
-     CATEGORY CARDS
-========================= -->
-
-<section class="cats">
-
+<section class="quickCategories">
 
   <a
     href="#latest"
     data-jump-category="Природа"
   >
-
-    <span class="catIcon">
-      🏔️
-    </span>
-
-    <b>
-      Природа
-    </b>
-
-    <small>
-      Горы, леса, океаны
-    </small>
-
+    <span>🏔️</span>
+    <b>Природа</b>
   </a>
-
-
 
   <a
     href="#latest"
     data-jump-category="Путешествия"
   >
-
-    <span class="catIcon">
-      ✈️
-    </span>
-
-    <b>
-      Путешествия
-    </b>
-
-    <small>
-      Маршруты и открытия
-    </small>
-
+    <span>✈️</span>
+    <b>Путешествия</b>
   </a>
-
-
 
   <a
     href="#latest"
     data-jump-category="Россия"
   >
-
-    <span class="catIcon">
-      🇷🇺
-    </span>
-
-    <b>
-      Россия
-    </b>
-
-    <small>
-      Неизведанные места
-    </small>
-
+    <span>🇷🇺</span>
+    <b>Россия</b>
   </a>
-
-
 
   <a
     href="#latest"
     data-jump-category="Животные"
   >
-
-    <span class="catIcon">
-      🐾
-    </span>
-
-    <b>
-      Животные
-    </b>
-
-    <small>
-      Дикий мир
-    </small>
-
+    <span>🐾</span>
+    <b>Животные</b>
   </a>
 
+  <a
+    href="#latest"
+    data-jump-category="Мир"
+  >
+    <span>🌍</span>
+    <b>Мир</b>
+  </a>
 
 </section>
 
 
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
 
-<!-- =========================
-     FEATURED
-========================= -->
-
-<section class="section featuredSection">
-
-
-  <div class="heading">
-
-    <div>
-
-      <small>
-        ГЛАВНОЕ СЕГОДНЯ
-      </small>
-
-      <h2>
-        Свежий материал
-      </h2>
-
-    </div>
+<div class="vkLayout">
 
 
-    <div class="live">
+  <!-- ===================================================
+       LEFT SIDEBAR
+  =================================================== -->
 
-      <i></i>
+  <aside class="vkSidebar">
 
-      LIVE
+    <div class="sideCard">
 
-    </div>
+      <div class="sideTitle">
+        National Geographic
+      </div>
 
-  </div>
+      <p>
+        Исследуем планету вместе.
+        Каждый день — новые места,
+        истории и фотографии.
+      </p>
 
-
-  <div id="featuredPost">
-
-    <div class="featuredLoading skeleton"></div>
-
-  </div>
-
-
-</section>
-
-
-
-<!-- =========================
-     LATEST
-========================= -->
-
-<section
-  class="section"
-  id="latest"
->
-
-
-  <div class="heading">
-
-    <div>
-
-      <small>
-        ЛЕНТА
-      </small>
-
-      <h2>
-        Последние материалы
-      </h2>
-
-    </div>
-
-
-    <div class="resultCounter">
-
-      <span id="resultCount">
-        0
-      </span>
-
-      материалов
-
-    </div>
-
-  </div>
-
-
-
-  <!-- SEARCH -->
-
-  <div class="postFilters">
-
-
-    <div class="searchBox">
-
-      <input
-        id="postSearch"
-        type="search"
-        placeholder="Поиск по публикациям..."
-        autocomplete="off"
+      <a
+        class="sideVK"
+        href="https://vk.ru/national.geograph1c"
+        target="_blank"
+        rel="noopener noreferrer"
       >
-
-      <span>
-        ⌕
-      </span>
+        Открыть сообщество VK ↗
+      </a>
 
     </div>
 
 
+    <div class="sideCard">
 
-    <!-- CATEGORIES -->
+      <div class="sideHeading">
+        Разделы
+      </div>
 
-    <div class="categoryButtons">
+      <a href="#latest">
+        📰 Все публикации
+      </a>
 
-
-      <button
-        class="categoryBtn active"
-        data-category="Все"
-      >
-        Все
-      </button>
-
-
-      <button
-        class="categoryBtn"
-        data-category="Природа"
+      <a
+        href="#latest"
+        data-jump-category="Природа"
       >
         🏔️ Природа
-      </button>
+      </a>
 
-
-      <button
-        class="categoryBtn"
-        data-category="Путешествия"
+      <a
+        href="#latest"
+        data-jump-category="Путешествия"
       >
         ✈️ Путешествия
-      </button>
+      </a>
 
-
-      <button
-        class="categoryBtn"
-        data-category="Россия"
-      >
-        🇷🇺 Россия
-      </button>
-
-
-      <button
-        class="categoryBtn"
-        data-category="Мир"
-      >
-        🌍 Мир
-      </button>
-
-
-      <button
-        class="categoryBtn"
-        data-category="Животные"
+      <a
+        href="#latest"
+        data-jump-category="Животные"
       >
         🐾 Животные
-      </button>
+      </a>
 
-
-      <button
-        class="categoryBtn"
-        data-category="Избранное"
-      >
-        ★ Избранное
-      </button>
-
+      <a href="#photos">
+        📷 Фотографии
+      </a>
 
     </div>
 
 
+    <div class="sideCard sideInfo">
 
-    <div class="refreshPanel">
+      <div class="sideHeading">
+        National Geographic
+      </div>
 
-      <button id="refreshButton">
-        ↻ ОБНОВИТЬ
-      </button>
+      <span>
+        Природа
+      </span>
 
-      <span id="refreshTime">
-        Загрузка...
+      <span>
+        Путешествия
+      </span>
+
+      <span>
+        Фотография
+      </span>
+
+      <span>
+        Открытия
       </span>
 
     </div>
 
-
-  </div>
-
+  </aside>
 
 
-  <!-- POSTS -->
+  <!-- ===================================================
+       FEED
+  =================================================== -->
 
-  <div
-    class="grid"
-    id="posts"
-  >
-
-    <div class="loadingGrid">
-
-      <div class="skeleton skeletonCard"></div>
-
-      <div class="skeleton skeletonCard"></div>
-
-      <div class="skeleton skeletonCard"></div>
-
-    </div>
-
-  </div>
+  <section class="vkFeed">
 
 
-</section>
+    <!-- FEATURED -->
 
+    <div class="feedBlock featuredBlock">
 
-
-<!-- =========================
-     GEOGRAPHY
-========================= -->
-
-<section
-  class="section geographySection"
-  id="geography"
->
-
-
-  <div class="heading">
-
-    <div>
-
-      <small>
-        ГЕОГРАФИЯ
-      </small>
-
-      <h2>
-        Мир на одной карте
-      </h2>
-
-    </div>
-
-  </div>
-
-
-  <div class="geoPanel">
-
-
-    <div class="geoContent">
-
-      <span class="geoIcon">
-        🌍
-      </span>
-
-
-      <h3>
-        Исследуй планету
-      </h3>
-
-
-      <p>
-        Открывай места, о которых
-        рассказывают публикации
-        National Geographic.
-      </p>
-
-
-      <div class="geoStats">
+      <div class="feedBlockHeader">
 
         <div>
+          <small>
+            ГЛАВНОЕ
+          </small>
 
-          <strong>
-            🌲
-          </strong>
-
-          <span>
-            ПРИРОДА
-          </span>
-
+          <h2>
+            Свежий материал
+          </h2>
         </div>
 
-
-        <div>
-
-          <strong>
-            🏔️
-          </strong>
-
-          <span>
-            ГОРЫ
-          </span>
-
+        <div class="live">
+          <i></i>
+          LIVE
         </div>
 
-
-        <div>
-
-          <strong>
-            🌊
-          </strong>
-
-          <span>
-            ОКЕАН
-          </span>
-
-        </div>
+      </div>
 
 
-        <div>
+      <div id="featuredPost">
 
-          <strong>
-            🐾
-          </strong>
-
-          <span>
-            ЖИВОТНЫЕ
-          </span>
-
-        </div>
+        <div class="featuredLoading skeleton"></div>
 
       </div>
 
     </div>
 
 
-    <div
-      class="geoMap"
-      id="geoMap"
+    <!-- POSTS -->
+
+    <section
+      class="feedBlock"
+      id="latest"
     >
 
-      <div class="mapGrid"></div>
+      <div class="feedBlockHeader">
 
+        <div>
+          <small>
+            ЛЕНТА СООБЩЕСТВА
+          </small>
 
-      <div class="mapPoint point1">
-        <span></span>
+          <h2>
+            Публикации
+          </h2>
+        </div>
+
+        <div class="resultCounter">
+          <span id="resultCount">0</span>
+          материалов
+        </div>
+
       </div>
 
-      <div class="mapPoint point2">
-        <span></span>
+
+      <!-- SEARCH -->
+
+      <div class="vkTools">
+
+        <div class="searchBox">
+
+          <input
+            id="postSearch"
+            type="search"
+            placeholder="Поиск по публикациям..."
+            autocomplete="off"
+          >
+
+          <span>
+            ⌕
+          </span>
+
+        </div>
+
+
+        <div class="refreshPanel">
+
+          <button id="refreshButton">
+            ↻
+            ОБНОВИТЬ
+          </button>
+
+          <span id="refreshTime">
+            Загрузка...
+          </span>
+
+        </div>
+
       </div>
 
-      <div class="mapPoint point3">
-        <span></span>
+
+      <!-- CATEGORIES -->
+
+      <div class="categoryButtons">
+
+        <button
+          class="categoryBtn active"
+          data-category="Все"
+        >
+          Все
+        </button>
+
+        <button
+          class="categoryBtn"
+          data-category="Природа"
+        >
+          🏔️ Природа
+        </button>
+
+        <button
+          class="categoryBtn"
+          data-category="Путешествия"
+        >
+          ✈️ Путешествия
+        </button>
+
+        <button
+          class="categoryBtn"
+          data-category="Россия"
+        >
+          🇷🇺 Россия
+        </button>
+
+        <button
+          class="categoryBtn"
+          data-category="Мир"
+        >
+          🌍 Мир
+        </button>
+
+        <button
+          class="categoryBtn"
+          data-category="Животные"
+        >
+          🐾 Животные
+        </button>
+
+        <button
+          class="categoryBtn"
+          data-category="Избранное"
+        >
+          ★ Избранное
+        </button>
+
       </div>
 
-      <div class="mapPoint point4">
-        <span></span>
+
+      <!-- POSTS -->
+
+      <div
+        class="grid"
+        id="posts"
+      >
+
+        <div class="loadingGrid">
+
+          <div class="skeleton skeletonCard"></div>
+          <div class="skeleton skeletonCard"></div>
+          <div class="skeleton skeletonCard"></div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         GEOGRAPHY
+    ================================================= -->
+
+    <section
+      class="feedBlock"
+      id="geography"
+    >
+
+      <div class="feedBlockHeader">
+
+        <div>
+          <small>
+            ГЕОГРАФИЯ
+          </small>
+
+          <h2>
+            Мир на одной карте
+          </h2>
+        </div>
+
       </div>
 
 
-      <div class="mapLabel">
-        EARTH
+      <div class="geoPanel">
+
+        <div class="geoContent">
+
+          <span class="geoIcon">
+            🌍
+          </span>
+
+          <h3>
+            Исследуй планету
+          </h3>
+
+          <p>
+            Открывай места, о которых
+            рассказывают публикации
+            National Geographic.
+          </p>
+
+          <div class="geoStats">
+
+            <div>
+              <strong>🌲</strong>
+              <span>ПРИРОДА</span>
+            </div>
+
+            <div>
+              <strong>🏔️</strong>
+              <span>ГОРЫ</span>
+            </div>
+
+            <div>
+              <strong>🌊</strong>
+              <span>ОКЕАН</span>
+            </div>
+
+            <div>
+              <strong>🐾</strong>
+              <span>ЖИВОТНЫЕ</span>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="geoMap"
+          id="geoMap"
+        >
+
+          <div class="mapGrid"></div>
+
+          <div class="mapPoint point1">
+            <span></span>
+          </div>
+
+          <div class="mapPoint point2">
+            <span></span>
+          </div>
+
+          <div class="mapPoint point3">
+            <span></span>
+          </div>
+
+          <div class="mapPoint point4">
+            <span></span>
+          </div>
+
+          <div class="mapLabel">
+            EARTH
+          </div>
+
+        </div>
+
       </div>
 
-    </div>
+    </section>
 
 
-  </div>
+    <!-- =================================================
+         PHOTOS
+    ================================================= -->
+
+    <section
+      class="feedBlock"
+      id="photos"
+    >
+
+      <div class="feedBlockHeader">
+
+        <div>
+          <small>
+            ФОТОГРАФИИ
+          </small>
+
+          <h2>
+            Галерея сообщества
+          </h2>
+        </div>
+
+        <div class="photoCount">
+          <span id="photosCount">0</span>
+          фото
+        </div>
+
+      </div>
 
 
-</section>
+      <div
+        class="photos"
+        id="photoGallery"
+      >
+
+        <div class="galleryLoading">
+          ЗАГРУЖАЕМ ФОТОГРАФИИ...
+        </div>
+
+      </div>
+
+    </section>
 
 
+    <!-- =================================================
+         ABOUT
+    ================================================= -->
 
-<!-- =========================
-     NATURE
-========================= -->
+    <section
+      class="feedBlock aboutBlock"
+      id="about"
+    >
 
-<section
-  class="banner"
-  id="nature"
->
+      <div class="aboutLogo">
+        <i></i>
 
+        <span>
+          NATIONAL
+          <br>
+          <b>GEOGRAPHIC</b>
+        </span>
+      </div>
 
-  <div>
-
-    <small>
-      ПРИРОДА
-    </small>
-
-
-    <h2>
-      Там, где человек
-      остаётся гостем
-    </h2>
-
-
-    <p>
-      Дикие пейзажи, редкие животные
-      и места, которые заставляют
-      остановиться и просто смотреть.
-    </p>
-
-  </div>
-
-
-</section>
-
-
-
-<!-- =========================
-     TRAVEL
-========================= -->
-
-<section
-  class="section"
-  id="travel"
->
-
-
-  <div class="heading">
-
-    <div>
-
-      <small>
-        ПУТЕШЕСТВИЯ
-      </small>
 
       <h2>
-        Куда отправиться?
+        National Geographic
       </h2>
 
-    </div>
-
-  </div>
-
-
-
-  <div class="travel">
-
-
-    <article>
-
-      <b>
-        01
-      </b>
-
-      <h3>
-        Алтай
-      </h3>
-
       <p>
-        Горы, озёра и бесконечные
-        дороги среди дикой природы.
+        Место для тех, кто любит природу,
+        путешествия, фотографию и удивительные
+        уголки нашей планеты.
       </p>
 
-    </article>
-
-
-
-    <article>
-
-      <b>
-        02
-      </b>
-
-      <h3>
-        Курилы
-      </h3>
-
       <p>
-        Вулканы, океан и пейзажи,
-        похожие на другую планету.
+        Новые публикации автоматически
+        загружаются из сообщества ВКонтакте.
       </p>
 
-    </article>
 
+      <a
+        class="communityButton"
+        href="https://vk.ru/national.geograph1c"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Перейти в сообщество VK ↗
+      </a>
 
+    </section>
 
-    <article>
+  </section>
 
-      <b>
-        03
-      </b>
-
-      <h3>
-        Приморье
-      </h3>
-
-      <p>
-        Тайга встречается с морем,
-        создавая уникальный мир.
-      </p>
-
-    </article>
-
-
-  </div>
-
-
-</section>
-
-
-
-<!-- =========================
-     PHOTOS
-========================= -->
-
-<section
-  class="section"
-  id="photos"
->
-
-
-  <div class="heading">
-
-    <div>
-
-      <small>
-        ГАЛЕРЕЯ
-      </small>
-
-      <h2>
-        Фото из публикаций
-      </h2>
-
-    </div>
-
-  </div>
-
-
-  <div
-    class="photos"
-    id="photoGallery"
-  >
-
-    <div class="galleryLoading">
-      ЗАГРУЖАЕМ ФОТОГРАФИИ...
-    </div>
-
-  </div>
-
-
-</section>
-
-
-
-<!-- =========================
-     ABOUT
-========================= -->
-
-<section
-  class="about"
-  id="about"
->
-
-
-  <div>
-
-    <small>
-      О ПРОЕКТЕ
-    </small>
-
-
-    <h2>
-      National Geographic
-    </h2>
-
-  </div>
-
-
-  <p>
-
-    Место для тех, кто любит природу,
-    путешествия, фотографию и удивительные
-    уголки нашей планеты.
-
-    <br><br>
-
-    Новые публикации загружаются
-    автоматически из сообщества.
-
-  </p>
-
-
-</section>
-
-
+</div>
 
 </main>
 
 
-
-<!-- =========================
+<!-- =====================================================
      FOOTER
-========================= -->
+===================================================== -->
 
 <footer>
-
 
   <div class="logo">
 
     <i></i>
 
     <span>
-      NATIONAL<br>
+      NATIONAL
+      <br>
       <b>GEOGRAPHIC</b>
     </span>
 
   </div>
 
-
   <span>
     © <span id="year"></span>
+    National Geographic
   </span>
-
 
   <a
     href="https://vk.ru/national.geograph1c"
@@ -926,113 +792,65 @@
     ВКонтакте ↗
   </a>
 
-
 </footer>
 
 
-
-<!-- =========================
-     MOBILE NAVIGATION
-========================= -->
+<!-- =====================================================
+     MOBILE NAV
+===================================================== -->
 
 <nav
   class="mobileNav"
   id="mobileNav"
 >
 
-
   <a
     href="#home"
     class="mobileNavItem active"
     data-mobile-target="home"
   >
-
-    <span>
-      ⌂
-    </span>
-
-    <small>
-      Главная
-    </small>
-
+    <span>⌂</span>
+    <small>Главная</small>
   </a>
-
 
   <a
     href="#latest"
     class="mobileNavItem"
     data-mobile-target="latest"
   >
-
-    <span>
-      ▤
-    </span>
-
-    <small>
-      Лента
-    </small>
-
+    <span>▤</span>
+    <small>Посты</small>
   </a>
-
 
   <a
     href="#geography"
     class="mobileNavItem"
     data-mobile-target="geography"
   >
-
-    <span>
-      ◎
-    </span>
-
-    <small>
-      Карта
-    </small>
-
+    <span>◎</span>
+    <small>Карта</small>
   </a>
-
 
   <a
     href="#photos"
     class="mobileNavItem"
     data-mobile-target="photos"
   >
-
-    <span>
-      ▧
-    </span>
-
-    <small>
-      Фото
-    </small>
-
+    <span>▧</span>
+    <small>Фото</small>
   </a>
-
 
   <a
     href="#about"
     class="mobileNavItem"
     data-mobile-target="about"
   >
-
-    <span>
-      •••
-    </span>
-
-    <small>
-      Ещё
-    </small>
-
+    <span>•••</span>
+    <small>Ещё</small>
   </a>
-
 
 </nav>
 
-
-
-<!-- =========================
-     BACK TO TOP
-========================= -->
 
 <button
   id="backToTop"
@@ -1042,14 +860,7 @@
 </button>
 
 
-
-<!-- =========================
-     SCRIPT
-========================= -->
-
 <script src="script.js"></script>
 
-
 </body>
-
 </html>
