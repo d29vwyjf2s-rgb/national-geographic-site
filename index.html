@@ -7,7 +7,7 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
 
   <meta
@@ -17,7 +17,7 @@
 
   <meta
     name="description"
-    content="National Geographic — природа, путешествия, животные и удивительные места нашей планеты."
+    content="National Geographic — природа, путешествия, животные и удивительные места планеты."
   >
 
   <title>National Geographic</title>
@@ -45,7 +45,6 @@
     <a
       class="logo"
       href="#home"
-      aria-label="National Geographic"
     >
 
       <i></i>
@@ -60,7 +59,7 @@
 
     <button
       id="menu"
-      aria-label="Открыть меню"
+      aria-label="Меню"
     >
       ☰
     </button>
@@ -99,6 +98,10 @@
 </header>
 
 
+
+<!-- =========================
+     MAIN
+========================= -->
 
 <main id="home">
 
@@ -222,7 +225,7 @@
 
 
 <!-- =========================
-     CATEGORIES
+     CATEGORY CARDS
 ========================= -->
 
 <section class="cats">
@@ -305,7 +308,7 @@
     </b>
 
     <small>
-      Дикий мир планеты
+      Дикий мир
     </small>
 
   </a>
@@ -360,7 +363,7 @@
 
 
 <!-- =========================
-     LATEST POSTS
+     LATEST
 ========================= -->
 
 <section
@@ -380,6 +383,17 @@
       <h2>
         Последние материалы
       </h2>
+
+    </div>
+
+
+    <div class="resultCounter">
+
+      <span id="resultCount">
+        0
+      </span>
+
+      материалов
 
     </div>
 
@@ -474,22 +488,15 @@
 
 
 
-    <!-- REFRESH -->
-
     <div class="refreshPanel">
 
-
-      <button
-        id="refreshButton"
-      >
+      <button id="refreshButton">
         ↻ ОБНОВИТЬ
       </button>
-
 
       <span id="refreshTime">
         Загрузка...
       </span>
-
 
     </div>
 
@@ -505,7 +512,6 @@
     id="posts"
   >
 
-
     <div class="loadingGrid">
 
       <div class="skeleton skeletonCard"></div>
@@ -513,6 +519,151 @@
       <div class="skeleton skeletonCard"></div>
 
       <div class="skeleton skeletonCard"></div>
+
+    </div>
+
+  </div>
+
+
+</section>
+
+
+
+<!-- =========================
+     GEOGRAPHY
+========================= -->
+
+<section
+  class="section geographySection"
+  id="geography"
+>
+
+
+  <div class="heading">
+
+    <div>
+
+      <small>
+        ГЕОГРАФИЯ
+      </small>
+
+      <h2>
+        Мир на одной карте
+      </h2>
+
+    </div>
+
+  </div>
+
+
+  <div class="geoPanel">
+
+
+    <div class="geoContent">
+
+      <span class="geoIcon">
+        🌍
+      </span>
+
+
+      <h3>
+        Исследуй планету
+      </h3>
+
+
+      <p>
+        Открывай места, о которых
+        рассказывают публикации
+        National Geographic.
+      </p>
+
+
+      <div class="geoStats">
+
+        <div>
+
+          <strong>
+            🌲
+          </strong>
+
+          <span>
+            ПРИРОДА
+          </span>
+
+        </div>
+
+
+        <div>
+
+          <strong>
+            🏔️
+          </strong>
+
+          <span>
+            ГОРЫ
+          </span>
+
+        </div>
+
+
+        <div>
+
+          <strong>
+            🌊
+          </strong>
+
+          <span>
+            ОКЕАН
+          </span>
+
+        </div>
+
+
+        <div>
+
+          <strong>
+            🐾
+          </strong>
+
+          <span>
+            ЖИВОТНЫЕ
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div
+      class="geoMap"
+      id="geoMap"
+    >
+
+      <div class="mapGrid"></div>
+
+
+      <div class="mapPoint point1">
+        <span></span>
+      </div>
+
+      <div class="mapPoint point2">
+        <span></span>
+      </div>
+
+      <div class="mapPoint point3">
+        <span></span>
+      </div>
+
+      <div class="mapPoint point4">
+        <span></span>
+      </div>
+
+
+      <div class="mapLabel">
+        EARTH
+      </div>
 
     </div>
 
@@ -552,7 +703,6 @@
       и места, которые заставляют
       остановиться и просто смотреть.
     </p>
-
 
   </div>
 
@@ -656,7 +806,7 @@
 
 
 <!-- =========================
-     PHOTO GALLERY
+     PHOTOS
 ========================= -->
 
 <section
@@ -682,19 +832,14 @@
   </div>
 
 
-
   <div
     class="photos"
     id="photoGallery"
   >
 
-
     <div class="galleryLoading">
-
       ЗАГРУЖАЕМ ФОТОГРАФИИ...
-
     </div>
-
 
   </div>
 
@@ -736,8 +881,7 @@
     <br><br>
 
     Новые публикации загружаются
-    автоматически из сообщества
-    National Geographic.
+    автоматически из сообщества.
 
   </p>
 
@@ -762,26 +906,16 @@
     <i></i>
 
     <span>
-
       NATIONAL<br>
-
-      <b>
-        GEOGRAPHIC
-      </b>
-
+      <b>GEOGRAPHIC</b>
     </span>
 
   </div>
 
 
-
   <span>
-
-    ©
-    <span id="year"></span>
-
+    © <span id="year"></span>
   </span>
-
 
 
   <a
@@ -789,13 +923,110 @@
     target="_blank"
     rel="noopener noreferrer"
   >
-
     ВКонтакте ↗
-
   </a>
 
 
 </footer>
+
+
+
+<!-- =========================
+     MOBILE NAVIGATION
+========================= -->
+
+<nav
+  class="mobileNav"
+  id="mobileNav"
+>
+
+
+  <a
+    href="#home"
+    class="mobileNavItem active"
+    data-mobile-target="home"
+  >
+
+    <span>
+      ⌂
+    </span>
+
+    <small>
+      Главная
+    </small>
+
+  </a>
+
+
+  <a
+    href="#latest"
+    class="mobileNavItem"
+    data-mobile-target="latest"
+  >
+
+    <span>
+      ▤
+    </span>
+
+    <small>
+      Лента
+    </small>
+
+  </a>
+
+
+  <a
+    href="#geography"
+    class="mobileNavItem"
+    data-mobile-target="geography"
+  >
+
+    <span>
+      ◎
+    </span>
+
+    <small>
+      Карта
+    </small>
+
+  </a>
+
+
+  <a
+    href="#photos"
+    class="mobileNavItem"
+    data-mobile-target="photos"
+  >
+
+    <span>
+      ▧
+    </span>
+
+    <small>
+      Фото
+    </small>
+
+  </a>
+
+
+  <a
+    href="#about"
+    class="mobileNavItem"
+    data-mobile-target="about"
+  >
+
+    <span>
+      •••
+    </span>
+
+    <small>
+      Ещё
+    </small>
+
+  </a>
+
+
+</nav>
 
 
 
