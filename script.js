@@ -1,7 +1,8 @@
 const API_URL =
-  "https://national-geographic-backend.9dnwrczbz7.workers.dev/posts";
+  "https://national-geographic-backend.9dnwrczbz7.workers.dev/api/posts";
 
 const postsContainer = document.querySelector("#posts");
+
 
 function formatDate(timestamp) {
   if (!timestamp) return "";
@@ -13,17 +14,55 @@ function formatDate(timestamp) {
   });
 }
 
-function getText(text) {
-  if (!text) return "Новая публикация National Geographic";
 
-  return text.length > 180
-    ? text.substring(0, 180) + "..."
-    : text;
+function cleanText(text) {
+  if (!text) {
+    return "Новая публикация National Geographic";
+  }
+
+  return text
+    .replace(/\n+/g, " ")
+    .trim();
 }
+
+
+function getPreview(text) {
+  const clean = cleanText(text);
+
+  if (clean.length > 180) {
+    return clean.substring(0, 180) + "...";
+  }
+
+  return clean;
+}
+
+
+function getPostLink(vkId) {
+
+  if (!vkId) {
+    return "https://vk.ru/national.geograph1c";
+  }
+
+  const parts = vkId.split("_");
+
+  if (parts.length === 2) {
+
+    const ownerId = parts[0];
+    const postId = parts[1];
+
+    return `https://vk.ru/wall${ownerId}_${postId}`;
+  }
+
+  return "https://vk.ru/national.geograph1c";
+}
+
 
 function createPost(post) {
 
   const image = post.image_url;
+  const title = getPreview(post.text);
+  const date = formatDate(post.post_date);
+  const link = getPostLink(post.vk_id);
 
   return `
     <article class="post">
@@ -47,20 +86,18 @@ function createPost(post) {
 
       <div class="postBody">
 
-        <h3>
-          ${getText(post.text)}
-        </h3>
+        <h3>${title}</h3>
 
         ${
-          post.post_date
-            ? `<p>${formatDate(post.post_date)}</p>`
+          date
+            ? `<p>${date}</p>`
             : ""
         }
 
         <a
-          href="https://vk.ru/national.geograph1c"
+          href="${link}"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
         >
           Читать во ВКонтакте →
         </a>
@@ -71,26 +108,39 @@ function createPost(post) {
   `;
 }
 
+
 async function loadPosts() {
 
   postsContainer.innerHTML = `
     <div class="loading">
-      Загружаем материалы...
+      Загружаем публикации...
     </div>
   `;
 
   try {
 
-    const response = await fetch(API_URL);
+    const response = await fetch(API_URL, {
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    });
 
     if (!response.ok) {
-      throw new Error("Ошибка API");
+      throw new Error(
+        `API error: ${response.status}`
+      );
     }
 
     const data = await response.json();
 
-    if (!data.posts || !Array.isArray(data.posts)) {
-      throw new Error("Неверный формат данных");
+    if (
+      !data ||
+      !Array.isArray(data.posts)
+    ) {
+      throw new Error(
+        "API вернул неправильный формат"
+      );
     }
 
     if (data.posts.length === 0) {
@@ -105,58 +155,79 @@ async function loadPosts() {
     }
 
     postsContainer.innerHTML =
-      data.posts.map(createPost).join("");
+      data.posts
+        .map(createPost)
+        .join("");
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Ошибка загрузки постов:",
+      error
+    );
 
     postsContainer.innerHTML = `
       <div class="loading">
+
         Не удалось загрузить публикации.
+
         <br><br>
+
         <a
           href="https://vk.ru/national.geograph1c"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
         >
           Открыть группу ВКонтакте →
         </a>
+
       </div>
     `;
   }
 }
 
 
-document.querySelector("#year").textContent =
-  new Date().getFullYear();
+const year = document.querySelector("#year");
+
+if (year) {
+  year.textContent =
+    new Date().getFullYear();
+}
 
 
-const menu = document.querySelector("#menu");
-const links = document.querySelector("#links");
+const menu =
+  document.querySelector("#menu");
 
-menu.onclick = () => {
-
-  links.classList.toggle("open");
-
-  menu.textContent =
-    links.classList.contains("open")
-      ? "×"
-      : "☰";
-};
+const links =
+  document.querySelector("#links");
 
 
-links.querySelectorAll("a").forEach(link => {
+if (menu && links) {
 
-  link.onclick = () => {
+  menu.onclick = () => {
 
-    links.classList.remove("open");
+    links.classList.toggle("open");
 
-    menu.textContent = "☰";
-
+    menu.textContent =
+      links.classList.contains("open")
+        ? "×"
+        : "☰";
   };
 
-});
+
+  links
+    .querySelectorAll("a")
+    .forEach(link => {
+
+      link.onclick = () => {
+
+        links.classList.remove("open");
+
+        menu.textContent = "☰";
+      };
+
+    });
+}
 
 
 loadPosts();
