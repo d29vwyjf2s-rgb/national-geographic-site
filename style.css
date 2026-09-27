@@ -1,829 +1,2675 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
+:root {
+  --bg: #f2f0e8;
+  --paper: #f8f7f1;
+  --ink: #111510;
+  --muted: #777b72;
+  --line: rgba(17, 21, 16, .15);
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
+  --forest: #17241d;
+  --forest-2: #24382d;
+  --yellow: #f4c400;
+  --white: #fff;
 
-  <meta
-    name="theme-color"
-    content="#111712"
-  >
+  --max: 1240px;
+}
 
-  <meta
-    name="description"
-    content="National Geographic — природа, путешествия, животные и удивительные места нашей планеты."
-  >
 
-  <meta
-    name="apple-mobile-web-app-capable"
-    content="yes"
-  >
+/* ==================================================
+   RESET
+================================================== */
 
-  <meta
-    name="apple-mobile-web-app-status-bar-style"
-    content="black-translucent"
-  >
+* {
+  box-sizing: border-box;
+}
 
-  <title>National Geographic — Мир рядом</title>
+html {
+  scroll-behavior: smooth;
+}
 
-  <link rel="manifest" href="./manifest.json">
+body {
+  margin: 0;
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  background: var(--bg);
+  color: var(--ink);
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  >
+  font-family:
+    "DM Sans",
+    Arial,
+    sans-serif;
 
-  <link rel="stylesheet" href="./style.css">
-</head>
+  -webkit-font-smoothing: antialiased;
+}
 
-<body>
+body.menuOpen {
+  overflow: hidden;
+}
 
-  <!-- =====================================
-       HEADER
-  ====================================== -->
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
-  <header class="siteHeader">
+button {
+  font: inherit;
+}
 
-    <div class="headerInner">
+img {
+  max-width: 100%;
+  display: block;
+}
 
-      <a
-        href="#home"
-        class="siteLogo"
-        aria-label="National Geographic"
-      >
-        <span class="logoFrame">NG</span>
+::selection {
+  background: var(--yellow);
+  color: var(--ink);
+}
 
-        <span class="logoWords">
-          NATIONAL<br>
-          GEOGRAPHIC
-        </span>
-      </a>
+.pageContainer {
+  width: min(
+    calc(100% - 56px),
+    var(--max)
+  );
 
+  margin: 0 auto;
+}
 
-      <nav class="desktopNav">
 
-        <a href="#home">
-          Главная
-        </a>
+/* ==================================================
+   HEADER
+================================================== */
 
-        <a href="#explore">
-          Исследовать
-        </a>
+.siteHeader {
+  position: fixed;
 
-        <a href="#feed">
-          Журнал
-        </a>
+  top: 0;
+  left: 0;
+  right: 0;
 
-        <a href="#about">
-          О проекте
-        </a>
+  z-index: 1000;
 
-      </nav>
+  height: 82px;
 
+  color: var(--white);
 
-      <button
-        class="menuButton"
-        id="menuButton"
-        type="button"
-        aria-label="Открыть меню"
-      >
-        <span></span>
-        <span></span>
-      </button>
+  background:
+    linear-gradient(
+      rgba(9, 15, 11, .72),
+      rgba(9, 15, 11, .04)
+    );
 
-    </div>
+  transition:
+    background .35s ease,
+    color .35s ease,
+    box-shadow .35s ease;
+}
 
-  </header>
+.siteHeader.scrolled {
+  color: var(--ink);
 
+  background:
+    rgba(242, 240, 232, .94);
 
-  <!-- =====================================
-       MOBILE MENU
-  ====================================== -->
+  box-shadow:
+    0 8px 30px rgba(0,0,0,.07);
 
-  <div
-    class="mobileMenu"
-    id="mobileMenu"
-  >
+  backdrop-filter: blur(15px);
+}
 
-    <div class="mobileMenuInner">
+.headerInner {
+  width: min(
+    calc(100% - 56px),
+    var(--max)
+  );
 
-      <a href="#home">
-        <span>01</span>
-        Главная
-      </a>
+  height: 100%;
 
-      <a href="#explore">
-        <span>02</span>
-        Исследовать
-      </a>
+  margin: auto;
 
-      <a href="#feed">
-        <span>03</span>
-        Журнал
-      </a>
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-      <a href="#about">
-        <span>04</span>
-        О проекте
-      </a>
+.siteLogo {
+  display: flex;
+  align-items: center;
 
-    </div>
+  gap: 11px;
 
-  </div>
+  font-family: "Oswald", sans-serif;
+}
 
+.logoFrame {
+  width: 39px;
+  height: 39px;
 
-  <main id="home">
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
+  border: 3px solid var(--yellow);
 
-    <!-- =====================================
-         HERO
-    ====================================== -->
+  color: inherit;
 
-    <section class="hero">
+  font-size: 13px;
+  font-weight: 700;
+}
 
-      <div class="heroBackground">
+.logoWords {
+  font-size: 12px;
+  font-weight: 600;
 
-        <div class="heroMountain heroMountainOne"></div>
-        <div class="heroMountain heroMountainTwo"></div>
-        <div class="heroMountain heroMountainThree"></div>
+  line-height: .95;
 
-        <div class="heroSun"></div>
+  letter-spacing: .09em;
+}
 
-        <div class="heroGrid"></div>
+.desktopNav {
+  display: flex;
+  align-items: center;
 
-      </div>
+  gap: 34px;
+}
 
+.desktopNav a {
+  position: relative;
 
-      <div class="heroContent">
+  font-size: 9px;
+  font-weight: 700;
 
-        <div class="heroTopLine">
+  letter-spacing: .17em;
 
-          <span>
-            NATIONAL GEOGRAPHIC
-          </span>
+  text-transform: uppercase;
+}
 
-          <span>
-            DIGITAL JOURNAL · 2026
-          </span>
+.desktopNav a::after {
+  content: "";
 
-        </div>
+  position: absolute;
 
+  left: 0;
+  bottom: -9px;
 
-        <div class="heroMain">
+  width: 100%;
+  height: 2px;
 
-          <div class="heroNumber">
-            01
-          </div>
+  background: var(--yellow);
 
+  transform: scaleX(0);
+  transform-origin: right;
 
-          <div class="heroText">
+  transition:
+    transform .25s ease;
+}
 
-            <div class="heroLabel">
-              МИР НАЧИНАЕТСЯ ЗА ГОРИЗОНТОМ
-            </div>
+.desktopNav a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
 
-            <h1>
-              УВИДЕТЬ<br>
-              БОЛЬШЕ
-            </h1>
+.menuButton {
+  display: none;
 
-            <p>
-              Путешествия, природа и места,
-              ради которых хочется собрать
-              рюкзак и отправиться в путь.
-            </p>
+  width: 44px;
+  height: 44px;
 
-            <a
-              href="#feed"
-              class="heroLink"
-            >
-              ОТКРЫТЬ ЖУРНАЛ
-              <span>↗</span>
-            </a>
+  padding: 0;
 
-          </div>
+  border: 1px solid currentColor;
 
-        </div>
+  background: transparent;
 
+  align-items: center;
+  justify-content: center;
 
-        <div class="heroBottom">
+  flex-direction: column;
 
-          <span>
-            51° 28′ N
-          </span>
+  gap: 6px;
+}
 
-          <span>
-            EXPLORE / DISCOVER / REMEMBER
-          </span>
+.menuButton span {
+  width: 20px;
+  height: 1px;
 
-          <span>
-            12° 33′ E
-          </span>
+  background: currentColor;
 
-        </div>
+  transition:
+    transform .25s ease;
+}
 
-      </div>
+.menuButton.active span:first-child {
+  transform:
+    translateY(3.5px)
+    rotate(45deg);
+}
 
-    </section>
+.menuButton.active span:last-child {
+  transform:
+    translateY(-3.5px)
+    rotate(-45deg);
+}
 
 
-    <!-- =====================================
-         INTRO
-    ====================================== -->
+/* ==================================================
+   MOBILE MENU
+================================================== */
 
-    <section class="introSection">
+.mobileMenu {
+  position: fixed;
 
-      <div class="pageContainer">
+  inset: 0;
 
-        <div class="introGrid">
+  z-index: 900;
 
-          <div class="introSmall">
-            <span class="line"></span>
-            ИССЛЕДУЙТЕ ПЛАНЕТУ
-          </div>
+  padding-top: 82px;
 
+  background: var(--forest);
 
-          <div class="introLarge">
+  color: var(--white);
 
-            <h2>
-              Планета огромна.
-              <br>
-              И она всё ещё
-              <em>полна открытий.</em>
-            </h2>
+  opacity: 0;
+  visibility: hidden;
 
-            <p>
-              Мы собираем истории о местах,
-              животных и людях, которые
-              заставляют посмотреть на мир
-              немного иначе.
-            </p>
+  transform: translateY(-15px);
 
-          </div>
+  transition:
+    opacity .3s ease,
+    transform .3s ease,
+    visibility .3s ease;
+}
 
-        </div>
+.mobileMenu.active {
+  opacity: 1;
+  visibility: visible;
 
-      </div>
+  transform: translateY(0);
+}
 
-    </section>
+.mobileMenuInner {
+  width: min(
+    calc(100% - 40px),
+    600px
+  );
 
+  margin: auto;
+}
 
-    <!-- =====================================
-         EXPLORE
-    ====================================== -->
+.mobileMenu a {
+  min-height: 82px;
 
-    <section
-      class="exploreSection"
-      id="explore"
-    >
+  display: flex;
+  align-items: center;
 
-      <div class="pageContainer">
+  gap: 25px;
 
-        <div class="sectionHeader">
+  border-bottom:
+    1px solid rgba(255,255,255,.12);
 
-          <div>
+  font-family: "Oswald", sans-serif;
 
-            <div class="sectionKicker">
-              EXPLORE
-            </div>
+  font-size: 32px;
 
-            <h2>
-              НАПРАВЛЕНИЯ
-            </h2>
+  letter-spacing: .03em;
+}
 
-          </div>
+.mobileMenu a span {
+  color: var(--yellow);
 
-          <div class="sectionIndex">
-            02 / 04
-          </div>
+  font-family: "DM Sans", sans-serif;
 
-        </div>
+  font-size: 10px;
+}
 
 
-        <div class="exploreGrid">
+/* ==================================================
+   HERO
+================================================== */
 
+.hero {
+  position: relative;
 
-          <!-- CARD 1 -->
+  min-height: 100vh;
+  min-height: 760px;
 
-          <a
-            href="#feed"
-            class="exploreCard exploreCardLarge"
-          >
+  overflow: hidden;
 
-            <div class="exploreImage exploreNature">
+  background:
+    #19271f;
 
-              <span class="fakeSun"></span>
+  color: var(--white);
+}
 
-              <span class="fakeMountain mountainA"></span>
-              <span class="fakeMountain mountainB"></span>
-              <span class="fakeMountain mountainC"></span>
+.heroBackground {
+  position: absolute;
 
-            </div>
+  inset: 0;
 
+  overflow: hidden;
 
-            <div class="exploreOverlay"></div>
+  background:
+    linear-gradient(
+      180deg,
+      #59756c 0%,
+      #b6b59a 46%,
+      #29392e 100%
+    );
+}
 
+.heroBackground::before {
+  content: "";
 
-            <div class="exploreContent">
+  position: absolute;
 
-              <span class="exploreNumber">
-                01
-              </span>
+  inset: 0;
 
-              <h3>
-                ДИКАЯ<br>
-                ПРИРОДА
-              </h3>
+  background:
+    radial-gradient(
+      ellipse at 50% 42%,
+      rgba(255,221,129,.34),
+      transparent 28%
+    );
 
-              <p>
-                Горы · леса · пустыни · океаны
-              </p>
+  z-index: 2;
+}
 
-            </div>
+.heroBackground::after {
+  content: "";
 
-          </a>
+  position: absolute;
 
+  inset: 0;
 
-          <!-- CARD 2 -->
+  background:
+    linear-gradient(
+      90deg,
+      rgba(8,14,10,.82),
+      rgba(8,14,10,.28) 55%,
+      rgba(8,14,10,.45)
+    );
 
-          <a
-            href="#feed"
-            class="exploreCard"
-          >
+  z-index: 8;
+}
 
-            <div class="exploreImage exploreOcean">
+.heroSun {
+  position: absolute;
 
-              <div class="oceanSun"></div>
+  top: 19%;
+  right: 16%;
 
-              <div class="oceanWave waveOne"></div>
-              <div class="oceanWave waveTwo"></div>
-              <div class="oceanWave waveThree"></div>
+  width: 190px;
+  height: 190px;
 
-            </div>
+  border-radius: 50%;
 
-            <div class="exploreOverlay"></div>
+  background:
+    radial-gradient(
+      circle,
+      #fff4c3 0%,
+      #f6d77a 42%,
+      rgba(246,215,122,.05) 72%
+    );
 
-            <div class="exploreContent">
+  filter: blur(1px);
 
-              <span class="exploreNumber">
-                02
-              </span>
+  opacity: .85;
 
-              <h3>
-                ОКЕАН
-              </h3>
+  z-index: 1;
+}
 
-              <p>
-                Глубина · жизнь · стихия
-              </p>
 
-            </div>
+/* mountains */
 
-          </a>
+.heroMountain {
+  position: absolute;
 
+  bottom: -1px;
 
-          <!-- CARD 3 -->
+  width: 0;
+  height: 0;
 
-          <a
-            href="#feed"
-            class="exploreCard"
-          >
+  border-left-style: solid;
+  border-right-style: solid;
+  border-bottom: 0;
+}
 
-            <div class="exploreImage exploreTravel">
+.heroMountainOne {
+  left: -10%;
 
-              <div class="travelRoad"></div>
+  border-left-width: 42vw;
+  border-right-width: 30vw;
 
-              <div class="travelMountain"></div>
+  border-bottom:
+    52vh solid #1c2b23;
 
-            </div>
+  z-index: 4;
+}
 
-            <div class="exploreOverlay"></div>
+.heroMountainTwo {
+  left: 28%;
 
-            <div class="exploreContent">
+  border-left-width: 32vw;
+  border-right-width: 42vw;
 
-              <span class="exploreNumber">
-                03
-              </span>
+  border-bottom:
+    38vh solid #26392e;
 
-              <h3>
-                ПУТЕШЕСТВИЯ
-              </h3>
+  z-index: 3;
+}
 
-              <p>
-                Маршруты · города · открытия
-              </p>
+.heroMountainThree {
+  right: -15%;
 
-            </div>
+  border-left-width: 30vw;
+  border-right-width: 35vw;
 
-          </a>
+  border-bottom:
+    29vh solid #30483a;
 
+  z-index: 5;
+}
 
-          <!-- CARD 4 -->
 
-          <a
-            href="#feed"
-            class="exploreCard exploreCardWide"
-          >
+/* mountain snow */
 
-            <div class="exploreImage exploreWildlife">
+.heroMountainOne::after {
+  content: "";
 
-              <div class="animalEye"></div>
+  position: absolute;
 
-              <div class="animalShape"></div>
+  left: -80px;
+  bottom: -10px;
 
-            </div>
+  width: 160px;
+  height: 100px;
 
-            <div class="exploreOverlay"></div>
+  background:
+    rgba(241,239,220,.5);
 
-            <div class="exploreContent">
+  clip-path:
+    polygon(
+      50% 0,
+      100% 100%,
+      0 100%
+    );
+}
 
-              <span class="exploreNumber">
-                04
-              </span>
 
-              <h3>
-                ЖИВОТНЫЕ
-              </h3>
+/* grid */
 
-              <p>
-                Дикие обитатели нашей планеты
-              </p>
+.heroGrid {
+  position: absolute;
 
-            </div>
+  inset: 0;
 
-          </a>
+  z-index: 7;
 
-        </div>
+  opacity: .12;
 
-      </div>
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,.35) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.35) 1px,
+      transparent 1px
+    );
 
-    </section>
+  background-size:
+    80px 80px;
 
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent,
+      black 20%,
+      black 75%,
+      transparent
+    );
+}
 
-    <!-- =====================================
-         FIELD NOTE
-    ====================================== -->
 
-    <section class="fieldSection">
+/* hero content */
 
-      <div class="pageContainer">
+.heroContent {
+  position: relative;
 
-        <div class="fieldCard">
+  z-index: 20;
 
-          <div class="fieldImage">
+  width: min(
+    calc(100% - 56px),
+    var(--max)
+  );
 
-            <div class="fieldCompass">
-              N
-            </div>
+  min-height: 100vh;
 
-            <div class="fieldCoordinates">
-              43° 21′ 12″ N<br>
-              42° 26′ 48″ E
-            </div>
+  min-height: 760px;
 
-            <div class="fieldLandscape">
+  margin: auto;
 
-              <span></span>
-              <span></span>
-              <span></span>
+  padding-top: 120px;
+  padding-bottom: 45px;
 
-            </div>
+  display: flex;
 
-          </div>
+  flex-direction: column;
 
+  justify-content: space-between;
+}
 
-          <div class="fieldContent">
+.heroTopLine {
+  display: flex;
+  justify-content: space-between;
 
-            <div class="fieldLabel">
-              FIELD NOTE / 001
-            </div>
+  color: rgba(255,255,255,.62);
 
-            <h2>
-              КАЖДЫЙ<br>
-              МАРШРУТ<br>
-              НАЧИНАЕТСЯ<br>
-              С ШАГА.
-            </h2>
+  font-size: 8px;
+  font-weight: 700;
 
-            <p>
-              Иногда, чтобы увидеть что-то
-              удивительное, достаточно просто
-              свернуть с привычной дороги.
-            </p>
+  letter-spacing: .22em;
+}
 
-            <a
-              href="#feed"
-              class="darkButton"
-            >
-              СМОТРЕТЬ ИСТОРИИ
-              <span>→</span>
-            </a>
+.heroMain {
+  display: flex;
 
-          </div>
+  align-items: flex-end;
 
-        </div>
+  gap: 35px;
+}
 
-      </div>
+.heroNumber {
+  padding-bottom: 15px;
 
-    </section>
+  color: var(--yellow);
 
+  font-family: "Oswald", sans-serif;
 
-    <!-- =====================================
-         JOURNAL / VK FEED
-    ====================================== -->
+  font-size: 28px;
 
-    <section
-      class="journalSection"
-      id="feed"
-    >
+  font-weight: 400;
+}
 
-      <div class="pageContainer">
+.heroText {
+  max-width: 850px;
+}
 
-        <div class="journalHeader">
+.heroLabel {
+  margin-bottom: 20px;
 
-          <div>
+  color: var(--yellow);
 
-            <div class="sectionKicker">
-              NATIONAL GEOGRAPHIC JOURNAL
-            </div>
+  font-size: 9px;
+  font-weight: 800;
 
-            <h2>
-              ПОСЛЕДНИЕ ИСТОРИИ
-            </h2>
+  letter-spacing: .23em;
+}
 
-          </div>
+.hero h1 {
+  margin: 0;
 
+  font-family: "Oswald", sans-serif;
 
-          <div class="journalInfo">
+  font-size:
+    clamp(80px, 12vw, 170px);
 
-            <span>
-              LIVE
-            </span>
+  font-weight: 600;
 
-            <i></i>
+  line-height: .78;
 
-            <span>
-              VK EDITION
-            </span>
+  letter-spacing: -.045em;
+}
 
-          </div>
+.heroText p {
+  max-width: 480px;
 
-        </div>
+  margin:
+    34px 0 0;
 
+  color: rgba(255,255,255,.76);
 
-        <div
-          id="feedStatus"
-          class="feedStatus"
-        >
-          Загружаем последние материалы…
-        </div>
+  font-size: 14px;
 
+  line-height: 1.7;
+}
 
-        <div
-          id="posts"
-          class="postsGrid"
-        ></div>
+.heroLink {
+  width: 210px;
+  height: 50px;
 
+  margin-top: 28px;
 
-        <div
-          id="loadMoreWrap"
-          class="loadMoreWrap"
-        >
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
-          <button
-            id="loadMore"
-            class="loadMoreButton"
-            type="button"
-          >
-            ЗАГРУЗИТЬ ЕЩЁ
-            <span>↓</span>
-          </button>
+  gap: 20px;
 
-        </div>
+  background: var(--yellow);
 
-      </div>
+  color: var(--ink);
 
-    </section>
+  font-size: 9px;
+  font-weight: 800;
 
+  letter-spacing: .15em;
 
-    <!-- =====================================
-         COMMUNITY
-    ====================================== -->
+  transition:
+    transform .2s ease;
+}
 
-    <section class="communitySection">
+.heroLink:hover {
+  transform: translateY(-3px);
+}
 
-      <div class="pageContainer">
+.heroLink span {
+  font-size: 16px;
+}
 
-        <div class="communityCard">
+.heroBottom {
+  display: flex;
 
-          <div class="communityLogo">
-            NG
-          </div>
+  justify-content: space-between;
 
+  color: rgba(255,255,255,.48);
 
-          <div class="communityText">
+  font-size: 8px;
 
-            <span>
-              OFFICIAL COMMUNITY
-            </span>
+  letter-spacing: .18em;
+}
 
-            <h2>
-              NATIONAL GEOGRAPHIC
-            </h2>
 
-            <p>
-              Природа · путешествия · планета
-            </p>
+/* ==================================================
+   INTRO
+================================================== */
 
-          </div>
+.introSection {
+  padding:
+    150px 0 145px;
 
+  background:
+    var(--paper);
+}
 
-          <a
-            href="https://vk.ru/national.geograph1c"
-            target="_blank"
-            rel="noopener"
-            class="communityButton"
-          >
-            ОТКРЫТЬ VK
-            <span>↗</span>
-          </a>
+.introGrid {
+  display: grid;
 
-        </div>
+  grid-template-columns:
+    .35fr 1fr;
 
-      </div>
+  gap: 80px;
+}
 
-    </section>
+.introSmall {
+  display: flex;
+  align-items: flex-start;
 
+  gap: 12px;
 
-    <!-- =====================================
-         ABOUT
-    ====================================== -->
+  padding-top: 11px;
 
-    <section
-      class="aboutSection"
-      id="about"
-    >
+  color: var(--muted);
 
-      <div class="pageContainer">
+  font-size: 8px;
+  font-weight: 800;
 
-        <div class="aboutGrid">
+  letter-spacing: .18em;
+}
 
-          <div class="aboutTitle">
+.introSmall .line {
+  width: 32px;
+  height: 2px;
 
-            <span>
-              04
-            </span>
+  margin-top: 4px;
 
-            <h2>
-              О<br>
-              ПРОЕКТЕ
-            </h2>
+  background:
+    var(--yellow);
+}
 
-          </div>
+.introLarge {
+  max-width: 900px;
+}
 
+.introLarge h2 {
+  margin: 0;
 
-          <div class="aboutText">
+  font-family: "Oswald", sans-serif;
 
-            <p class="aboutLead">
-              National Geographic —
-              цифровой журнал о нашей планете.
-            </p>
+  font-size:
+    clamp(48px, 7vw, 92px);
 
-            <p>
-              Здесь встречаются большие
-              путешествия и маленькие открытия:
-              дикие места, редкие животные,
-              необычные города, горы, океаны
-              и истории людей.
-            </p>
+  font-weight: 500;
 
-            <p>
-              Мы верим, что интерес к миру
-              начинается с любопытства.
-              Поэтому просто открывайте,
-              смотрите и отправляйтесь дальше.
-            </p>
+  line-height: .95;
 
-          </div>
+  letter-spacing: -.035em;
+}
 
-        </div>
+.introLarge h2 em {
+  color: #677567;
 
-      </div>
+  font-style: normal;
+}
 
-    </section>
+.introLarge p {
+  max-width: 540px;
 
+  margin:
+    45px 0 0;
 
-  </main>
+  color: var(--muted);
 
+  font-size: 15px;
 
-  <!-- =====================================
-       FOOTER
-  ====================================== -->
+  line-height: 1.8;
+}
 
-  <footer class="siteFooter">
 
-    <div class="pageContainer">
+/* ==================================================
+   SECTION HEADERS
+================================================== */
 
-      <div class="footerTop">
+.sectionHeader,
+.journalHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
 
-        <div class="footerLogo">
-          <span>NG</span>
-          NATIONAL<br>
-          GEOGRAPHIC
-        </div>
+  gap: 30px;
+}
 
+.sectionKicker {
+  margin-bottom: 12px;
 
-        <div class="footerPhrase">
-          THE WORLD<br>
-          IS WAITING.
-        </div>
+  color: #8a7200;
 
-      </div>
+  font-size: 8px;
+  font-weight: 800;
 
+  letter-spacing: .22em;
+}
 
-      <div class="footerBottom">
+.sectionHeader h2,
+.journalHeader h2 {
+  margin: 0;
 
-        <span>
-          NATIONAL GEOGRAPHIC DIGITAL EDITION
-        </span>
+  font-family: "Oswald", sans-serif;
 
-        <span>
-          © 2026
-        </span>
+  font-size:
+    clamp(48px, 6vw, 80px);
 
-      </div>
+  font-weight: 500;
 
-    </div>
+  line-height: .9;
 
-  </footer>
+  letter-spacing: -.035em;
+}
 
+.sectionIndex {
+  padding-bottom: 7px;
 
-  <!-- =====================================
-       MOBILE BOTTOM NAV
-  ====================================== -->
+  color: var(--muted);
 
-  <nav class="mobileBottomNav">
+  font-size: 9px;
 
-    <a href="#home">
-      <span>01</span>
-      Главная
-    </a>
+  letter-spacing: .15em;
+}
 
-    <a href="#explore">
-      <span>02</span>
-      Мир
-    </a>
 
-    <a href="#feed">
-      <span>03</span>
-      Журнал
-    </a>
+/* ==================================================
+   EXPLORE
+================================================== */
 
-    <a href="#about">
-      <span>04</span>
-      О нас
-    </a>
+.exploreSection {
+  padding:
+    120px 0 150px;
 
-  </nav>
+  background:
+    #e8e6dd;
+}
 
+.exploreGrid {
+  margin-top: 55px;
 
-  <!-- =====================================
-       TOP BUTTON
-  ====================================== -->
+  display: grid;
 
-  <button
-    id="backToTop"
-    class="backToTop"
-    type="button"
-    aria-label="Наверх"
-  >
-    ↑
-  </button>
+  grid-template-columns:
+    1.3fr .7fr;
 
+  grid-template-rows:
+    390px 390px;
 
-  <!-- =====================================
-       TOAST
-  ====================================== -->
+  gap: 20px;
+}
 
-  <div
-    id="toast"
-    class="toast"
-    aria-live="polite"
-  ></div>
+.exploreCard {
+  position: relative;
 
+  overflow: hidden;
 
-  <!-- =====================================
-       SCRIPTS
-  ====================================== -->
+  min-height: 300px;
 
-  <script src="./script.js"></script>
+  color: var(--white);
 
-</body>
-</html>
+  background:
+    var(--forest);
+}
+
+.exploreCardLarge {
+  grid-row:
+    span 2;
+}
+
+.exploreCardWide {
+  grid-column:
+    2;
+}
+
+.exploreImage {
+  position: absolute;
+
+  inset: 0;
+
+  overflow: hidden;
+
+  transition:
+    transform .7s cubic-bezier(.2,.7,.2,1);
+}
+
+.exploreCard:hover .exploreImage {
+  transform:
+    scale(1.06);
+}
+
+.exploreOverlay {
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.03) 20%,
+      rgba(0,0,0,.76)
+    );
+
+  z-index: 2;
+}
+
+.exploreContent {
+  position: absolute;
+
+  left: 30px;
+  right: 30px;
+  bottom: 28px;
+
+  z-index: 5;
+}
+
+.exploreNumber {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: var(--yellow);
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: .2em;
+}
+
+.exploreContent h3 {
+  margin: 0;
+
+  font-family: "Oswald", sans-serif;
+
+  font-size:
+    clamp(32px, 4vw, 58px);
+
+  font-weight: 500;
+
+  line-height: .88;
+}
+
+.exploreContent p {
+  margin: 15px 0 0;
+
+  color: rgba(255,255,255,.62);
+
+  font-size: 9px;
+
+  letter-spacing: .08em;
+}
+
+
+/* NATURE */
+
+.exploreNature {
+  background:
+    linear-gradient(
+      160deg,
+      #8ca99b,
+      #617d6e 45%,
+      #17251d 100%
+    );
+}
+
+.fakeSun {
+  position: absolute;
+
+  top: 15%;
+  right: 15%;
+
+  width: 100px;
+  height: 100px;
+
+  border-radius: 50%;
+
+  background:
+    #f0d98c;
+
+  box-shadow:
+    0 0 80px rgba(240,217,140,.4);
+}
+
+.fakeMountain {
+  position: absolute;
+
+  bottom: -20px;
+
+  width: 0;
+  height: 0;
+
+  border-left: 280px solid transparent;
+  border-right: 280px solid transparent;
+
+  border-bottom: 430px solid #25382d;
+}
+
+.mountainA {
+  left: -180px;
+}
+
+.mountainB {
+  left: 20%;
+
+  border-left-width: 320px;
+  border-right-width: 320px;
+
+  border-bottom-color:
+    #334d3d;
+}
+
+.mountainC {
+  right: -220px;
+
+  border-left-width: 340px;
+  border-right-width: 340px;
+
+  border-bottom-color:
+    #17251d;
+}
+
+
+/* OCEAN */
+
+.exploreOcean {
+  background:
+    linear-gradient(
+      180deg,
+      #809ca2,
+      #3e6770 45%,
+      #153a43
+    );
+}
+
+.oceanSun {
+  position: absolute;
+
+  top: 17%;
+  left: 18%;
+
+  width: 90px;
+  height: 90px;
+
+  border-radius: 50%;
+
+  background:
+    #e6d9a4;
+
+  box-shadow:
+    0 0 70px rgba(230,217,164,.4);
+}
+
+.oceanWave {
+  position: absolute;
+
+  left: -20%;
+
+  width: 140%;
+
+  height: 130px;
+
+  border-radius:
+    50% 50% 0 0;
+
+  transform:
+    rotate(-4deg);
+}
+
+.waveOne {
+  bottom: -20px;
+
+  background: #173f46;
+}
+
+.waveTwo {
+  bottom: 45px;
+
+  background: #28545b;
+
+  opacity: .9;
+}
+
+.waveThree {
+  bottom: 105px;
+
+  background: #47757a;
+
+  opacity: .7;
+}
+
+
+/* TRAVEL */
+
+.exploreTravel {
+  background:
+    linear-gradient(
+      180deg,
+      #d3b889,
+      #b88857 48%,
+      #52644d
+    );
+}
+
+.travelRoad {
+  position: absolute;
+
+  left: 37%;
+  bottom: -20%;
+
+  width: 28%;
+  height: 90%;
+
+  background:
+    #5e594b;
+
+  transform:
+    perspective(400px)
+    rotateX(25deg);
+}
+
+.travelMountain {
+  position: absolute;
+
+  left: -10%;
+  bottom: 20%;
+
+  width: 0;
+  height: 0;
+
+  border-left: 230px solid transparent;
+  border-right: 230px solid transparent;
+
+  border-bottom: 250px solid #475a49;
+}
+
+
+/* WILDLIFE */
+
+.exploreWildlife {
+  background:
+    radial-gradient(
+      circle at 58% 35%,
+      #8e855d,
+      #3c4432 28%,
+      #151c16 72%
+    );
+}
+
+.animalShape {
+  position: absolute;
+
+  left: 15%;
+  top: 5%;
+
+  width: 70%;
+  height: 110%;
+
+  border-radius:
+    48% 48% 20% 20%;
+
+  background:
+    #1a2119;
+
+  transform:
+    rotate(8deg);
+
+  opacity: .9;
+}
+
+.animalEye {
+  position: absolute;
+
+  top: 36%;
+  left: 56%;
+
+  width: 12px;
+  height: 12px;
+
+  border-radius: 50%;
+
+  background: var(--yellow);
+
+  box-shadow:
+    0 0 25px rgba(244,196,0,.9);
+
+  z-index: 3;
+}
+
+
+/* ==================================================
+   FIELD NOTE
+================================================== */
+
+.fieldSection {
+  padding:
+    130px 0;
+
+  background:
+    var(--forest);
+
+  color: var(--white);
+}
+
+.fieldCard {
+  min-height: 600px;
+
+  display: grid;
+
+  grid-template-columns:
+    1.1fr .9fr;
+}
+
+.fieldImage {
+  position: relative;
+
+  overflow: hidden;
+
+  min-height: 600px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #778f86,
+      #2e4b3b 55%,
+      #142018
+    );
+}
+
+.fieldImage::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent 40%,
+      rgba(0,0,0,.2)
+    );
+}
+
+.fieldCompass {
+  position: absolute;
+
+  top: 35px;
+  left: 35px;
+
+  width: 72px;
+  height: 72px;
+
+  border:
+    1px solid rgba(255,255,255,.35);
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--yellow);
+
+  font-family: "Oswald", sans-serif;
+
+  font-size: 20px;
+
+  z-index: 3;
+}
+
+.fieldCoordinates {
+  position: absolute;
+
+  right: 30px;
+  bottom: 30px;
+
+  color: rgba(255,255,255,.65);
+
+  font-size: 8px;
+
+  line-height: 1.8;
+
+  letter-spacing: .15em;
+
+  z-index: 3;
+}
+
+.fieldLandscape {
+  position: absolute;
+
+  inset: auto 0 0;
+
+  height: 55%;
+
+  background:
+    #18251d;
+
+  clip-path:
+    polygon(
+      0 65%,
+      18% 38%,
+      30% 52%,
+      47% 18%,
+      58% 48%,
+      72% 28%,
+      87% 51%,
+      100% 30%,
+      100% 100%,
+      0 100%
+    );
+}
+
+.fieldContent {
+  padding:
+    70px 65px;
+
+  background:
+    #111913;
+}
+
+.fieldLabel {
+  color: var(--yellow);
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: .2em;
+}
+
+.fieldContent h2 {
+  margin:
+    25px 0 30px;
+
+  font-family: "Oswald", sans-serif;
+
+  font-size:
+    clamp(48px, 6vw, 76px);
+
+  font-weight: 500;
+
+  line-height: .88;
+}
+
+.fieldContent p {
+  max-width: 390px;
+
+  margin: 0;
+
+  color: rgba(255,255,255,.6);
+
+  font-size: 13px;
+
+  line-height: 1.8;
+}
+
+.darkButton {
+  width: 220px;
+  height: 48px;
+
+  margin-top: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 20px;
+
+  border:
+    1px solid var(--yellow);
+
+  color: var(--yellow);
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: .15em;
+
+  transition:
+    background .2s ease,
+    color .2s ease;
+}
+
+.darkButton:hover {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+
+/* ==================================================
+   JOURNAL
+================================================== */
+
+.journalSection {
+  padding:
+    135px 0 150px;
+
+  background:
+    var(--paper);
+}
+
+.journalInfo {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding-bottom: 8px;
+
+  color: var(--muted);
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: .15em;
+}
+
+.journalInfo span:first-child {
+  color: #8a7200;
+}
+
+.journalInfo i {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: var(--yellow);
+}
+
+.feedStatus {
+  min-height: 18px;
+
+  margin:
+    35px 0 20px;
+
+  color: var(--muted);
+
+  font-size: 9px;
+
+  letter-spacing: .12em;
+}
+
+.postsGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 24px;
+}
+
+
+/* ==================================================
+   VK POST
+================================================== */
+
+.vkPost {
+  position: relative;
+
+  overflow: hidden;
+
+  background:
+    var(--white);
+
+  border:
+    1px solid var(--line);
+
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
+}
+
+.vkPost:hover {
+  transform:
+    translateY(-5px);
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.09);
+}
+
+.vkPostHeader {
+  min-height: 72px;
+
+  padding:
+    13px 17px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom:
+    1px solid var(--line);
+}
+
+.vkPostIdentity {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+}
+
+.vkCommunityAvatar {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--forest);
+
+  color: var(--yellow);
+
+  font-family: "Oswald", sans-serif;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.vkPostAuthor {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.vkPostAuthor strong {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.vkPostAuthor time {
+  color: var(--muted);
+
+  font-size: 8px;
+}
+
+.vkPostMenu {
+  width: 38px;
+  height: 38px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: var(--muted);
+
+  font-size: 20px;
+}
+
+.vkPostContent {
+  padding: 18px;
+}
+
+.vkPostText {
+  margin:
+    0 0 18px;
+
+  font-size: 13px;
+
+  line-height: 1.75;
+
+  white-space: pre-wrap;
+
+  overflow-wrap: anywhere;
+}
+
+.vkPostImage {
+  width:
+    calc(100% + 36px);
+
+  max-height: 620px;
+
+  margin:
+    0 -18px;
+
+  object-fit: cover;
+
+  cursor: zoom-in;
+}
+
+.vkPostVideo {
+  width:
+    calc(100% + 36px);
+
+  margin:
+    0 -18px;
+}
+
+.vkPostPlaceholder {
+  width:
+    calc(100% + 36px);
+
+  min-height: 230px;
+
+  margin:
+    0 -18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    var(--forest);
+
+  color:
+    rgba(244,196,0,.35);
+
+  font-family:
+    "Oswald", sans-serif;
+
+  font-size: 70px;
+}
+
+.vkVideoLink {
+  min-height: 230px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    var(--forest);
+
+  color: var(--yellow);
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: .15em;
+}
+
+
+/* ==================================================
+   POST ACTIONS
+================================================== */
+
+.vkPostActions {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  margin-top: 18px;
+
+  border-top:
+    1px solid var(--line);
+
+  border-bottom:
+    1px solid var(--line);
+}
+
+.vkAction {
+  width: 100%;
+  height: 46px;
+
+  border: 0;
+  border-right:
+    1px solid var(--line);
+
+  background: transparent;
+
+  color: var(--muted);
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: .05em;
+}
+
+.vkAction:last-child {
+  border-right: 0;
+}
+
+.vkAction:hover {
+  color: var(--ink);
+  background:
+    rgba(244,196,0,.08);
+}
+
+.vkAction.active {
+  color:
+    #927700;
+}
+
+.vkPostBottom {
+  min-height: 48px;
+
+  padding:
+    0 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  color: var(--muted);
+
+  font-size: 8px;
+}
+
+.vkOpenPost {
+  color:
+    #8a7200;
+
+  font-weight: 800;
+}
+
+
+/* comments */
+
+.vkComments {
+  margin-top: 15px;
+
+  padding: 15px;
+
+  background:
+    #efede5;
+}
+
+.vkCommentsHeader {
+  margin-bottom: 10px;
+
+  color: #8a7200;
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: .15em;
+}
+
+.vkComment {
+  padding:
+    9px 0;
+
+  border-bottom:
+    1px solid var(--line);
+
+  font-size: 10px;
+
+  line-height: 1.5;
+}
+
+.vkCommentsEmpty {
+  color: var(--muted);
+
+  font-size: 9px;
+}
+
+
+/* ==================================================
+   LOAD MORE
+================================================== */
+
+.loadMoreWrap {
+  padding-top: 45px;
+
+  display: flex;
+  justify-content: center;
+}
+
+.loadMoreButton {
+  width: 210px;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 25px;
+
+  border:
+    1px solid var(--ink);
+
+  background: transparent;
+
+  color: var(--ink);
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: .17em;
+
+  transition:
+    background .2s ease,
+    color .2s ease;
+}
+
+.loadMoreButton:hover {
+  background:
+    var(--ink);
+
+  color:
+    var(--yellow);
+}
+
+
+/* ==================================================
+   COMMUNITY
+================================================== */
+
+.communitySection {
+  padding:
+    80px 0;
+
+  background:
+    #e3e1d7;
+}
+
+.communityCard {
+  min-height: 145px;
+
+  padding:
+    25px 35px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 25px;
+
+  background:
+    var(--forest);
+
+  color:
+    var(--white);
+}
+
+.communityLogo {
+  width: 78px;
+  height: 78px;
+
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border:
+    4px solid var(--yellow);
+
+  color: var(--yellow);
+
+  font-family:
+    "Oswald", sans-serif;
+
+  font-size: 22px;
+}
+
+.communityText {
+  flex: 1;
+}
+
+.communityText > span {
+  color:
+    var(--yellow);
+
+  font-size: 7px;
+  font-weight: 800;
+
+  letter-spacing: .2em;
+}
+
+.communityText h2 {
+  margin:
+    7px 0 4px;
+
+  font-family:
+    "Oswald", sans-serif;
+
+  font-size: 30px;
+
+  font-weight: 500;
+}
+
+.communityText p {
+  margin: 0;
+
+  color:
+    rgba(255,255,255,.5);
+
+  font-size: 9px;
+}
+
+.communityButton {
+  width: 145px;
+  height: 46px;
+
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 15px;
+
+  border:
+    1px solid var(--yellow);
+
+  color:
+    var(--yellow);
+
+  font-size: 8px;
+  font-weight: 800;
+
+  letter-spacing: .14em;
+
+  transition:
+    background .2s ease,
+    color .2s ease;
+}
+
+.communityButton:hover {
+  background:
+    var(--yellow);
+
+  color:
+    var(--ink);
+}
+
+
+/* ==================================================
+   ABOUT
+================================================== */
+
+.aboutSection {
+  padding:
+    145px 0;
+
+  background:
+    var(--paper);
+}
+
+.aboutGrid {
+  display: grid;
+
+  grid-template-columns:
+    .7fr 1.3fr;
+
+  gap: 100px;
+}
+
+.aboutTitle span {
+  color:
+    #8a7200;
+
+  font-size: 9px;
+
+  letter-spacing: .2em;
+}
+
+.aboutTitle h2 {
+  margin:
+    20px 0 0;
+
+  font-family:
+    "Oswald", sans-serif;
+
+  font-size:
+    clamp(65px, 8vw, 110px);
+
+  font-weight: 500;
+
+  line-height: .8;
+
+  letter-spacing: -.04em;
+}
+
+.aboutText {
+  max-width: 650px;
+
+  padding-top: 40px;
+}
+
+.aboutText p {
+  margin:
+    0 0 28px;
+
+  color:
+    var(--muted);
+
+  font-size: 15px;
+
+  line-height: 1.85;
+}
+
+.aboutText .aboutLead {
+  color:
+    var(--ink);
+
+  font-family:
+    "Oswald", sans-serif;
+
+  font-size:
+    clamp(30px, 4vw, 47px);
+
+  font-weight: 400;
+
+  line-height: 1.05;
+}
+
+
+/* ==================================================
+   FOOTER
+================================================== */
+
+.siteFooter {
+  padding:
+    65px 0 35px;
+
+  background:
+    var(--ink);
+
+  color:
+    var(--white);
+}
+
+.footerTop {
+  min-height: 200px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.footerLogo {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  font-family:
+    "Oswald", sans-serif;
+
+  font-size: 16px;
+
+  line-height: .9;
+
+  letter-spacing: .08em;
+}
+
+.footerLogo span {
+  width: 42px;
+  height: 42px;
+
+  margin-bottom: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border:
+    3px solid var(--yellow);
+
+  color:
+    var(--yellow);
+
+  font-size: 12px;
+}
+
+.footerPhrase {
+  color:
+    rgba(255,255,255,.45);
+
+  font-family:
+    "Oswald", sans-serif;
+
+  font-size:
+    clamp(35px, 5vw, 70px);
+
+  line-height: .85;
+
+  text-align: right;
+}
+
+.footerBottom {
+  padding-top: 25px;
+
+  display: flex;
+  justify-content: space-between;
+
+  border-top:
+    1px solid rgba(255,255,255,.12);
+
+  color:
+    rgba(255,255,255,.35);
+
+  font-size: 7px;
+
+  letter-spacing: .16em;
+}
+
+
+/* ==================================================
+   MOBILE BOTTOM NAV
+================================================== */
+
+.mobileBottomNav {
+  display: none;
+}
+
+
+/* ==================================================
+   BACK TO TOP
+================================================== */
+
+.backToTop {
+  position: fixed;
+
+  right: 25px;
+  bottom: 25px;
+
+  z-index: 700;
+
+  width: 48px;
+  height: 48px;
+
+  border:
+    1px solid var(--ink);
+
+  background:
+    var(--paper);
+
+  color:
+    var(--ink);
+
+  font-size: 18px;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform:
+    translateY(10px);
+
+  transition:
+    opacity .2s ease,
+    transform .2s ease;
+}
+
+.backToTop.visible {
+  opacity: 1;
+  visibility: visible;
+
+  transform:
+    translateY(0);
+}
+
+.backToTop:hover {
+  background:
+    var(--yellow);
+
+  border-color:
+    var(--yellow);
+}
+
+
+/* ==================================================
+   TOAST
+================================================== */
+
+.toast {
+  position: fixed;
+
+  left: 50%;
+  bottom: 30px;
+
+  z-index: 3000;
+
+  min-width: 220px;
+  min-height: 45px;
+
+  padding:
+    0 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    var(--ink);
+
+  color:
+    var(--yellow);
+
+  font-size: 9px;
+  font-weight: 800;
+
+  transform:
+    translate(-50%, 20px);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    opacity .2s ease,
+    transform .2s ease;
+}
+
+.toast.visible {
+  opacity: 1;
+  visibility: visible;
+
+  transform:
+    translate(-50%, 0);
+}
+
+
+/* ==================================================
+   POPUP MENU
+================================================== */
+
+.postPopupMenu {
+  position: fixed;
+
+  z-index: 4000;
+
+  min-width: 190px;
+
+  padding: 5px;
+
+  background:
+    var(--paper);
+
+  border:
+    1px solid var(--line);
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,.15);
+}
+
+.postPopupMenu button {
+  width: 100%;
+  min-height: 40px;
+
+  padding:
+    0 12px;
+
+  border: 0;
+
+  background:
+    transparent;
+
+  color:
+    var(--ink);
+
+  text-align: left;
+
+  font-size: 9px;
+}
+
+.postPopupMenu button:hover {
+  background:
+    rgba(244,196,0,.12);
+}
+
+
+/* ==================================================
+   TABLET
+================================================== */
+
+@media (max-width: 900px) {
+
+  .desktopNav {
+    display: none;
+  }
+
+  .menuButton {
+    display: flex;
+  }
+
+  .introGrid {
+    grid-template-columns:
+      1fr;
+
+    gap: 35px;
+  }
+
+  .exploreGrid {
+    grid-template-columns:
+      1fr 1fr;
+
+    grid-template-rows:
+      330px 330px;
+  }
+
+  .exploreCardLarge {
+    grid-row:
+      span 1;
+  }
+
+  .exploreCardWide {
+    grid-column:
+      auto;
+  }
+
+  .fieldCard {
+    grid-template-columns:
+      1fr;
+  }
+
+  .fieldImage {
+    min-height: 470px;
+  }
+
+  .aboutGrid {
+    grid-template-columns:
+      1fr;
+
+    gap: 30px;
+  }
+
+  .aboutText {
+    padding-top: 0;
+  }
+
+}
+
+
+/* ==================================================
+   MOBILE
+================================================== */
+
+@media (max-width: 700px) {
+
+  body {
+    padding-bottom: 64px;
+  }
+
+  .pageContainer,
+  .headerInner,
+  .heroContent {
+    width:
+      calc(100% - 30px);
+  }
+
+  .siteHeader {
+    height: 68px;
+  }
+
+  .mobileMenu {
+    padding-top: 68px;
+  }
+
+  .logoFrame {
+    width: 34px;
+    height: 34px;
+  }
+
+  .logoWords {
+    font-size: 10px;
+  }
+
+  .hero {
+    min-height: 720px;
+  }
+
+  .heroContent {
+    min-height: 720px;
+
+    padding-top: 95px;
+    padding-bottom: 30px;
+  }
+
+  .heroTopLine {
+    font-size: 6px;
+  }
+
+  .heroTopLine span:last-child {
+    display: none;
+  }
+
+  .heroMain {
+    align-items: flex-start;
+
+    gap: 12px;
+  }
+
+  .heroNumber {
+    padding-top: 7px;
+
+    font-size: 17px;
+  }
+
+  .hero h1 {
+    font-size:
+      clamp(66px, 21vw, 105px);
+  }
+
+  .heroText p {
+    margin-top: 25px;
+
+    font-size: 12px;
+  }
+
+  .heroBottom {
+    font-size: 6px;
+  }
+
+  .heroBottom span:nth-child(2) {
+    display: none;
+  }
+
+  .introSection {
+    padding:
+      90px 0;
+  }
+
+  .introLarge h2 {
+    font-size:
+      clamp(43px, 13vw, 65px);
+  }
+
+  .introLarge p {
+    margin-top: 30px;
+
+    font-size: 13px;
+  }
+
+  .exploreSection {
+    padding:
+      85px 0;
+  }
+
+  .sectionHeader h2,
+  .journalHeader h2 {
+    font-size: 45px;
+  }
+
+  .sectionIndex {
+    display: none;
+  }
+
+  .exploreGrid {
+    margin-top: 35px;
+
+    display: grid;
+
+    grid-template-columns:
+      1fr;
+
+    grid-template-rows:
+      400px 260px 260px 260px;
+
+    gap: 12px;
+  }
+
+  .exploreCardLarge,
+  .exploreCardWide {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .exploreContent {
+    left: 22px;
+    right: 22px;
+    bottom: 22px;
+  }
+
+  .exploreContent h3 {
+    font-size: 42px;
+  }
+
+  .fieldSection {
+    padding:
+      65px 0;
+  }
+
+  .fieldImage {
+    min-height: 380px;
+  }
+
+  .fieldContent {
+    padding:
+      45px 28px;
+  }
+
+  .fieldContent h2 {
+    font-size: 55px;
+  }
+
+  .journalSection {
+    padding:
+      85px 0;
+  }
+
+  .journalInfo {
+    display: none;
+  }
+
+  .postsGrid {
+    grid-template-columns:
+      1fr;
+
+    gap: 16px;
+  }
+
+  .communitySection {
+    padding:
+      35px 0;
+  }
+
+  .communityCard {
+    padding:
+      22px;
+
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+
+    gap: 18px;
+  }
+
+  .communityLogo {
+    width: 58px;
+    height: 58px;
+
+    font-size: 17px;
+  }
+
+  .communityText h2 {
+    font-size: 25px;
+  }
+
+  .communityButton {
+    width: 100%;
+  }
+
+  .aboutSection {
+    padding:
+      90px 0;
+  }
+
+  .aboutTitle h2 {
+    font-size:
+      72px;
+  }
+
+  .aboutText .aboutLead {
+    font-size: 35px;
+  }
+
+  .footerTop {
+    min-height: 180px;
+
+    flex-direction:
+      column;
+
+    gap: 50px;
+  }
+
+  .footerPhrase {
+    font-size: 47px;
+
+    text-align:
+      left;
+  }
+
+  .footerBottom {
+    gap: 15px;
+
+    flex-direction:
+      column;
+  }
+
+  .backToTop {
+    right: 15px;
+    bottom: 80px;
+  }
+
+  .toast {
+    bottom: 80px;
+  }
+
+
+  /* mobile bottom */
+
+  .mobileBottomNav {
+    position: fixed;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    z-index: 2000;
+
+    height: 64px;
+
+    display: grid;
+
+    grid-template-columns:
+      repeat(4, 1fr);
+
+    background:
+      rgba(248,247,241,.96);
+
+    border-top:
+      1px solid var(--line);
+
+    backdrop-filter:
+      blur(18px);
+  }
+
+  .mobileBottomNav a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-direction:
+      column;
+
+    gap: 4px;
+
+    color:
+      var(--muted);
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: .04em;
+
+    text-transform:
+      uppercase;
+  }
+
+  .mobileBottomNav a span {
+    color:
+      #9a9d94;
+
+    font-size: 7px;
+  }
+
+  .mobileBottomNav a:hover {
+    color:
+      var(--ink);
+  }
+
+}
+
+
+/* ==================================================
+   SMALL PHONES
+================================================== */
+
+@media (max-width: 390px) {
+
+  .pageContainer,
+  .headerInner,
+  .heroContent {
+    width:
+      calc(100% - 22px);
+  }
+
+  .hero h1 {
+    font-size:
+      63px;
+  }
+
+  .heroText p {
+    max-width:
+      270px;
+  }
+
+  .exploreGrid {
+    grid-template-rows:
+      350px 245px 245px 245px;
+  }
+
+  .exploreContent h3 {
+    font-size:
+      37px;
+  }
+
+  .fieldContent h2 {
+    font-size:
+      49px;
+  }
+
+  .aboutTitle h2 {
+    font-size:
+      62px;
+  }
+
+}
