@@ -1,4 +1,4 @@
-const CACHE_NAME = "national-geographic-v4";
+const CACHE_NAME = "national-geographic-v4-1";
 
 const APP_FILES = [
   "./",
@@ -8,150 +8,113 @@ const APP_FILES = [
   "./manifest.json"
 ];
 
+/* Установка новой версии */
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(APP_FILES))
+  );
 
-self.addEventListener(
-  "install",
-  event => {
+  self.skipWaiting();
+});
 
-    event.waitUntil(
-
-      caches.open(CACHE_NAME)
-        .then(cache => {
-
-          return cache.addAll(
-            APP_FILES
-          );
-
-        })
-
-    );
-
-    self.skipWaiting();
-
-  }
-);
-
-
-self.addEventListener(
-  "activate",
-  event => {
-
-    event.waitUntil(
-
-      caches.keys()
-        .then(keys => {
-
-          return Promise.all(
-
-            keys
-              .filter(
-                key =>
-                  key !== CACHE_NAME
-              )
-              .map(
-                key =>
-                  caches.delete(key)
-              )
-
-          );
-
-        })
-
-    );
-
-    self.clients.claim();
-
-  }
-);
-
-
-self.addEventListener(
-  "fetch",
-  event => {
-
-    const request =
-      event.request;
-
-
-    if (
-      request.method !== "GET"
-    ) {
-      return;
-    }
-
-
-    /*
-      API всегда получаем
-      напрямую, чтобы публикации
-      оставались свежими.
-    */
-
-    if (
-      request.url.includes(
-        "national-geographic-backend"
-      )
-    ) {
-
-      event.respondWith(
-
-        fetch(request)
-          .catch(
-            () =>
-              caches.match(request)
-          )
-
+/* Удаление старого кэша */
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys
+          .filter(key => key !== CACHE_NAME)
+          .map(key => caches.delete(key))
       );
+    }).then(() => self.clients.claim())
+  );
+});
 
-      return;
+/* Запросы */
+self.addEventListener("fetch", event => {
+  const request = event.request;
 
-    }
+  if (request.method !== "GET") {
+    return;
+  }
 
-
+  /*
+    API никогда не берём из старого кэша.
+    Посты должны приходить свежими.
+  */
+  if (
+    request.url.includes(
+      "national-geographic-backend"
+    )
+  ) {
     event.respondWith(
+      fetch(request, {
+        cache: "no-store"
+      }).catch(() => {
+        return caches.match(request);
+      })
+    );
 
-      caches.match(request)
-        .then(cached => {
+    return;
+  }
 
-          if (cached) {
-            return cached;
+  /*
+    HTML всегда сначала пытаемся получить
+    свежий вариант с GitHub Pages.
+  */
+  if (
+    request.mode === "navigate" ||
+    request.url.endsWith(".html") ||
+    request.url.endsWith("/")
+  ) {
+    event.respondWith(
+      fetch(request)
+        .then(response => {
+
+          if (response && response.status === 200) {
+            const copy = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then(cache => {
+                cache.put(request, copy);
+              });
           }
 
-
-          return fetch(request)
-            .then(response => {
-
-              if (
-                !response ||
-                response.status !== 200
-              ) {
-                return response;
-              }
-
-
-              const copy =
-                response.clone();
-
-
-              caches.open(
-                CACHE_NAME
-              )
-              .then(cache => {
-
-                cache.put(
-                  request,
-                  copy
-                );
-
-              });
-
-
-              return response;
-
-            });
-
+          return response;
         })
-
+        .catch(() => {
+          return caches.match(request);
+        })
     );
 
+    return;
   }
-);
+
+  /*
+    CSS / JS / manifest / иконки
+    сначала берём из сети.
+  */
+  event.respondWith(
+    fetch(request)
+      .then(response => {
+
+        if (
+          response &&
+          response.status === 200
+        ) {
+          const copy = response.clone();
+
+          caches.open(CACHE_NAME)
+            .then(cache => {
+              cache.put(request, copy);
+            });
+        }
+
+        return response;
+      })
+      .catch(() => {
+        return caches.match(request);
+      })
+  );
+});
