@@ -3,7 +3,7 @@ const API_URL =
 
 
 /* =========================
-   СОСТОЯНИЕ
+   STATE
 ========================= */
 
 let allPosts = [];
@@ -16,7 +16,7 @@ let isLoading = false;
 
 
 /* =========================
-   КАТЕГОРИИ
+   CATEGORIES
 ========================= */
 
 const categories = {
@@ -130,6 +130,18 @@ function cleanText(text) {
 }
 
 
+function escapeHtml(value) {
+
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
 /* =========================
    DATE
 ========================= */
@@ -140,15 +152,21 @@ function formatDate(timestamp) {
     return "";
   }
 
-  return new Date(timestamp * 1000)
-    .toLocaleDateString(
-      "ru-RU",
-      {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      }
-    );
+  const date =
+    new Date(Number(timestamp) * 1000);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return date.toLocaleDateString(
+    "ru-RU",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }
+  );
 
 }
 
@@ -205,6 +223,27 @@ function detectCategory(text) {
 
 
 /* =========================
+   IMAGE
+========================= */
+
+function getImage(post) {
+
+  if (!post) {
+    return null;
+  }
+
+  return (
+    post.image_url ||
+    post.image ||
+    post.photo ||
+    post.photo_url ||
+    null
+  );
+
+}
+
+
+/* =========================
    FAVORITES
 ========================= */
 
@@ -212,11 +251,21 @@ function getFavorites() {
 
   try {
 
-    return JSON.parse(
+    const value =
       localStorage.getItem(
         "ng_favorites"
-      ) || "[]"
-    );
+      );
+
+    if (!value) {
+      return [];
+    }
+
+    const parsed =
+      JSON.parse(value);
+
+    return Array.isArray(parsed)
+      ? parsed.map(String)
+      : [];
 
   } catch {
 
@@ -270,6 +319,7 @@ function toggleFavorite(id) {
 
   saveFavorites(favorites);
 
+  renderFeaturedPost();
   renderPosts();
 
 }
@@ -340,26 +390,6 @@ function getFilteredPosts() {
 
 
 /* =========================
-   IMAGE
-========================= */
-
-function getImage(post) {
-
-  if (!post) {
-    return null;
-  }
-
-  return (
-    post.image_url ||
-    post.image ||
-    post.photo ||
-    null
-  );
-
-}
-
-
-/* =========================
    FEATURED
 ========================= */
 
@@ -388,16 +418,20 @@ function renderFeaturedPost() {
   const category =
     detectCategory(text);
 
+  const favorite =
+    isFavorite(post.id);
+
 
   featuredContainer.innerHTML = `
 
     <article class="featuredPost">
 
+
       <div
         class="featuredImage ${image ? "" : "noImage"}"
         ${
           image
-            ? `style="background-image:url('${image}')"`
+            ? `style="background-image:url('${escapeHtml(image)}')"`
             : ""
         }
       >
@@ -418,18 +452,22 @@ function renderFeaturedPost() {
       <div class="featuredContent">
 
         <span class="featuredCategory">
-          ${category}
+          ${escapeHtml(category)}
         </span>
+
 
         <h3>
           ${escapeHtml(text)}
         </h3>
 
+
         <div class="featuredDate">
-          ${date}
+          ${escapeHtml(date)}
         </div>
 
+
         <div class="featuredActions">
+
 
           <button
             class="featuredButton"
@@ -438,12 +476,17 @@ function renderFeaturedPost() {
             ЧИТАТЬ МАТЕРИАЛ →
           </button>
 
+
           <button
-            class="favoriteButton featuredFavorite"
-            data-favorite="${post.id}"
+            class="favoriteButton featuredFavorite ${
+              favorite ? "active" : ""
+            }"
+            id="featuredFavorite"
+            aria-label="Избранное"
           >
-            ${isFavorite(post.id) ? "★" : "☆"}
+            ${favorite ? "★" : "☆"}
           </button>
+
 
         </div>
 
@@ -454,38 +497,38 @@ function renderFeaturedPost() {
   `;
 
 
-  document
-    .querySelector("#openFeatured")
-    .onclick =
-    () => openPost(post);
+  const openButton =
+    document.querySelector(
+      "#openFeatured"
+    );
 
 
-  document
-    .querySelector("[data-favorite]")
-    .onclick =
-    event => {
+  if (openButton) {
 
-      event.stopPropagation();
+    openButton.onclick =
+      () => openPost(post);
 
-      toggleFavorite(post.id);
-
-    };
-
-}
+  }
 
 
-/* =========================
-   ESCAPE HTML
-========================= */
+  const favoriteButton =
+    document.querySelector(
+      "#featuredFavorite"
+    );
 
-function escapeHtml(value) {
 
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+  if (favoriteButton) {
+
+    favoriteButton.onclick =
+      event => {
+
+        event.stopPropagation();
+
+        toggleFavorite(post.id);
+
+      };
+
+  }
 
 }
 
@@ -516,17 +559,19 @@ function createPost(post) {
 
     <article
       class="post"
-      data-post-id="${post.id}"
+      data-post-id="${escapeHtml(post.id)}"
     >
+
 
       <div
         class="postImg ${image ? "" : "noImage"}"
         ${
           image
-            ? `style="background-image:url('${image}')"`
+            ? `style="background-image:url('${escapeHtml(image)}')"`
             : ""
         }
       >
+
 
         ${
           !image
@@ -538,44 +583,60 @@ function createPost(post) {
             : ""
         }
 
+
         <span class="tag">
-          ${category}
+          ${escapeHtml(category)}
         </span>
+
 
         <button
           class="favoriteButton ${
             favorite ? "active" : ""
           }"
-          data-favorite="${post.id}"
+          data-favorite="${escapeHtml(post.id)}"
           aria-label="Добавить в избранное"
         >
           ${favorite ? "★" : "☆"}
         </button>
+
 
       </div>
 
 
       <div class="postBody">
 
+
         <h3>
           ${escapeHtml(text)}
         </h3>
+
 
         ${
           date
             ? `
               <p class="postDate">
-                ${date}
+                ${escapeHtml(date)}
               </p>
             `
             : ""
         }
 
-        <span class="readPost">
-          Читать материал →
-        </span>
+
+        <div class="postCardBottom">
+
+          <span class="readPost">
+            Читать материал →
+          </span>
+
+          <span class="shareHint">
+            ↗
+          </span>
+
+        </div>
+
 
       </div>
+
 
     </article>
 
@@ -589,6 +650,11 @@ function createPost(post) {
 ========================= */
 
 function renderPosts() {
+
+  if (!postsContainer) {
+    return;
+  }
+
 
   const filteredPosts =
     getFilteredPosts();
@@ -687,16 +753,24 @@ function renderPosts() {
     `;
 
 
-    document
-      .querySelector("#loadMore")
-      .onclick =
-      () => {
+    const loadMore =
+      document.querySelector(
+        "#loadMore"
+      );
 
-        visiblePosts += 6;
 
-        renderPosts();
+    if (loadMore) {
 
-      };
+      loadMore.onclick =
+        () => {
+
+          visiblePosts += 6;
+
+          renderPosts();
+
+        };
+
+    }
 
   }
 
@@ -709,10 +783,16 @@ function renderPosts() {
 
 function openPost(post) {
 
+  if (!post) {
+    return;
+  }
+
+
   const old =
     document.querySelector(
       "#postViewer"
     );
+
 
   if (old) {
     old.remove();
@@ -740,6 +820,7 @@ function openPost(post) {
       "div"
     );
 
+
   viewer.id =
     "postViewer";
 
@@ -749,14 +830,22 @@ function openPost(post) {
     <div class="viewerBackdrop"></div>
 
 
-    <div class="viewerWindow">
+    <div
+      class="viewerWindow"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Материал National Geographic"
+    >
+
 
       <button
         class="viewerClose"
         id="viewerClose"
+        aria-label="Закрыть"
       >
         ×
       </button>
+
 
 
       <div
@@ -765,10 +854,11 @@ function openPost(post) {
         }"
         ${
           image
-            ? `style="background-image:url('${image}')"`
+            ? `style="background-image:url('${escapeHtml(image)}')"`
             : ""
         }
       >
+
 
         ${
           !image
@@ -780,34 +870,58 @@ function openPost(post) {
             : ""
         }
 
+
       </div>
+
 
 
       <div class="viewerContent">
 
+
         <div class="viewerCategory">
-          ${category}
+          ${escapeHtml(category)}
         </div>
+
 
         <h2>
           ${escapeHtml(text)}
         </h2>
 
+
         <div class="viewerDate">
-          ${date}
+          ${escapeHtml(date)}
         </div>
+
 
 
         <div class="viewerButtons">
 
+
           <a
             class="viewerVk"
-            href="${link}"
+            href="${escapeHtml(link)}"
             target="_blank"
             rel="noopener noreferrer"
           >
             ОТКРЫТЬ ВО ВКОНТАКТЕ ↗
           </a>
+
+
+          <button
+            class="viewerShare"
+            id="viewerShare"
+          >
+            ПОДЕЛИТЬСЯ
+          </button>
+
+
+          <button
+            class="viewerCopy"
+            id="viewerCopy"
+          >
+            КОПИРОВАТЬ ССЫЛКУ
+          </button>
+
 
           <button
             class="viewerBack"
@@ -816,9 +930,18 @@ function openPost(post) {
             НАЗАД
           </button>
 
+
         </div>
 
+
+        <div
+          class="viewerStatus"
+          id="viewerStatus"
+        ></div>
+
+
       </div>
+
 
     </div>
 
@@ -829,27 +952,79 @@ function openPost(post) {
     viewer
   );
 
+
   document.body.classList.add(
     "viewerOpen"
   );
 
 
-  document
-    .querySelector("#viewerClose")
-    .onclick =
-    closePost;
+  const closeButton =
+    document.querySelector(
+      "#viewerClose"
+    );
 
 
-  document
-    .querySelector("#viewerBack")
-    .onclick =
-    closePost;
+  const backButton =
+    document.querySelector(
+      "#viewerBack"
+    );
 
 
-  document
-    .querySelector(".viewerBackdrop")
-    .onclick =
-    closePost;
+  const backdrop =
+    document.querySelector(
+      ".viewerBackdrop"
+    );
+
+
+  const shareButton =
+    document.querySelector(
+      "#viewerShare"
+    );
+
+
+  const copyButton =
+    document.querySelector(
+      "#viewerCopy"
+    );
+
+
+  if (closeButton) {
+    closeButton.onclick =
+      closePost;
+  }
+
+
+  if (backButton) {
+    backButton.onclick =
+      closePost;
+  }
+
+
+  if (backdrop) {
+    backdrop.onclick =
+      closePost;
+  }
+
+
+  if (shareButton) {
+
+    shareButton.onclick =
+      () => sharePost(
+        post,
+        link
+      );
+
+  }
+
+
+  if (copyButton) {
+
+    copyButton.onclick =
+      () => copyPostLink(
+        link
+      );
+
+  }
 
 
   document.addEventListener(
@@ -860,6 +1035,10 @@ function openPost(post) {
 }
 
 
+/* =========================
+   CLOSE VIEWER
+========================= */
+
 function closePost() {
 
   const viewer =
@@ -867,13 +1046,16 @@ function closePost() {
       "#postViewer"
     );
 
+
   if (viewer) {
     viewer.remove();
   }
 
+
   document.body.classList.remove(
     "viewerOpen"
   );
+
 
   document.removeEventListener(
     "keydown",
@@ -882,6 +1064,10 @@ function closePost() {
 
 }
 
+
+/* =========================
+   ESCAPE
+========================= */
 
 function handleViewerKey(event) {
 
@@ -898,6 +1084,174 @@ function handleViewerKey(event) {
 
 
 /* =========================
+   SHARE
+========================= */
+
+async function sharePost(
+  post,
+  link
+) {
+
+  const title =
+    "National Geographic";
+
+
+  const text =
+    cleanText(post.text);
+
+
+  if (
+    navigator.share
+  ) {
+
+    try {
+
+      await navigator.share({
+
+        title,
+
+        text,
+
+        url: link
+
+      });
+
+      return;
+
+    } catch (error) {
+
+      if (
+        error &&
+        error.name ===
+        "AbortError"
+      ) {
+        return;
+      }
+
+    }
+
+  }
+
+
+  await copyPostLink(
+    link,
+    "Ссылка скопирована"
+  );
+
+}
+
+
+/* =========================
+   COPY LINK
+========================= */
+
+async function copyPostLink(
+  link,
+  successText = "Ссылка скопирована"
+) {
+
+  try {
+
+    await navigator.clipboard.writeText(
+      link
+    );
+
+
+    showViewerStatus(
+      successText
+    );
+
+
+  } catch {
+
+    const input =
+      document.createElement(
+        "input"
+      );
+
+
+    input.value =
+      link;
+
+
+    document.body.appendChild(
+      input
+    );
+
+
+    input.select();
+
+
+    try {
+
+      document.execCommand(
+        "copy"
+      );
+
+
+      showViewerStatus(
+        successText
+      );
+
+    } catch {
+
+      showViewerStatus(
+        "Не удалось скопировать ссылку"
+      );
+
+    }
+
+
+    input.remove();
+
+  }
+
+}
+
+
+/* =========================
+   VIEWER STATUS
+========================= */
+
+function showViewerStatus(
+  message
+) {
+
+  const status =
+    document.querySelector(
+      "#viewerStatus"
+    );
+
+
+  if (!status) {
+    return;
+  }
+
+
+  status.textContent =
+    message;
+
+
+  clearTimeout(
+    showViewerStatus.timer
+  );
+
+
+  showViewerStatus.timer =
+    setTimeout(
+      () => {
+
+        status.textContent =
+          "";
+
+      },
+      2500
+    );
+
+}
+
+
+/* =========================
    GALLERY
 ========================= */
 
@@ -908,6 +1262,7 @@ function renderGallery() {
       "#photoGallery"
     );
 
+
   if (!gallery) {
     return;
   }
@@ -915,10 +1270,14 @@ function renderGallery() {
 
   const photoPosts =
     allPosts
-      .filter(post =>
-        getImage(post)
+      .filter(
+        post =>
+          getImage(post)
       )
-      .slice(0, 6);
+      .slice(
+        0,
+        6
+      );
 
 
   if (!photoPosts.length) {
@@ -926,9 +1285,11 @@ function renderGallery() {
     gallery.innerHTML = `
 
       <div class="galleryEmpty">
+
         Фотографии появятся
         автоматически после загрузки
         изображений из VK.
+
       </div>
 
     `;
@@ -946,20 +1307,27 @@ function renderGallery() {
           const image =
             getImage(post);
 
+
           return `
 
             <div
-              class="galleryPhoto
-              galleryPhoto${index + 1}"
-              data-gallery="${post.id}"
+              class="
+                galleryPhoto
+                galleryPhoto${index + 1}
+              "
+              data-gallery="${escapeHtml(post.id)}"
               style="
                 background-image:
-                url('${image}')
+                url('${escapeHtml(image)}')
               "
             >
 
               <span>
-                ${detectCategory(post.text)}
+                ${escapeHtml(
+                  detectCategory(
+                    post.text
+                  )
+                )}
               </span>
 
             </div>
@@ -978,22 +1346,28 @@ function renderGallery() {
     .forEach(
       element => {
 
-        element.onclick = () => {
+        element.onclick =
+          () => {
 
-          const post =
-            allPosts.find(
-              item =>
-                String(item.id) ===
-                String(
-                  element.dataset.gallery
-                )
-            );
+            const post =
+              allPosts.find(
+                item =>
+                  String(item.id) ===
+                  String(
+                    element.dataset.gallery
+                  )
+              );
 
-          if (post) {
-            openPost(post);
-          }
 
-        };
+            if (post) {
+
+              openPost(
+                post
+              );
+
+            }
+
+          };
 
       }
     );
@@ -1012,9 +1386,16 @@ function updateStats() {
       "#postsCount"
     );
 
+
   const photosCount =
     document.querySelector(
       "#photosCount"
+    );
+
+
+  const categoriesCount =
+    document.querySelector(
+      "#categoriesCount"
     );
 
 
@@ -1030,8 +1411,31 @@ function updateStats() {
 
     photosCount.textContent =
       allPosts.filter(
-        post => getImage(post)
+        post =>
+          getImage(post)
       ).length;
+
+  }
+
+
+  if (categoriesCount) {
+
+    const found =
+      new Set(
+        allPosts.map(
+          post =>
+            detectCategory(
+              post.text
+            )
+        )
+      );
+
+
+    categoriesCount.textContent =
+      Math.max(
+        5,
+        found.size
+      );
 
   }
 
@@ -1048,6 +1452,7 @@ function updateRefreshTime() {
     document.querySelector(
       "#refreshTime"
     );
+
 
   if (!element) {
     return;
@@ -1084,14 +1489,19 @@ async function loadPosts(
   isLoading = true;
 
 
-  if (showLoading) {
+  if (
+    showLoading &&
+    postsContainer
+  ) {
 
     postsContainer.innerHTML = `
 
       <div class="loadingGrid">
 
         <div class="skeleton skeletonCard"></div>
+
         <div class="skeleton skeletonCard"></div>
+
         <div class="skeleton skeletonCard"></div>
 
       </div>
@@ -1157,12 +1567,15 @@ async function loadPosts(
   } catch (error) {
 
     console.error(
-      "Ошибка загрузки:",
+      "Ошибка загрузки публикаций:",
       error
     );
 
 
-    if (showLoading) {
+    if (
+      showLoading &&
+      postsContainer
+    ) {
 
       postsContainer.innerHTML = `
 
@@ -1176,7 +1589,7 @@ async function loadPosts(
           <a
             href="https://vk.ru/national.geograph1c"
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
           >
             Открыть ВКонтакте →
           </a>
@@ -1202,6 +1615,7 @@ async function loadPosts(
 
 function setupFilters() {
 
+
   document
     .querySelectorAll(
       ".categoryBtn"
@@ -1209,37 +1623,40 @@ function setupFilters() {
     .forEach(
       button => {
 
-        button.onclick = () => {
+        button.onclick =
+          () => {
 
-          document
-            .querySelectorAll(
-              ".categoryBtn"
-            )
-            .forEach(
-              btn =>
-                btn.classList.remove(
-                  "active"
-                )
+            document
+              .querySelectorAll(
+                ".categoryBtn"
+              )
+              .forEach(
+                btn =>
+                  btn.classList.remove(
+                    "active"
+                  )
+              );
+
+
+            button.classList.add(
+              "active"
             );
 
 
-          button.classList.add(
-            "active"
-          );
+            activeCategory =
+              button.dataset.category;
 
 
-          activeCategory =
-            button.dataset.category;
+            visiblePosts = 6;
 
 
-          visiblePosts = 6;
+            renderPosts();
 
-          renderPosts();
-
-        };
+          };
 
       }
     );
+
 
 
   const search =
@@ -1256,13 +1673,16 @@ function setupFilters() {
         searchText =
           event.target.value;
 
+
         visiblePosts = 6;
+
 
         renderPosts();
 
       };
 
   }
+
 
 
   const refresh =
@@ -1276,10 +1696,19 @@ function setupFilters() {
     refresh.onclick =
       async () => {
 
+        if (isLoading) {
+          return;
+        }
+
+
         refresh.textContent =
           "↻ ОБНОВЛЕНИЕ...";
 
-        await loadPosts(false);
+
+        await loadPosts(
+          false
+        );
+
 
         refresh.textContent =
           "↻ ОБНОВИТЬ";
@@ -1304,38 +1733,40 @@ function setupCategoryCards() {
     .forEach(
       card => {
 
-        card.onclick = () => {
+        card.onclick =
+          () => {
 
-          const category =
-            card.dataset.jumpCategory;
-
-
-          activeCategory =
-            category;
+            const category =
+              card.dataset.jumpCategory;
 
 
-          document
-            .querySelectorAll(
-              ".categoryBtn"
-            )
-            .forEach(
-              button => {
-
-                button.classList.toggle(
-                  "active",
-                  button.dataset.category ===
-                  category
-                );
-
-              }
-            );
+            activeCategory =
+              category;
 
 
-          visiblePosts = 6;
+            document
+              .querySelectorAll(
+                ".categoryBtn"
+              )
+              .forEach(
+                button => {
 
-          renderPosts();
+                  button.classList.toggle(
+                    "active",
+                    button.dataset.category ===
+                    category
+                  );
 
-        };
+                }
+              );
+
+
+            visiblePosts = 6;
+
+
+            renderPosts();
+
+          };
 
       }
     );
@@ -1354,6 +1785,7 @@ function setupMenu() {
       "#menu"
     );
 
+
   const links =
     document.querySelector(
       "#links"
@@ -1365,21 +1797,22 @@ function setupMenu() {
   }
 
 
-  menu.onclick = () => {
+  menu.onclick =
+    () => {
 
-    links.classList.toggle(
-      "open"
-    );
-
-
-    menu.textContent =
-      links.classList.contains(
+      links.classList.toggle(
         "open"
-      )
-        ? "×"
-        : "☰";
+      );
 
-  };
+
+      menu.textContent =
+        links.classList.contains(
+          "open"
+        )
+          ? "×"
+          : "☰";
+
+    };
 
 
   links
@@ -1387,19 +1820,82 @@ function setupMenu() {
     .forEach(
       link => {
 
-        link.onclick = () => {
+        link.onclick =
+          () => {
 
-          links.classList.remove(
-            "open"
-          );
+            links.classList.remove(
+              "open"
+            );
 
-          menu.textContent =
-            "☰";
 
-        };
+            menu.textContent =
+              "☰";
+
+          };
 
       }
     );
+
+}
+
+
+/* =========================
+   BACK TO TOP
+========================= */
+
+function setupBackToTop() {
+
+  const button =
+    document.querySelector(
+      "#backToTop"
+    );
+
+
+  if (!button) {
+    return;
+  }
+
+
+  button.onclick =
+    () => {
+
+      window.scrollTo({
+
+        top: 0,
+
+        behavior: "smooth"
+
+      });
+
+    };
+
+
+  window.addEventListener(
+    "scroll",
+    () => {
+
+      if (
+        window.scrollY >
+        500
+      ) {
+
+        button.classList.add(
+          "visible"
+        );
+
+      } else {
+
+        button.classList.remove(
+          "visible"
+        );
+
+      }
+
+    },
+    {
+      passive: true
+    }
+  );
 
 }
 
@@ -1412,6 +1908,7 @@ const year =
   document.querySelector(
     "#year"
   );
+
 
 if (year) {
 
@@ -1430,6 +1927,8 @@ setupFilters();
 setupCategoryCards();
 
 setupMenu();
+
+setupBackToTop();
 
 loadPosts();
 
