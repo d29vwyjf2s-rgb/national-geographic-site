@@ -1,28 +1,25 @@
 :root {
-  --bg: #050606;
-  --surface: #0b0e0d;
-  --surface-2: #111513;
-  --surface-3: #171c19;
-
+  --bg: #f4f2ec;
+  --paper: #faf9f5;
+  --white: #ffffff;
+  --ink: #11130f;
+  --gray: #686b63;
+  --light-gray: #dcdcd4;
   --yellow: #f5c400;
-  --yellow-light: #ffd83d;
-
-  --white: #f7f7f2;
-  --text: #d7d9d4;
-  --muted: #858b85;
-  --muted-2: #555c56;
-
-  --line: rgba(255,255,255,.10);
-  --line-yellow: rgba(245,196,0,.35);
+  --yellow-dark: #c79d00;
+  --green: #26352d;
 
   --container: 1240px;
-  --gap: 24px;
-
-  --button-height: 48px;
+  --radius: 2px;
 
   --shadow:
-    0 24px 70px rgba(0,0,0,.38);
+    0 18px 50px rgba(24, 29, 24, .10);
 }
+
+
+/* =========================
+   RESET
+========================= */
 
 * {
   box-sizing: border-box;
@@ -35,15 +32,8 @@ html {
 body {
   margin: 0;
 
-  background:
-    radial-gradient(
-      circle at 85% 10%,
-      rgba(245,196,0,.045),
-      transparent 28%
-    ),
-    var(--bg);
-
-  color: var(--white);
+  background: var(--bg);
+  color: var(--ink);
 
   font-family:
     "Inter",
@@ -53,44 +43,14 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-body::before {
-  content: "";
-
-  position: fixed;
-  inset: 0;
-
-  pointer-events: none;
-
-  opacity: .035;
-
-  background-image:
-    linear-gradient(
-      rgba(255,255,255,.4) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(255,255,255,.4) 1px,
-      transparent 1px
-    );
-
-  background-size: 80px 80px;
-
-  mask-image:
-    linear-gradient(
-      to bottom,
-      black,
-      transparent 70%
-    );
-}
-
+body,
 button,
-a,
-input {
-  font: inherit;
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
+  font: inherit;
   cursor: pointer;
 }
 
@@ -110,13 +70,13 @@ img {
     var(--container)
   );
 
-  margin-inline: auto;
+  margin: 0 auto;
 }
 
 
-/* ==================================================
+/* =========================
    HEADER
-================================================== */
+========================= */
 
 .ngHeader {
   position: sticky;
@@ -124,16 +84,16 @@ img {
 
   z-index: 1000;
 
-  height: 76px;
+  height: 78px;
 
   background:
-    rgba(5,6,6,.92);
+    rgba(250,249,245,.94);
 
   border-bottom:
-    1px solid var(--line);
+    1px solid rgba(17,19,15,.12);
 
   backdrop-filter:
-    blur(20px);
+    blur(16px);
 }
 
 .ngHeaderInner {
@@ -144,51 +104,56 @@ img {
 
   height: 100%;
 
-  margin-inline: auto;
+  margin: auto;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
+
+/* LOGO */
+
 .ngBrand {
   display: flex;
   align-items: center;
-
-  gap: 12px;
+  gap: 11px;
 }
 
 .ngBrandBox {
-  height: 30px;
+  height: 31px;
+
+  padding: 0 7px;
 
   display: flex;
   align-items: center;
-
-  padding-inline: 7px;
+  justify-content: center;
 
   border: 2px solid var(--yellow);
 
-  color: var(--yellow);
+  color: var(--ink);
 
   font-family: "Oswald", sans-serif;
+
   font-size: 12px;
   font-weight: 700;
 
-  letter-spacing: .07em;
+  letter-spacing: .04em;
 }
 
 .ngBrandText {
   font-family: "Oswald", sans-serif;
 
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 600;
 
-  letter-spacing: .08em;
+  letter-spacing: .06em;
 }
 
-.ngNav {
-  height: 100%;
 
+/* NAV */
+
+.ngNav {
   display: flex;
   align-items: center;
 
@@ -198,21 +163,16 @@ img {
 .ngNav a {
   position: relative;
 
-  height: 100%;
-
-  display: flex;
-  align-items: center;
-
-  color: var(--muted);
+  color: #5f625c;
 
   font-size: 10px;
   font-weight: 800;
 
-  letter-spacing: .16em;
+  letter-spacing: .15em;
+
   text-transform: uppercase;
 
-  transition:
-    color .2s ease;
+  transition: color .2s ease;
 }
 
 .ngNav a::after {
@@ -222,37 +182,38 @@ img {
 
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: -9px;
 
   height: 2px;
 
   background: var(--yellow);
 
-  transform:
-    scaleX(0);
+  transform: scaleX(0);
 
   transition:
     transform .2s ease;
 }
 
 .ngNav a:hover {
-  color: var(--white);
+  color: var(--ink);
 }
 
 .ngNav a:hover::after {
-  transform:
-    scaleX(1);
+  transform: scaleX(1);
 }
+
+
+/* MOBILE BUTTON */
 
 .ngMenu {
   display: none;
 
-  width: 46px;
-  height: 46px;
+  width: 44px;
+  height: 44px;
 
   padding: 0;
 
-  border: 1px solid var(--line);
+  border: 1px solid rgba(17,19,15,.15);
 
   background: transparent;
 
@@ -268,30 +229,32 @@ img {
   width: 20px;
   height: 2px;
 
-  background: var(--white);
+  background: var(--ink);
 }
 
 
-/* ==================================================
+/* =========================
    MOBILE MENU
-================================================== */
+========================= */
 
 .ngMobileMenu {
   display: none;
 
   position: fixed;
 
-  top: 76px;
+  top: 78px;
   left: 0;
   right: 0;
 
   z-index: 900;
 
-  background:
-    rgba(5,6,6,.98);
+  background: var(--paper);
 
   border-bottom:
-    1px solid var(--line);
+    1px solid var(--light-gray);
+
+  box-shadow:
+    0 15px 30px rgba(0,0,0,.08);
 }
 
 .ngMobileMenu.active {
@@ -304,51 +267,46 @@ img {
     var(--container)
   );
 
-  margin-inline: auto;
+  margin: auto;
 }
 
 .ngMobileMenu a {
+  min-height: 58px;
+
   display: flex;
   align-items: center;
 
-  min-height: 58px;
-
   border-bottom:
-    1px solid var(--line);
+    1px solid var(--light-gray);
 
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
 
-  letter-spacing: .16em;
+  letter-spacing: .15em;
+
   text-transform: uppercase;
 }
 
 
-/* ==================================================
-   HERO / EXPEDITION
-================================================== */
+/* =========================
+   HERO
+========================= */
 
 .ngHero {
   position: relative;
 
-  min-height: 720px;
+  min-height: 680px;
 
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 
   overflow: hidden;
 
   background:
-    radial-gradient(
-      circle at 78% 40%,
-      rgba(245,196,0,.11),
-      transparent 24%
-    ),
     linear-gradient(
       135deg,
-      #050606 0%,
-      #0b100e 55%,
-      #111712 100%
+      #26352d,
+      #111812
     );
 }
 
@@ -359,12 +317,16 @@ img {
   inset: 0;
 
   background:
+    radial-gradient(
+      circle at 75% 35%,
+      rgba(245,196,0,.25),
+      transparent 22%
+    ),
     linear-gradient(
       90deg,
-      rgba(5,6,6,1) 0%,
-      rgba(5,6,6,.95) 38%,
-      rgba(5,6,6,.65) 68%,
-      rgba(5,6,6,.18) 100%
+      rgba(10,17,13,.95) 0%,
+      rgba(10,17,13,.72) 48%,
+      rgba(10,17,13,.20) 100%
     );
 }
 
@@ -373,20 +335,20 @@ img {
 
   position: absolute;
 
-  width: 650px;
-  height: 650px;
+  right: 7%;
+  top: 14%;
 
-  right: -140px;
-  top: 60px;
+  width: 320px;
+  height: 320px;
 
   border:
-    1px solid rgba(245,196,0,.13);
+    1px solid rgba(255,255,255,.17);
 
   border-radius: 50%;
 
   box-shadow:
-    0 0 0 60px rgba(245,196,0,.025),
-    0 0 0 120px rgba(245,196,0,.018);
+    0 0 0 40px rgba(255,255,255,.025),
+    0 0 0 80px rgba(255,255,255,.018);
 }
 
 .ngHeroContent {
@@ -399,23 +361,27 @@ img {
     var(--container)
   );
 
-  margin-inline: auto;
+  margin: 0 auto;
+
+  padding-bottom: 86px;
+
+  color: white;
 }
 
 .ngHeroMeta {
   display: flex;
   align-items: center;
 
-  gap: 11px;
+  gap: 12px;
 
-  margin-bottom: 26px;
+  margin-bottom: 25px;
 
-  color: var(--muted);
+  color: rgba(255,255,255,.68);
 
   font-size: 10px;
   font-weight: 800;
 
-  letter-spacing: .2em;
+  letter-spacing: .18em;
 }
 
 .ngYellowLine {
@@ -437,31 +403,33 @@ img {
   font-family: "Oswald", sans-serif;
 
   font-size:
-    clamp(60px, 9vw, 132px);
+    clamp(64px, 10vw, 140px);
 
-  font-weight: 700;
+  font-weight: 600;
 
-  line-height: .86;
+  line-height: .84;
 
-  letter-spacing: -.025em;
+  letter-spacing: -.035em;
 }
 
 .ngHero p {
   max-width: 570px;
 
   margin:
-    34px 0 0;
+    32px 0 0;
 
-  color: var(--text);
+  color: rgba(255,255,255,.76);
 
   font-size: 15px;
 
-  line-height: 1.75;
+  line-height: 1.7;
 }
 
 .ngHeroButton {
-  min-width: 210px;
-  height: var(--button-height);
+  width: 215px;
+  height: 50px;
+
+  margin-top: 35px;
 
   display: inline-flex;
   align-items: center;
@@ -469,58 +437,31 @@ img {
 
   gap: 18px;
 
-  margin-top: 36px;
-
-  padding-inline: 20px;
-
   background: var(--yellow);
 
-  color: #080908;
+  color: var(--ink);
 
   font-size: 10px;
   font-weight: 900;
 
-  letter-spacing: .16em;
+  letter-spacing: .14em;
 
   transition:
-    background .2s ease,
-    transform .2s ease;
+    transform .2s ease,
+    background .2s ease;
 }
 
 .ngHeroButton:hover {
-  background: var(--yellow-light);
+  background: #ffd83d;
 
   transform:
     translateY(-2px);
 }
 
 
-/* ==================================================
-   EXPEDITION DECOR
-================================================== */
-
-.ngHeroContent::after {
-  content:
-    "EXPEDITION  /  2026  /  WORLD";
-
-  position: absolute;
-
-  left: 0;
-  bottom: -170px;
-
-  color: rgba(255,255,255,.18);
-
-  font-family: "Oswald", sans-serif;
-
-  font-size: 10px;
-
-  letter-spacing: .35em;
-}
-
-
-/* ==================================================
+/* =========================
    COMMUNITY BAR
-================================================== */
+========================= */
 
 .ngCommunityBar {
   width: min(
@@ -530,14 +471,14 @@ img {
 
   min-height: 100px;
 
-  margin-inline: auto;
+  margin: auto;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   border-bottom:
-    1px solid var(--line);
+    1px solid rgba(17,19,15,.12);
 }
 
 .ngCommunityIdentity {
@@ -555,14 +496,13 @@ img {
   align-items: center;
   justify-content: center;
 
-  border:
-    1px solid var(--yellow);
+  background: var(--ink);
 
   color: var(--yellow);
 
   font-family: "Oswald", sans-serif;
 
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -574,54 +514,49 @@ img {
 .ngCommunitySubtitle {
   margin-top: 5px;
 
-  color: var(--muted);
+  color: var(--gray);
 
   font-size: 10px;
 }
 
 .ngVkButton {
   width: 110px;
-  height: var(--button-height);
+  height: 46px;
 
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
 
   gap: 10px;
 
   border:
-    1px solid var(--line-yellow);
+    1px solid var(--ink);
 
-  color: var(--yellow);
+  color: var(--ink);
 
   font-size: 10px;
   font-weight: 900;
 
-  letter-spacing: .13em;
+  letter-spacing: .12em;
 
   transition:
     background .2s ease,
-    color .2s ease,
-    border-color .2s ease;
+    color .2s ease;
 }
 
 .ngVkButton:hover {
-  background: var(--yellow);
-
-  border-color:
-    var(--yellow);
-
-  color: #050606;
+  background: var(--ink);
+  color: var(--yellow);
 }
 
 
-/* ==================================================
+/* =========================
    FEED
-================================================== */
+========================= */
 
 .ngFeedSection {
   padding:
-    110px 0 120px;
+    105px 0 120px;
 }
 
 .ngSectionHeading {
@@ -635,12 +570,12 @@ img {
 .ngEyebrow {
   margin-bottom: 13px;
 
-  color: var(--yellow);
+  color: var(--yellow-dark);
 
   font-size: 9px;
   font-weight: 900;
 
-  letter-spacing: .24em;
+  letter-spacing: .23em;
 }
 
 .ngSectionHeading h2 {
@@ -649,46 +584,50 @@ img {
   font-family: "Oswald", sans-serif;
 
   font-size:
-    clamp(40px, 5vw, 66px);
+    clamp(42px, 5vw, 68px);
 
   font-weight: 600;
 
-  line-height: .95;
+  line-height: .92;
 
-  letter-spacing: -.02em;
+  letter-spacing: -.025em;
 }
 
 .ngSectionNumber {
-  color: var(--muted-2);
+  color: #c8c8c0;
 
   font-family: "Oswald", sans-serif;
 
-  font-size: 62px;
-  line-height: 1;
+  font-size: 60px;
 }
 
 .ngSectionDivider {
-  width: 100%;
   height: 1px;
 
   margin:
-    32px 0 26px;
+    32px 0 27px;
 
-  background: var(--line);
+  background:
+    rgba(17,19,15,.15);
 }
 
 .ngFeedStatus {
   min-height: 18px;
 
-  margin-bottom: 24px;
+  margin-bottom: 25px;
 
-  color: var(--muted);
+  color: var(--gray);
 
   font-size: 9px;
   font-weight: 800;
 
-  letter-spacing: .18em;
+  letter-spacing: .16em;
 }
+
+
+/* =========================
+   POSTS GRID
+========================= */
 
 .ngPosts {
   display: grid;
@@ -696,13 +635,13 @@ img {
   grid-template-columns:
     repeat(2, minmax(0, 1fr));
 
-  gap: var(--gap);
+  gap: 30px;
 }
 
 
-/* ==================================================
-   POST CARD
-================================================== */
+/* =========================
+   POST
+========================= */
 
 .vkPost {
   position: relative;
@@ -710,58 +649,25 @@ img {
   overflow: hidden;
 
   background:
-    linear-gradient(
-      145deg,
-      #0d1110,
-      #080a09
-    );
+    var(--paper);
 
   border:
-    1px solid var(--line);
+    1px solid rgba(17,19,15,.12);
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.04);
 
   transition:
     transform .25s ease,
-    border-color .25s ease,
     box-shadow .25s ease;
-}
-
-.vkPost::before {
-  content: "";
-
-  position: absolute;
-
-  left: 0;
-  top: 0;
-
-  width: 3px;
-  height: 100%;
-
-  background: var(--yellow);
-
-  transform:
-    scaleY(0);
-
-  transform-origin:
-    bottom;
-
-  transition:
-    transform .25s ease;
 }
 
 .vkPost:hover {
   transform:
     translateY(-4px);
 
-  border-color:
-    var(--line-yellow);
-
   box-shadow:
     var(--shadow);
-}
-
-.vkPost:hover::before {
-  transform:
-    scaleY(1);
 }
 
 .vkPostHeader {
@@ -774,8 +680,11 @@ img {
   align-items: center;
   justify-content: space-between;
 
+  background:
+    var(--white);
+
   border-bottom:
-    1px solid var(--line);
+    1px solid rgba(17,19,15,.09);
 }
 
 .vkPostIdentity {
@@ -789,14 +698,11 @@ img {
   width: 38px;
   height: 38px;
 
-  flex: 0 0 38px;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border:
-    1px solid var(--yellow);
+  background: var(--ink);
 
   color: var(--yellow);
 
@@ -819,7 +725,7 @@ img {
 }
 
 .vkPostAuthor time {
-  color: var(--muted);
+  color: var(--gray);
 
   font-size: 9px;
 }
@@ -828,24 +734,21 @@ img {
   width: 40px;
   height: 40px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0;
-
   border: 0;
 
   background: transparent;
 
-  color: var(--muted);
+  color: var(--gray);
 
   font-size: 20px;
 }
 
 .vkPostMenu:hover {
-  color: var(--yellow);
+  color: var(--ink);
 }
+
+
+/* CONTENT */
 
 .vkPostContent {
   padding:
@@ -856,7 +759,7 @@ img {
   margin:
     0 0 20px;
 
-  color: var(--text);
+  color: #292d28;
 
   font-size: 14px;
 
@@ -867,6 +770,9 @@ img {
   overflow-wrap:
     anywhere;
 }
+
+
+/* IMAGE */
 
 .vkPostImage {
   width:
@@ -882,11 +788,14 @@ img {
   cursor: zoom-in;
 }
 
+
+/* PLACEHOLDER */
+
 .vkPostPlaceholder {
   width:
     calc(100% + 36px);
 
-  min-height: 230px;
+  min-height: 240px;
 
   margin:
     0 -18px;
@@ -896,20 +805,19 @@ img {
   justify-content: center;
 
   background:
-    linear-gradient(
-      135deg,
-      #141916,
-      #080a09
-    );
+    var(--green);
 
   color:
-    rgba(245,196,0,.16);
+    rgba(245,196,0,.25);
 
-  font-family: "Oswald", sans-serif;
+  font-family:
+    "Oswald", sans-serif;
 
-  font-size: 80px;
-  font-weight: 700;
+  font-size: 85px;
 }
+
+
+/* VIDEO */
 
 .vkPostVideo {
   width:
@@ -920,20 +828,17 @@ img {
 }
 
 .vkVideoLink {
-  min-height: 230px;
+  min-height: 240px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   background:
-    linear-gradient(
-      135deg,
-      #101512,
-      #070908
-    );
+    var(--green);
 
-  color: var(--yellow);
+  color:
+    var(--yellow);
 
   font-size: 10px;
   font-weight: 900;
@@ -942,9 +847,9 @@ img {
 }
 
 
-/* ==================================================
-   POST ACTIONS — 3 PERFECT COLUMNS
-================================================== */
+/* =========================
+   ACTIONS
+========================= */
 
 .vkPostActions {
   display: grid;
@@ -957,37 +862,35 @@ img {
   margin-top: 20px;
 
   border-top:
-    1px solid var(--line);
+    1px solid rgba(17,19,15,.10);
 
   border-bottom:
-    1px solid var(--line);
+    1px solid rgba(17,19,15,.10);
 }
 
 .vkAction {
   width: 100%;
   height: 48px;
 
-  min-width: 0;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
-  padding: 0 8px;
+  padding: 0 6px;
 
   border: 0;
   border-right:
-    1px solid var(--line);
+    1px solid rgba(17,19,15,.10);
 
   background:
-    rgba(255,255,255,.01);
+    transparent;
 
-  color: var(--muted);
+  color: var(--gray);
 
   font-size: 9px;
   font-weight: 900;
 
-  letter-spacing: .05em;
+  letter-spacing: .04em;
 
   white-space: nowrap;
 
@@ -1002,19 +905,20 @@ img {
 
 .vkAction:hover {
   background:
-    rgba(245,196,0,.06);
+    rgba(245,196,0,.08);
 
-  color: var(--white);
+  color: var(--ink);
 }
 
 .vkAction.active {
-  color: var(--yellow);
+  color:
+    var(--yellow-dark);
 }
 
 
-/* ==================================================
+/* =========================
    POST BOTTOM
-================================================== */
+========================= */
 
 .vkPostBottom {
   min-height: 52px;
@@ -1028,30 +932,30 @@ img {
 
   gap: 15px;
 
-  color: var(--muted-2);
+  color:
+    var(--gray);
 
   font-size: 8px;
-
-  letter-spacing: .04em;
 }
 
 .vkOpenPost {
-  color: var(--yellow);
+  color:
+    var(--yellow-dark);
 
   font-size: 9px;
   font-weight: 900;
 
-  letter-spacing: .1em;
+  letter-spacing: .09em;
 }
 
 .vkOpenPost:hover {
-  color: var(--yellow-light);
+  color: var(--ink);
 }
 
 
-/* ==================================================
+/* =========================
    COMMENTS
-================================================== */
+========================= */
 
 .vkComments {
   margin-top: 18px;
@@ -1059,21 +963,22 @@ img {
   padding: 16px;
 
   background:
-    rgba(255,255,255,.025);
+    #f0efe8;
 
   border:
-    1px solid var(--line);
+    1px solid rgba(17,19,15,.09);
 }
 
 .vkCommentsHeader {
   margin-bottom: 12px;
 
-  color: var(--yellow);
+  color:
+    var(--yellow-dark);
 
   font-size: 9px;
   font-weight: 900;
 
-  letter-spacing: .16em;
+  letter-spacing: .15em;
 }
 
 .vkComment {
@@ -1081,9 +986,10 @@ img {
     10px 0;
 
   border-bottom:
-    1px solid var(--line);
+    1px solid rgba(17,19,15,.09);
 
-  color: var(--text);
+  color:
+    #4f534d;
 
   font-size: 11px;
 
@@ -1095,7 +1001,8 @@ img {
 }
 
 .vkCommentsEmpty {
-  color: var(--muted);
+  color:
+    var(--gray);
 
   font-size: 10px;
 
@@ -1103,20 +1010,20 @@ img {
 }
 
 
-/* ==================================================
+/* =========================
    LOAD MORE
-================================================== */
+========================= */
 
 .loadMoreWrap {
   display: flex;
   justify-content: center;
 
-  padding-top: 44px;
+  padding-top: 45px;
 }
 
 .loadMore {
   width: 210px;
-  height: var(--button-height);
+  height: 48px;
 
   display: flex;
   align-items: center;
@@ -1125,17 +1032,18 @@ img {
   padding: 0;
 
   border:
-    1px solid var(--yellow);
+    1px solid var(--ink);
 
   background:
     transparent;
 
-  color: var(--yellow);
+  color:
+    var(--ink);
 
   font-size: 9px;
   font-weight: 900;
 
-  letter-spacing: .16em;
+  letter-spacing: .15em;
 
   transition:
     background .2s ease,
@@ -1143,32 +1051,27 @@ img {
 }
 
 .loadMore:hover {
-  background: var(--yellow);
+  background:
+    var(--ink);
 
-  color: #050606;
+  color:
+    var(--yellow);
 }
 
 
-/* ==================================================
+/* =========================
    ABOUT
-================================================== */
+========================= */
 
 .ngAbout {
   padding:
     110px 0;
 
   background:
-    linear-gradient(
-      135deg,
-      #090c0b,
-      #060807
-    );
+    var(--green);
 
-  border-top:
-    1px solid var(--line);
-
-  border-bottom:
-    1px solid var(--line);
+  color:
+    var(--white);
 }
 
 .ngAboutGrid {
@@ -1180,17 +1083,23 @@ img {
   gap: 100px;
 }
 
+.ngAbout .ngEyebrow {
+  color:
+    var(--yellow);
+}
+
 .ngAbout h2 {
   margin: 0;
 
-  font-family: "Oswald", sans-serif;
+  font-family:
+    "Oswald", sans-serif;
 
   font-size:
-    clamp(46px, 6vw, 78px);
+    clamp(48px, 6vw, 80px);
 
   font-weight: 600;
 
-  line-height: .92;
+  line-height: .9;
 }
 
 .ngAboutText {
@@ -1201,7 +1110,8 @@ img {
   margin:
     0 0 22px;
 
-  color: var(--text);
+  color:
+    rgba(255,255,255,.75);
 
   font-size: 15px;
 
@@ -1210,7 +1120,7 @@ img {
 
 .ngAboutLink {
   width: 240px;
-  height: var(--button-height);
+  height: 48px;
 
   display: inline-flex;
   align-items: center;
@@ -1218,17 +1128,18 @@ img {
 
   gap: 15px;
 
-  margin-top: 14px;
+  margin-top: 15px;
 
   border:
-    1px solid var(--line-yellow);
+    1px solid var(--yellow);
 
-  color: var(--yellow);
+  color:
+    var(--yellow);
 
   font-size: 9px;
   font-weight: 900;
 
-  letter-spacing: .13em;
+  letter-spacing: .12em;
 
   transition:
     background .2s ease,
@@ -1236,19 +1147,27 @@ img {
 }
 
 .ngAboutLink:hover {
-  background: var(--yellow);
+  background:
+    var(--yellow);
 
-  color: #050606;
+  color:
+    var(--ink);
 }
 
 
-/* ==================================================
+/* =========================
    FOOTER
-================================================== */
+========================= */
 
 .ngFooter {
   padding:
-    36px 0 90px;
+    35px 0 90px;
+
+  background:
+    var(--ink);
+
+  color:
+    var(--white);
 }
 
 .ngFooterInner {
@@ -1257,22 +1176,22 @@ img {
     var(--container)
   );
 
-  margin-inline: auto;
-
   min-height: 40px;
+
+  margin: auto;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  gap: 20px;
 }
 
 .ngFooterBrand {
   display: flex;
+
   gap: 8px;
 
-  font-family: "Oswald", sans-serif;
+  font-family:
+    "Oswald", sans-serif;
 
   font-size: 13px;
 
@@ -1280,28 +1199,30 @@ img {
 }
 
 .ngFooterBrand strong {
-  color: var(--yellow);
+  color:
+    var(--yellow);
 }
 
 .ngFooterCopy {
-  color: var(--muted-2);
+  color:
+    #777b74;
 
   font-size: 9px;
 }
 
 
-/* ==================================================
+/* =========================
    MOBILE NAV
-================================================== */
+========================= */
 
 .ngMobileNav {
   display: none;
 }
 
 
-/* ==================================================
+/* =========================
    BACK TO TOP
-================================================== */
+========================= */
 
 .ngTop {
   position: fixed;
@@ -1319,12 +1240,13 @@ img {
   justify-content: center;
 
   border:
-    1px solid var(--line-yellow);
+    1px solid var(--ink);
 
   background:
-    rgba(5,6,6,.94);
+    var(--paper);
 
-  color: var(--yellow);
+  color:
+    var(--ink);
 
   font-size: 18px;
 
@@ -1333,7 +1255,6 @@ img {
 
   transition:
     opacity .2s ease,
-    visibility .2s ease,
     background .2s ease;
 }
 
@@ -1343,15 +1264,17 @@ img {
 }
 
 .ngTop:hover {
-  background: var(--yellow);
+  background:
+    var(--yellow);
 
-  color: #050606;
+  border-color:
+    var(--yellow);
 }
 
 
-/* ==================================================
+/* =========================
    TOAST
-================================================== */
+========================= */
 
 .ngToast {
   position: fixed;
@@ -1374,10 +1297,10 @@ img {
     translate(-50%, 20px);
 
   background:
-    var(--yellow);
+    var(--ink);
 
   color:
-    #050606;
+    var(--yellow);
 
   font-size: 10px;
   font-weight: 900;
@@ -1399,9 +1322,9 @@ img {
 }
 
 
-/* ==================================================
+/* =========================
    POPUP
-================================================== */
+========================= */
 
 .postPopupMenu {
   position: fixed;
@@ -1413,10 +1336,10 @@ img {
   padding: 6px;
 
   background:
-    #101412;
+    var(--paper);
 
   border:
-    1px solid var(--line);
+    1px solid rgba(17,19,15,.15);
 
   box-shadow:
     var(--shadow);
@@ -1424,33 +1347,37 @@ img {
 
 .postPopupMenu button {
   width: 100%;
-
   min-height: 42px;
 
-  padding: 0 12px;
+  padding:
+    0 12px;
 
   border: 0;
 
-  background: transparent;
+  background:
+    transparent;
 
-  color: var(--text);
+  color:
+    var(--ink);
 
-  text-align: left;
+  text-align:
+    left;
 
   font-size: 10px;
 }
 
 .postPopupMenu button:hover {
   background:
-    rgba(245,196,0,.06);
+    rgba(245,196,0,.12);
 
-  color: var(--yellow);
+  color:
+    var(--yellow-dark);
 }
 
 
-/* ==================================================
+/* =========================
    TABLET
-================================================== */
+========================= */
 
 @media (max-width: 900px) {
 
@@ -1463,7 +1390,8 @@ img {
   }
 
   .ngPosts {
-    grid-template-columns: 1fr;
+    grid-template-columns:
+      1fr;
   }
 
   .ngAboutGrid {
@@ -1473,9 +1401,9 @@ img {
 }
 
 
-/* ==================================================
+/* =========================
    MOBILE
-================================================== */
+========================= */
 
 @media (max-width: 700px) {
 
@@ -1492,17 +1420,8 @@ img {
     height: 68px;
   }
 
-  .ngHeaderInner {
-    width:
-      calc(100% - 32px);
-  }
-
   .ngMobileMenu {
     top: 68px;
-  }
-
-  .ngBrandBox {
-    height: 27px;
   }
 
   .ngBrandText {
@@ -1510,7 +1429,11 @@ img {
   }
 
   .ngHero {
-    min-height: 620px;
+    min-height: 610px;
+  }
+
+  .ngHeroContent {
+    padding-bottom: 70px;
   }
 
   .ngHero h1 {
@@ -1519,20 +1442,14 @@ img {
   }
 
   .ngHero p {
-    max-width: 100%;
-
     font-size: 13px;
   }
 
-  .ngHeroButton {
-    width: 210px;
-  }
-
   .ngHero::after {
-    width: 420px;
-    height: 420px;
+    width: 400px;
+    height: 400px;
 
-    right: -190px;
+    right: -200px;
   }
 
   .ngCommunityBar {
@@ -1554,20 +1471,24 @@ img {
   }
 
   .ngAboutGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns:
+      1fr;
 
     gap: 38px;
   }
 
-  .ngFooterInner {
-    width:
-      calc(100% - 32px);
+  .ngFooter {
+    padding-bottom: 90px;
+  }
 
+  .ngFooterInner {
     align-items:
       flex-start;
 
     flex-direction:
       column;
+
+    gap: 16px;
   }
 
   .ngTop {
@@ -1596,18 +1517,16 @@ img {
       repeat(3, 1fr);
 
     background:
-      rgba(5,6,6,.96);
+      rgba(250,249,245,.96);
 
     border-top:
-      1px solid var(--line);
+      1px solid rgba(17,19,15,.12);
 
     backdrop-filter:
       blur(18px);
   }
 
   .ngMobileNav a {
-    min-width: 0;
-
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1616,11 +1535,13 @@ img {
 
     gap: 4px;
 
-    color: var(--muted);
+    color:
+      var(--gray);
   }
 
   .ngMobileNav a:hover {
-    color: var(--yellow);
+    color:
+      var(--ink);
   }
 
   .ngMobileNav span {
@@ -1639,9 +1560,9 @@ img {
 }
 
 
-/* ==================================================
-   SMALL PHONES
-================================================== */
+/* =========================
+   SMALL PHONE
+========================= */
 
 @media (max-width: 390px) {
 
@@ -1690,7 +1611,8 @@ img {
     width:
       calc(100% + 28px);
 
-    margin-inline: -14px;
+    margin-inline:
+      -14px;
   }
 
   .vkAction {
