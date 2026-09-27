@@ -1,6 +1,5 @@
 /* =========================================================
-   NATIONAL GEOGRAPHIC — VK FEED v5.1
-   Cloudflare Worker API
+   NATIONAL GEOGRAPHIC — VK FEED v5.2
 ========================================================= */
 
 const API_URL =
@@ -8,12 +7,17 @@ const API_URL =
 
 const FAVORITES_KEY = "ng_favorites";
 const LIKES_KEY = "ng_likes";
+const EXPANDED_KEY = "ng_expanded_posts";
 
 let allPosts = [];
 let visiblePosts = 8;
 let activeCategory = "Все";
 let searchText = "";
 let isLoading = false;
+
+/* =========================================================
+   DOM
+========================================================= */
 
 const postsContainer = document.getElementById("posts");
 const featuredContainer = document.getElementById("featuredPost");
@@ -31,72 +35,111 @@ const menu = document.getElementById("menu");
 const links = document.getElementById("links");
 const mobileNav = document.getElementById("mobileNav");
 
-if (year) year.textContent = new Date().getFullYear();
+if (year) {
+  year.textContent = new Date().getFullYear();
+}
 
 /* =========================================================
-   LOCAL DATA
+   STORAGE
 ========================================================= */
 
-function getFavorites() {
+function getStorageArray(key) {
   try {
-    return JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]");
+    return JSON.parse(
+      localStorage.getItem(key) || "[]"
+    );
   } catch {
     return [];
   }
 }
 
-function saveFavorites(list) {
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(list));
+function setStorageArray(key, value) {
+  localStorage.setItem(
+    key,
+    JSON.stringify(value)
+  );
 }
 
 function isFavorite(id) {
-  return getFavorites().includes(String(id));
-}
-
-function getLikes() {
-  try {
-    return JSON.parse(localStorage.getItem(LIKES_KEY) || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function saveLikes(list) {
-  localStorage.setItem(LIKES_KEY, JSON.stringify(list));
+  return getStorageArray(FAVORITES_KEY)
+    .includes(String(id));
 }
 
 function isLiked(id) {
-  return getLikes().includes(String(id));
+  return getStorageArray(LIKES_KEY)
+    .includes(String(id));
 }
 
+function isExpanded(id) {
+  return getStorageArray(EXPANDED_KEY)
+    .includes(String(id));
+}
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
 function toggleFavorite(id) {
-  const favorites = getFavorites();
+  const list =
+    getStorageArray(FAVORITES_KEY);
+
   const value = String(id);
-  const index = favorites.indexOf(value);
+  const index = list.indexOf(value);
 
   if (index >= 0) {
-    favorites.splice(index, 1);
+    list.splice(index, 1);
   } else {
-    favorites.push(value);
+    list.push(value);
   }
 
-  saveFavorites(favorites);
+  setStorageArray(
+    FAVORITES_KEY,
+    list
+  );
+
   renderPosts();
   renderFeaturedPost();
 }
 
 function toggleLike(id) {
-  const likes = getLikes();
+  const list =
+    getStorageArray(LIKES_KEY);
+
   const value = String(id);
-  const index = likes.indexOf(value);
+  const index = list.indexOf(value);
 
   if (index >= 0) {
-    likes.splice(index, 1);
+    list.splice(index, 1);
   } else {
-    likes.push(value);
+    list.push(value);
   }
 
-  saveLikes(likes);
+  setStorageArray(
+    LIKES_KEY,
+    list
+  );
+
+  renderPosts();
+}
+
+function toggleExpanded(id) {
+  const list =
+    getStorageArray(EXPANDED_KEY);
+
+  const value = String(id);
+  const index = list.indexOf(value);
+
+  if (index >= 0) {
+    list.splice(index, 1);
+  } else {
+    list.push(value);
+  }
+
+  setStorageArray(
+    EXPANDED_KEY,
+    list
+  );
+
   renderPosts();
 }
 
@@ -123,13 +166,16 @@ function escapeHtml(text) {
 }
 
 function truncateText(text, length = 220) {
-  const clean = cleanText(text);
+  const value = cleanText(text);
 
-  if (clean.length <= length) {
-    return clean;
+  if (value.length <= length) {
+    return value;
   }
 
-  return clean.substring(0, length).trim() + "…";
+  return (
+    value.substring(0, length)
+      .trim() + "…"
+  );
 }
 
 /* =========================================================
@@ -139,36 +185,44 @@ function truncateText(text, length = 220) {
 function formatDate(timestamp) {
   if (!timestamp) return "";
 
-  const date = new Date(Number(timestamp) * 1000);
+  const date =
+    new Date(Number(timestamp) * 1000);
 
   if (Number.isNaN(date.getTime())) {
     return "";
   }
 
-  return date.toLocaleDateString("ru-RU", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric"
-  });
+  return date.toLocaleDateString(
+    "ru-RU",
+    {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    }
+  );
 }
 
 function formatTime(timestamp) {
   if (!timestamp) return "";
 
-  const date = new Date(Number(timestamp) * 1000);
+  const date =
+    new Date(Number(timestamp) * 1000);
 
   if (Number.isNaN(date.getTime())) {
     return "";
   }
 
-  return date.toLocaleTimeString("ru-RU", {
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+  return date.toLocaleTimeString(
+    "ru-RU",
+    {
+      hour: "2-digit",
+      minute: "2-digit"
+    }
+  );
 }
 
 /* =========================================================
-   VK LINK
+   VK
 ========================================================= */
 
 function getPostLink(post) {
@@ -177,17 +231,22 @@ function getPostLink(post) {
     post.vk_id &&
     String(post.vk_id).includes("_")
   ) {
-    const parts = String(post.vk_id).split("_");
+    const parts =
+      String(post.vk_id).split("_");
 
-    const ownerId = parts[0];
-    const postId = parts[1];
-
-    if (ownerId && postId) {
-      return "https://vk.com/wall" + ownerId + "_" + postId;
+    if (parts[0] && parts[1]) {
+      return (
+        "https://vk.com/wall" +
+        parts[0] +
+        "_" +
+        parts[1]
+      );
     }
   }
 
-  return "https://vk.ru/national.geograph1c";
+  return (
+    "https://vk.ru/national.geograph1c"
+  );
 }
 
 /* =========================================================
@@ -237,10 +296,8 @@ const categoryKeywords = {
     "поездк",
     "дорог",
     "пут",
-    "отправ",
     "тур",
     "экспедиц",
-    "место",
     "страна"
   ],
 
@@ -287,9 +344,6 @@ const categoryKeywords = {
     "акул",
     "птиц",
     "орел",
-    "сокол",
-    "кот",
-    "собак",
     "слон",
     "жираф",
     "панд"
@@ -303,37 +357,38 @@ function detectCategory(post) {
     cleanText(post.title)
   ).toLowerCase();
 
-  let bestCategory = "Мир";
-  let bestScore = 0;
+  let result = "Мир";
+  let score = 0;
 
-  for (const [category, words] of Object.entries(categoryKeywords)) {
-    let score = 0;
+  for (
+    const [category, words]
+    of Object.entries(categoryKeywords)
+  ) {
+    let current = 0;
 
     words.forEach(word => {
       if (text.includes(word)) {
-        score++;
+        current++;
       }
     });
 
-    if (score > bestScore) {
-      bestScore = score;
-      bestCategory = category;
+    if (current > score) {
+      score = current;
+      result = category;
     }
   }
 
-  return bestCategory;
+  return result;
 }
 
 function categoryIcon(category) {
-  const icons = {
+  return {
     "Природа": "🏔️",
     "Путешествия": "✈️",
     "Россия": "🇷🇺",
     "Мир": "🌍",
     "Животные": "🐾"
-  };
-
-  return icons[category] || "🌍";
+  }[category] || "🌍";
 }
 
 /* =========================================================
@@ -341,45 +396,62 @@ function categoryIcon(category) {
 ========================================================= */
 
 function getFilteredPosts() {
-  const favorites = getFavorites();
+  const favorites =
+    getStorageArray(
+      FAVORITES_KEY
+    );
 
   return allPosts.filter(post => {
-    const category = detectCategory(post);
 
-    const text = cleanText(post.text).toLowerCase();
+    const category =
+      detectCategory(post);
+
+    const text =
+      cleanText(post.text)
+        .toLowerCase();
 
     const searchMatch =
       !searchText ||
-      text.includes(searchText.toLowerCase()) ||
+      text.includes(
+        searchText.toLowerCase()
+      ) ||
       category
         .toLowerCase()
-        .includes(searchText.toLowerCase());
+        .includes(
+          searchText.toLowerCase()
+        );
 
     let categoryMatch = true;
 
     if (activeCategory !== "Все") {
-      if (activeCategory === "Избранное") {
-        categoryMatch = favorites.includes(
-          String(post.id)
-        );
+
+      if (
+        activeCategory ===
+        "Избранное"
+      ) {
+        categoryMatch =
+          favorites.includes(
+            String(post.id)
+          );
       } else {
         categoryMatch =
-          category === activeCategory;
+          category ===
+          activeCategory;
       }
     }
 
-    return searchMatch && categoryMatch;
+    return (
+      searchMatch &&
+      categoryMatch
+    );
   });
 }
 
 /* =========================================================
-   VK POST HEADER
+   POST HEADER
 ========================================================= */
 
-function postHeader(post) {
-  const date = formatDate(post.post_date);
-  const time = formatTime(post.post_date);
-
+function createPostHeader(post) {
   return `
     <div class="vkPostHeader">
 
@@ -392,13 +464,29 @@ function postHeader(post) {
         <div class="vkPostAuthor">
 
           <div class="vkAuthorLine">
-            <strong>National Geographic</strong>
-            <span class="verifiedBadge">✓</span>
+
+            <strong>
+              National Geographic
+            </strong>
+
+            <span class="verifiedBadge">
+              ✓
+            </span>
+
           </div>
 
           <div class="vkPostDate">
-            ${escapeHtml(date)}
-            ${time ? " · " + escapeHtml(time) : ""}
+            ${escapeHtml(
+              formatDate(
+                post.post_date
+              )
+            )}
+            ·
+            ${escapeHtml(
+              formatTime(
+                post.post_date
+              )
+            )}
           </div>
 
         </div>
@@ -407,9 +495,11 @@ function postHeader(post) {
 
       <button
         class="vkPostMenu"
-        type="button"
-        onclick="showPostMenu(${Number(post.id)})"
-        aria-label="Меню"
+        onclick="
+          showPostMenu(
+            ${Number(post.id)}
+          )
+        "
       >
         •••
       </button>
@@ -419,18 +509,39 @@ function postHeader(post) {
 }
 
 /* =========================================================
-   VK POST
+   POST
 ========================================================= */
 
 function createPost(post) {
-  const text = cleanText(post.text);
-  const image = getImage(post);
-  const category = detectCategory(post);
-  const favorite = isFavorite(post.id);
-  const liked = isLiked(post.id);
-  const link = getPostLink(post);
 
-  const likeIcon = liked ? "♥" : "♡";
+  const text =
+    cleanText(post.text);
+
+  const image =
+    getImage(post);
+
+  const category =
+    detectCategory(post);
+
+  const favorite =
+    isFavorite(post.id);
+
+  const liked =
+    isLiked(post.id);
+
+  const expanded =
+    isExpanded(post.id);
+
+  const link =
+    getPostLink(post);
+
+  const longText =
+    text.length > 420;
+
+  const visibleText =
+    longText && !expanded
+      ? truncateText(text, 420)
+      : text;
 
   return `
     <article
@@ -438,29 +549,66 @@ function createPost(post) {
       data-post-id="${Number(post.id)}"
     >
 
-      ${postHeader(post)}
+      ${createPostHeader(post)}
 
       <div class="vkPostContent">
 
         ${
-          text
+          visibleText
             ? `
               <div class="vkPostText">
-                ${escapeHtml(text).replace(/\n/g, "<br>")}
+                ${escapeHtml(
+                  visibleText
+                ).replace(
+                  /\n/g,
+                  "<br>"
+                )}
+
+                ${
+                  longText
+                    ? `
+                      <button
+                        class="showMoreText"
+                        onclick="
+                          toggleExpanded(
+                            ${Number(
+                              post.id
+                            )}
+                          )
+                        "
+                      >
+                        ${
+                          expanded
+                            ? "Скрыть"
+                            : "Показать полностью"
+                        }
+                      </button>
+                    `
+                    : ""
+                }
+
               </div>
             `
             : `
               <div class="vkPostText emptyPostText">
-                Новый материал National Geographic
+                Новый материал
+                National Geographic
               </div>
             `
         }
 
         <div class="vkPostCategory">
+
           <span>
-            ${categoryIcon(category)}
-            ${escapeHtml(category)}
+            ${categoryIcon(
+              category
+            )}
+
+            ${escapeHtml(
+              category
+            )}
           </span>
+
         </div>
 
         ${
@@ -468,37 +616,55 @@ function createPost(post) {
             ? `
               <div
                 class="vkPostImage"
-                onclick="openPost(${Number(post.id)})"
+                onclick="
+                  openPost(
+                    ${Number(post.id)}
+                  )
+                "
               >
+
                 <img
-                  src="${escapeHtml(image)}"
+                  src="${escapeHtml(
+                    image
+                  )}"
                   alt="${escapeHtml(
                     truncateText(
-                      text || category,
+                      text ||
+                      category,
                       100
                     )
                   )}"
                   loading="lazy"
-                  onerror="
-                    this.parentElement.classList.add('imageError');
-                    this.remove();
-                  "
                 />
+
               </div>
             `
             : `
               <div
                 class="vkPostNoImage"
-                onclick="openPost(${Number(post.id)})"
+                onclick="
+                  openPost(
+                    ${Number(post.id)}
+                  )
+                "
               >
+
                 <div class="vkPostNoImageLogo">
-                  <span>NATIONAL</span>
-                  <strong>GEOGRAPHIC</strong>
+                  <span>
+                    NATIONAL
+                  </span>
+
+                  <strong>
+                    GEOGRAPHIC
+                  </strong>
                 </div>
 
                 <div class="vkPostNoImageIcon">
-                  ${categoryIcon(category)}
+                  ${categoryIcon(
+                    category
+                  )}
                 </div>
+
               </div>
             `
         }
@@ -508,44 +674,85 @@ function createPost(post) {
       <div class="vkPostActions">
 
         <button
-          class="vkAction ${liked ? "liked" : ""}"
-          onclick="toggleLike(${Number(post.id)})"
-          type="button"
+          class="vkAction ${
+            liked ? "liked" : ""
+          }"
+          onclick="
+            toggleLike(
+              ${Number(post.id)}
+            )
+          "
         >
-          <span class="vkActionIcon">${likeIcon}</span>
-          <span>Нравится</span>
+          <span class="vkActionIcon">
+            ${liked ? "♥" : "♡"}
+          </span>
+
+          <span>
+            Нравится
+          </span>
         </button>
 
         <button
           class="vkAction"
-          onclick="sharePost(${Number(post.id)})"
-          type="button"
+          onclick="
+            sharePost(
+              ${Number(post.id)}
+            )
+          "
         >
-          <span class="vkActionIcon">↗</span>
-          <span>Поделиться</span>
+          <span class="vkActionIcon">
+            ↗
+          </span>
+
+          <span>
+            Поделиться
+          </span>
         </button>
 
         <button
-          class="vkAction ${favorite ? "favoriteActive" : ""}"
-          onclick="toggleFavorite(${Number(post.id)})"
-          type="button"
+          class="vkAction ${
+            favorite
+              ? "favoriteActive"
+              : ""
+          }"
+          onclick="
+            toggleFavorite(
+              ${Number(post.id)}
+            )
+          "
         >
           <span class="vkActionIcon">
-            ${favorite ? "★" : "☆"}
+            ${
+              favorite
+                ? "★"
+                : "☆"
+            }
           </span>
+
           <span>
-            ${favorite ? "Сохранено" : "Сохранить"}
+            ${
+              favorite
+                ? "Сохранено"
+                : "Сохранить"
+            }
           </span>
         </button>
 
         <a
           class="vkAction vkOpenAction"
-          href="${escapeHtml(link)}"
+          href="${escapeHtml(
+            link
+          )}"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span class="vkActionIcon">VK</span>
-          <span>Открыть</span>
+          <span class="vkActionIcon">
+            VK
+          </span>
+
+          <span>
+            Открыть
+          </span>
         </a>
 
       </div>
@@ -555,28 +762,149 @@ function createPost(post) {
 }
 
 /* =========================================================
-   FEATURED
+   RENDER
 ========================================================= */
 
-function renderFeaturedPost() {
-  if (!featuredContainer) return;
+function renderPosts() {
 
-  if (!allPosts.length) {
-    featuredContainer.innerHTML = `
+  if (!postsContainer) return;
+
+  const filtered =
+    getFilteredPosts();
+
+  if (resultCount) {
+    resultCount.textContent =
+      filtered.length;
+  }
+
+  if (!filtered.length) {
+
+    postsContainer.innerHTML = `
       <div class="emptyState">
-        Пока нет публикаций
+
+        <div class="emptyIcon">
+          🔎
+        </div>
+
+        <h3>
+          Ничего не найдено
+        </h3>
+
+        <p>
+          Попробуйте изменить
+          поиск или категорию.
+        </p>
+
+        <button
+          onclick="resetFilters()"
+        >
+          СБРОСИТЬ ФИЛЬТРЫ
+        </button>
+
       </div>
     `;
 
     return;
   }
 
-  const post = allPosts[0];
+  const posts =
+    filtered.slice(
+      0,
+      visiblePosts
+    );
 
-  const text = cleanText(post.text);
-  const image = getImage(post);
-  const category = detectCategory(post);
-  const link = getPostLink(post);
+  postsContainer.innerHTML =
+    posts
+      .map(createPost)
+      .join("");
+
+  if (
+    filtered.length >
+    visiblePosts
+  ) {
+
+    postsContainer.innerHTML += `
+      <div class="loadMoreWrap">
+
+        <button
+          class="loadMore"
+          onclick="loadMorePosts()"
+        >
+          ПОКАЗАТЬ ЕЩЁ
+        </button>
+
+        <span>
+          Показано
+          ${posts.length}
+          из
+          ${filtered.length}
+        </span>
+
+      </div>
+    `;
+  }
+}
+
+function loadMorePosts() {
+  visiblePosts += 8;
+  renderPosts();
+}
+
+function resetFilters() {
+
+  activeCategory = "Все";
+  searchText = "";
+  visiblePosts = 8;
+
+  if (postSearch) {
+    postSearch.value = "";
+  }
+
+  document
+    .querySelectorAll(
+      ".categoryBtn"
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.category ===
+        "Все"
+      );
+
+    });
+
+  renderPosts();
+}
+
+/* =========================================================
+   FEATURED
+========================================================= */
+
+function renderFeaturedPost() {
+
+  if (!featuredContainer) {
+    return;
+  }
+
+  if (!allPosts.length) {
+    featuredContainer.innerHTML =
+      "";
+
+    return;
+  }
+
+  const post =
+    allPosts[0];
+
+  const image =
+    getImage(post);
+
+  const text =
+    cleanText(post.text);
+
+  const category =
+    detectCategory(post);
 
   featuredContainer.innerHTML = `
     <article class="featuredCard">
@@ -586,19 +914,32 @@ function renderFeaturedPost() {
           ? `
             <div
               class="featuredImage"
-              onclick="openPost(${Number(post.id)})"
+              onclick="
+                openPost(
+                  ${Number(post.id)}
+                )
+              "
             >
+
               <img
-                src="${escapeHtml(image)}"
-                alt="${escapeHtml(
-                  truncateText(text, 100)
+                src="${escapeHtml(
+                  image
                 )}"
+                alt=""
               />
+
             </div>
           `
           : `
-            <div class="featuredImage featuredPlaceholder">
-              <span>${categoryIcon(category)}</span>
+            <div class="
+              featuredImage
+              featuredPlaceholder
+            ">
+              <span>
+                ${categoryIcon(
+                  category
+                )}
+              </span>
             </div>
           `
       }
@@ -606,22 +947,31 @@ function renderFeaturedPost() {
       <div class="featuredContent">
 
         <div class="postMeta">
+
           <span class="tag">
-            ${categoryIcon(category)}
-            ${escapeHtml(category)}
+            ${categoryIcon(
+              category
+            )}
+            ${escapeHtml(
+              category
+            )}
           </span>
 
           <span>
             ${escapeHtml(
-              formatDate(post.post_date)
+              formatDate(
+                post.post_date
+              )
             )}
           </span>
+
         </div>
 
         <h3>
           ${escapeHtml(
             truncateText(
-              text || "Новый материал",
+              text ||
+              "Новый материал",
               150
             )
           )}
@@ -631,7 +981,7 @@ function renderFeaturedPost() {
           ${escapeHtml(
             truncateText(
               text ||
-                "Откройте публикацию, чтобы узнать больше.",
+              "Новый материал National Geographic.",
               260
             )
           )}
@@ -641,14 +991,20 @@ function renderFeaturedPost() {
 
           <button
             class="readButton"
-            onclick="openPost(${Number(post.id)})"
+            onclick="
+              openPost(
+                ${Number(post.id)}
+              )
+            "
           >
             ЧИТАТЬ →
           </button>
 
           <a
             class="vkButton"
-            href="${escapeHtml(link)}"
+            href="${escapeHtml(
+              getPostLink(post)
+            )}"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -664,260 +1020,75 @@ function renderFeaturedPost() {
 }
 
 /* =========================================================
-   POSTS
-========================================================= */
-
-function renderPosts() {
-  if (!postsContainer) return;
-
-  const filtered = getFilteredPosts();
-
-  if (resultCount) {
-    resultCount.textContent = filtered.length;
-  }
-
-  if (!filtered.length) {
-    postsContainer.innerHTML = `
-      <div class="emptyState">
-        <div class="emptyIcon">🔎</div>
-
-        <h3>Ничего не найдено</h3>
-
-        <p>
-          Попробуйте изменить поиск
-          или выбрать другую категорию.
-        </p>
-
-        <button onclick="resetFilters()">
-          СБРОСИТЬ ФИЛЬТРЫ
-        </button>
-      </div>
-    `;
-
-    return;
-  }
-
-  const posts = filtered.slice(
-    0,
-    visiblePosts
-  );
-
-  postsContainer.innerHTML =
-    posts.map(createPost).join("");
-
-  if (filtered.length > visiblePosts) {
-    postsContainer.innerHTML += `
-      <div class="loadMoreWrap">
-
-        <button
-          class="loadMore"
-          onclick="loadMorePosts()"
-        >
-          ПОКАЗАТЬ ЕЩЁ
-        </button>
-
-        <span>
-          Показано ${posts.length}
-          из ${filtered.length}
-        </span>
-
-      </div>
-    `;
-  }
-}
-
-function loadMorePosts() {
-  visiblePosts += 8;
-  renderPosts();
-}
-
-function resetFilters() {
-  activeCategory = "Все";
-  searchText = "";
-  visiblePosts = 8;
-
-  if (postSearch) {
-    postSearch.value = "";
-  }
-
-  document
-    .querySelectorAll(".categoryBtn")
-    .forEach(button => {
-      button.classList.toggle(
-        "active",
-        button.dataset.category === "Все"
-      );
-    });
-
-  renderPosts();
-}
-
-/* =========================================================
-   POST MENU
-========================================================= */
-
-function showPostMenu(id) {
-  const post = allPosts.find(
-    item => Number(item.id) === Number(id)
-  );
-
-  if (!post) return;
-
-  const existing =
-    document.querySelector(".vkPostMenuPopup");
-
-  if (existing) {
-    existing.remove();
-  }
-
-  const popup = document.createElement("div");
-
-  popup.className = "vkPostMenuPopup";
-
-  popup.innerHTML = `
-    <button
-      onclick="sharePost(${Number(post.id)}); closePostMenu();"
-    >
-      ↗ Поделиться
-    </button>
-
-    <button
-      onclick="copyPostLink(${Number(post.id)}); closePostMenu();"
-    >
-      ⧉ Скопировать ссылку
-    </button>
-
-    <button
-      onclick="toggleFavorite(${Number(post.id)}); closePostMenu();"
-    >
-      ☆ Сохранить
-    </button>
-  `;
-
-  document.body.appendChild(popup);
-
-  requestAnimationFrame(() => {
-    popup.classList.add("show");
-  });
-
-  setTimeout(() => {
-    document.addEventListener(
-      "click",
-      closeMenuOnOutside,
-      { once: true }
-    );
-  }, 50);
-}
-
-function closeMenuOnOutside(event) {
-  const popup =
-    document.querySelector(".vkPostMenuPopup");
-
-  if (
-    popup &&
-    !popup.contains(event.target)
-  ) {
-    closePostMenu();
-  }
-}
-
-function closePostMenu() {
-  const popup =
-    document.querySelector(".vkPostMenuPopup");
-
-  if (!popup) return;
-
-  popup.remove();
-}
-
-/* =========================================================
    MODAL
 ========================================================= */
 
 function openPost(id) {
-  const post = allPosts.find(
-    item => Number(item.id) === Number(id)
-  );
+
+  const post =
+    allPosts.find(
+      item =>
+        Number(item.id) ===
+        Number(id)
+    );
 
   if (!post) return;
 
-  const text = cleanText(post.text);
-  const image = getImage(post);
-  const category = detectCategory(post);
-  const favorite = isFavorite(post.id);
-  const liked = isLiked(post.id);
-  const link = getPostLink(post);
+  const image =
+    getImage(post);
+
+  const text =
+    cleanText(post.text);
+
+  const category =
+    detectCategory(post);
 
   const modal =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
-  modal.className = "postModal";
+  modal.className =
+    "postModal";
 
   modal.innerHTML = `
+
     <div
       class="modalBackdrop"
       onclick="closePostModal()"
     ></div>
 
     <div
-      class="modalWindow vkModalWindow"
-      role="dialog"
-      aria-modal="true"
+      class="
+        modalWindow
+        vkModalWindow
+      "
     >
 
       <button
         class="modalClose"
         onclick="closePostModal()"
-        aria-label="Закрыть"
       >
         ×
       </button>
 
-      <div class="vkModalHeader">
-
-        <div class="vkCommunityAvatar">
-          <span>NG</span>
-        </div>
-
-        <div>
-          <strong>
-            National Geographic
-          </strong>
-
-          <span class="verifiedBadge">
-            ✓
-          </span>
-
-          <small>
-            ${escapeHtml(
-              formatDate(post.post_date)
-            )}
-          </small>
-        </div>
-
-      </div>
+      ${createPostHeader(post)}
 
       ${
         image
           ? `
             <div class="modalImage">
+
               <img
-                src="${escapeHtml(image)}"
-                alt="${escapeHtml(
-                  truncateText(text, 100)
+                src="${escapeHtml(
+                  image
                 )}"
+                alt=""
               />
+
             </div>
           `
-          : `
-            <div
-              class="modalImage modalPlaceholder"
-            >
-              <span>
-                ${categoryIcon(category)}
-              </span>
-            </div>
-          `
+          : ""
       }
 
       <div class="modalContent">
@@ -925,13 +1096,19 @@ function openPost(id) {
         <div class="modalMeta">
 
           <span class="tag">
-            ${categoryIcon(category)}
-            ${escapeHtml(category)}
+            ${categoryIcon(
+              category
+            )}
+            ${escapeHtml(
+              category
+            )}
           </span>
 
           <span>
             ${escapeHtml(
-              formatTime(post.post_date)
+              formatDate(
+                post.post_date
+              )
             )}
           </span>
 
@@ -940,53 +1117,57 @@ function openPost(id) {
         <div class="modalText">
           ${escapeHtml(
             text ||
-              "Подробная информация о публикации."
-          ).replace(/\n/g, "<br>")}
+            "Новый материал National Geographic."
+          ).replace(
+            /\n/g,
+            "<br>"
+          )}
         </div>
 
         <div class="modalActions">
 
           <button
-            class="favoriteLarge ${
-              liked ? "active" : ""
-            }"
+            class="favoriteLarge"
             onclick="
-              toggleLike(${Number(post.id)});
-              refreshOpenModal(${Number(post.id)});
+              toggleLike(
+                ${Number(post.id)}
+              )
             "
           >
-            ${liked ? "♥ Нравится" : "♡ Нравится"}
+            ${
+              isLiked(post.id)
+                ? "♥ Нравится"
+                : "♡ Нравится"
+            }
           </button>
 
           <button
             class="shareButton"
-            onclick="sharePost(${Number(post.id)})"
+            onclick="
+              sharePost(
+                ${Number(post.id)}
+              )
+            "
           >
             ↗ Поделиться
           </button>
 
           <button
             class="copyButton"
-            onclick="copyPostLink(${Number(post.id)})"
+            onclick="
+              copyPostLink(
+                ${Number(post.id)}
+              )
+            "
           >
             ⧉ Скопировать
           </button>
 
-          <button
-            class="favoriteLarge ${
-              favorite ? "active" : ""
-            }"
-            onclick="
-              toggleFavorite(${Number(post.id)});
-              refreshOpenModal(${Number(post.id)});
-            "
-          >
-            ${favorite ? "★ Сохранено" : "☆ Сохранить"}
-          </button>
-
           <a
             class="vkLarge"
-            href="${escapeHtml(link)}"
+            href="${escapeHtml(
+              getPostLink(post)
+            )}"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -996,8 +1177,8 @@ function openPost(id) {
         </div>
 
         <div
-          class="viewerStatus"
           id="viewerStatus"
+          class="viewerStatus"
         ></div>
 
       </div>
@@ -1005,14 +1186,18 @@ function openPost(id) {
     </div>
   `;
 
-  document.body.appendChild(modal);
+  document.body.appendChild(
+    modal
+  );
 
   document.body.classList.add(
     "modalOpen"
   );
 
   requestAnimationFrame(() => {
-    modal.classList.add("visible");
+    modal.classList.add(
+      "visible"
+    );
   });
 
   document.addEventListener(
@@ -1022,24 +1207,35 @@ function openPost(id) {
 }
 
 function handleModalEscape(event) {
-  if (event.key === "Escape") {
+
+  if (
+    event.key === "Escape"
+  ) {
     closePostModal();
   }
 }
 
 function closePostModal() {
+
   const modal =
-    document.querySelector(".postModal");
+    document.querySelector(
+      ".postModal"
+    );
 
   if (!modal) return;
 
-  modal.classList.remove("visible");
+  modal.classList.remove(
+    "visible"
+  );
 
   setTimeout(() => {
+
     modal.remove();
+
     document.body.classList.remove(
       "modalOpen"
     );
+
   }, 200);
 
   document.removeEventListener(
@@ -1048,12 +1244,118 @@ function closePostModal() {
   );
 }
 
-function refreshOpenModal(id) {
-  closePostModal();
+/* =========================================================
+   MENU
+========================================================= */
+
+function showPostMenu(id) {
+
+  const post =
+    allPosts.find(
+      item =>
+        Number(item.id) ===
+        Number(id)
+    );
+
+  if (!post) return;
+
+  closePostMenu();
+
+  const menu =
+    document.createElement(
+      "div"
+    );
+
+  menu.className =
+    "vkPostMenuPopup";
+
+  menu.innerHTML = `
+
+    <button
+      onclick="
+        sharePost(${Number(post.id)});
+        closePostMenu();
+      "
+    >
+      ↗ Поделиться
+    </button>
+
+    <button
+      onclick="
+        copyPostLink(
+          ${Number(post.id)}
+        );
+        closePostMenu();
+      "
+    >
+      ⧉ Скопировать ссылку
+    </button>
+
+    <button
+      onclick="
+        toggleFavorite(
+          ${Number(post.id)}
+        );
+        closePostMenu();
+      "
+    >
+      ${
+        isFavorite(post.id)
+          ? "★ Убрать из сохранённых"
+          : "☆ Сохранить"
+      }
+    </button>
+
+  `;
+
+  document.body.appendChild(
+    menu
+  );
+
+  requestAnimationFrame(() => {
+    menu.classList.add("show");
+  });
 
   setTimeout(() => {
-    openPost(id);
-  }, 220);
+
+    document.addEventListener(
+      "click",
+      closeMenuOutside,
+      {
+        once: true
+      }
+    );
+
+  }, 50);
+}
+
+function closeMenuOutside(event) {
+
+  const menu =
+    document.querySelector(
+      ".vkPostMenuPopup"
+    );
+
+  if (
+    menu &&
+    !menu.contains(
+      event.target
+    )
+  ) {
+    closePostMenu();
+  }
+}
+
+function closePostMenu() {
+
+  const menu =
+    document.querySelector(
+      ".vkPostMenuPopup"
+    );
+
+  if (menu) {
+    menu.remove();
+  }
 }
 
 /* =========================================================
@@ -1061,31 +1363,40 @@ function refreshOpenModal(id) {
 ========================================================= */
 
 async function sharePost(id) {
-  const post = allPosts.find(
-    item => Number(item.id) === Number(id)
-  );
+
+  const post =
+    allPosts.find(
+      item =>
+        Number(item.id) ===
+        Number(id)
+    );
 
   if (!post) return;
 
-  const link = getPostLink(post);
+  const link =
+    getPostLink(post);
 
-  const title =
-    truncateText(
-      cleanText(post.text) ||
-        "National Geographic",
-      100
-    );
+  if (
+    navigator.share
+  ) {
 
-  if (navigator.share) {
     try {
+
       await navigator.share({
         title:
           "National Geographic",
-        text: title,
+        text:
+          truncateText(
+            cleanText(
+              post.text
+            ),
+            120
+          ),
         url: link
       });
 
       return;
+
     } catch {}
   }
 
@@ -1097,9 +1408,13 @@ async function sharePost(id) {
 }
 
 async function copyPostLink(id) {
-  const post = allPosts.find(
-    item => Number(item.id) === Number(id)
-  );
+
+  const post =
+    allPosts.find(
+      item =>
+        Number(item.id) ===
+        Number(id)
+    );
 
   if (!post) return;
 
@@ -1113,21 +1428,29 @@ async function copyPostLink(id) {
 }
 
 async function copyText(text) {
+
   try {
+
     await navigator.clipboard.writeText(
       text
     );
 
     return true;
+
   } catch {
+
     const textarea =
       document.createElement(
         "textarea"
       );
 
     textarea.value = text;
-    textarea.style.position = "fixed";
-    textarea.style.opacity = "0";
+
+    textarea.style.position =
+      "fixed";
+
+    textarea.style.opacity =
+      "0";
 
     document.body.appendChild(
       textarea
@@ -1136,11 +1459,17 @@ async function copyText(text) {
     textarea.select();
 
     try {
-      document.execCommand("copy");
+
+      document.execCommand(
+        "copy"
+      );
+
       textarea.remove();
 
       return true;
+
     } catch {
+
       textarea.remove();
 
       return false;
@@ -1148,7 +1477,10 @@ async function copyText(text) {
   }
 }
 
-function showViewerStatus(message) {
+function showViewerStatus(
+  message
+) {
+
   const status =
     document.getElementById(
       "viewerStatus"
@@ -1156,11 +1488,19 @@ function showViewerStatus(message) {
 
   if (!status) return;
 
-  status.textContent = message;
-  status.classList.add("show");
+  status.textContent =
+    message;
+
+  status.classList.add(
+    "show"
+  );
 
   setTimeout(() => {
-    status.classList.remove("show");
+
+    status.classList.remove(
+      "show"
+    );
+
   }, 2200);
 }
 
@@ -1169,28 +1509,34 @@ function showViewerStatus(message) {
 ========================================================= */
 
 function renderGallery() {
+
   if (!photoGallery) return;
 
-  const photoPosts =
-    allPosts.filter(post =>
-      Boolean(getImage(post))
+  const photos =
+    allPosts.filter(
+      post =>
+        Boolean(
+          getImage(post)
+        )
     );
 
   document
-    .querySelectorAll("[data-photo-count]")
-    .forEach(element => {
-      element.textContent =
-        photoPosts.length;
+    .querySelectorAll(
+      "[data-photo-count]"
+    )
+    .forEach(item => {
+      item.textContent =
+        photos.length;
     });
 
-  if (!photoPosts.length) {
+  if (!photos.length) {
+
     photoGallery.innerHTML = `
       <div class="galleryEmpty">
         <span>📷</span>
-
         <p>
-          Фотографии появятся вместе
-          с новыми публикациями.
+          Фотографии появятся
+          вместе с публикациями.
         </p>
       </div>
     `;
@@ -1198,12 +1544,11 @@ function renderGallery() {
     return;
   }
 
-  const gallery =
-    photoPosts.slice(0, 12);
-
   photoGallery.innerHTML =
-    gallery
+    photos
+      .slice(0, 12)
       .map((post, index) => {
+
         const image =
           getImage(post);
 
@@ -1212,41 +1557,44 @@ function renderGallery() {
 
         return `
           <button
-            class="photoItem photoItem${
-              index + 1
-            }"
-            onclick="
-              openPost(${Number(post.id)})
+            class="
+              photoItem
+              photoItem${index + 1}
             "
-            aria-label="Открыть фотографию"
+            onclick="
+              openPost(
+                ${Number(post.id)}
+              )
+            "
           >
 
             <img
-              src="${escapeHtml(image)}"
-              alt="${escapeHtml(
-                truncateText(
-                  post.text ||
-                    category,
-                  80
-                )
+              src="${escapeHtml(
+                image
               )}"
+              alt=""
               loading="lazy"
             />
 
             <span class="photoOverlay">
 
               <strong>
-                ${categoryIcon(category)}
+                ${categoryIcon(
+                  category
+                )}
               </strong>
 
               <small>
-                ${escapeHtml(category)}
+                ${escapeHtml(
+                  category
+                )}
               </small>
 
             </span>
 
           </button>
         `;
+
       })
       .join("");
 }
@@ -1256,6 +1604,7 @@ function renderGallery() {
 ========================================================= */
 
 function updateStats() {
+
   if (postsCount) {
     postsCount.textContent =
       allPosts.length;
@@ -1268,42 +1617,66 @@ function updateStats() {
       ).length;
   }
 
-  const photoCount =
-    allPosts.filter(post =>
-      Boolean(getImage(post))
+  const photos =
+    allPosts.filter(
+      post =>
+        Boolean(
+          getImage(post)
+        )
     ).length;
 
   document
-    .querySelectorAll("[data-photo-count]")
-    .forEach(element => {
-      element.textContent =
-        photoCount;
+    .querySelectorAll(
+      "[data-photo-count]"
+    )
+    .forEach(item => {
+      item.textContent =
+        photos;
     });
 
   if (photosCount) {
     photosCount.textContent =
-      photoCount;
+      photos;
   }
 }
 
 /* =========================================================
-   REFRESH
+   SKELETON
 ========================================================= */
 
-function updateRefreshTime() {
-  if (!refreshTime) return;
+function showSkeleton() {
 
-  const now = new Date();
+  if (!postsContainer) return;
 
-  refreshTime.textContent =
-    "Обновлено " +
-    now.toLocaleTimeString(
-      "ru-RU",
-      {
-        hour: "2-digit",
-        minute: "2-digit"
-      }
-    );
+  postsContainer.innerHTML =
+    Array.from(
+      { length: 3 }
+    )
+      .map(() => `
+        <div class="vkSkeleton">
+
+          <div class="vkSkeletonHeader">
+
+            <div class="skeletonAvatar"></div>
+
+            <div class="skeletonLines">
+              <span></span>
+              <span></span>
+            </div>
+
+          </div>
+
+          <div class="skeletonText">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="skeletonImage"></div>
+
+        </div>
+      `)
+      .join("");
 }
 
 /* =========================================================
@@ -1311,23 +1684,34 @@ function updateRefreshTime() {
 ========================================================= */
 
 async function loadPosts() {
+
   if (isLoading) return;
 
   isLoading = true;
 
+  if (
+    !allPosts.length
+  ) {
+    showSkeleton();
+  }
+
   if (refreshButton) {
-    refreshButton.disabled = true;
+
+    refreshButton.disabled =
+      true;
+
     refreshButton.classList.add(
       "loading"
     );
   }
 
   try {
+
     const response =
       await fetch(
         API_URL +
-          "?t=" +
-          Date.now(),
+        "?t=" +
+        Date.now(),
         {
           method: "GET",
           cache: "no-store"
@@ -1337,7 +1721,7 @@ async function loadPosts() {
     if (!response.ok) {
       throw new Error(
         "HTTP " +
-          response.status
+        response.status
       );
     }
 
@@ -1374,18 +1758,31 @@ async function loadPosts() {
     renderFeaturedPost();
     renderPosts();
     renderGallery();
-    updateRefreshTime();
+
+    if (refreshTime) {
+
+      refreshTime.textContent =
+        "Обновлено " +
+        new Date()
+          .toLocaleTimeString(
+            "ru-RU",
+            {
+              hour: "2-digit",
+              minute: "2-digit"
+            }
+          );
+
+    }
 
   } catch (error) {
+
     console.error(
       "National Geographic API:",
       error
     );
 
-    if (
-      !allPosts.length &&
-      postsContainer
-    ) {
+    if (!allPosts.length) {
+
       postsContainer.innerHTML = `
         <div class="errorState">
 
@@ -1399,15 +1796,18 @@ async function loadPosts() {
 
           <p>
             Проверьте соединение
-            и попробуйте обновить страницу.
+            и попробуйте ещё раз.
           </p>
 
-          <button onclick="loadPosts()">
+          <button
+            onclick="loadPosts()"
+          >
             ПОВТОРИТЬ
           </button>
 
         </div>
       `;
+
     }
 
     if (refreshTime) {
@@ -1416,10 +1816,14 @@ async function loadPosts() {
     }
 
   } finally {
+
     isLoading = false;
 
     if (refreshButton) {
-      refreshButton.disabled = false;
+
+      refreshButton.disabled =
+        false;
+
       refreshButton.classList.remove(
         "loading"
       );
@@ -1428,12 +1832,38 @@ async function loadPosts() {
 }
 
 /* =========================================================
-   CATEGORY BUTTONS
+   SEARCH
+========================================================= */
+
+function setupSearch() {
+
+  if (!postSearch) return;
+
+  postSearch.addEventListener(
+    "input",
+    event => {
+
+      searchText =
+        event.target.value.trim();
+
+      visiblePosts = 8;
+
+      renderPosts();
+
+    }
+  );
+}
+
+/* =========================================================
+   CATEGORY
 ========================================================= */
 
 function setupCategoryButtons() {
+
   document
-    .querySelectorAll(".categoryBtn")
+    .querySelectorAll(
+      ".categoryBtn"
+    )
     .forEach(button => {
 
       button.addEventListener(
@@ -1451,13 +1881,16 @@ function setupCategoryButtons() {
               ".categoryBtn"
             )
             .forEach(item => {
+
               item.classList.toggle(
                 "active",
                 item === button
               );
+
             });
 
           renderPosts();
+
         }
       );
 
@@ -1465,31 +1898,11 @@ function setupCategoryButtons() {
 }
 
 /* =========================================================
-   SEARCH
-========================================================= */
-
-function setupSearch() {
-  if (!postSearch) return;
-
-  postSearch.addEventListener(
-    "input",
-    event => {
-
-      searchText =
-        event.target.value.trim();
-
-      visiblePosts = 8;
-
-      renderPosts();
-    }
-  );
-}
-
-/* =========================================================
    CATEGORY CARDS
 ========================================================= */
 
 function setupCategoryCards() {
+
   document
     .querySelectorAll(
       "[data-jump-category]"
@@ -1502,12 +1915,9 @@ function setupCategoryCards() {
 
           event.preventDefault();
 
-          const category =
+          activeCategory =
             card.dataset
               .jumpCategory;
-
-          activeCategory =
-            category;
 
           visiblePosts = 8;
 
@@ -1516,12 +1926,13 @@ function setupCategoryCards() {
               ".categoryBtn"
             )
             .forEach(button => {
+
               button.classList.toggle(
                 "active",
-                button.dataset
-                  .category ===
-                  category
+                button.dataset.category ===
+                activeCategory
               );
+
             });
 
           renderPosts();
@@ -1532,11 +1943,13 @@ function setupCategoryCards() {
             );
 
           if (latest) {
+
             latest.scrollIntoView({
-              behavior: "smooth",
-              block: "start"
+              behavior: "smooth"
             });
+
           }
+
         }
       );
 
@@ -1548,6 +1961,7 @@ function setupCategoryCards() {
 ========================================================= */
 
 function setupMobileMenu() {
+
   if (!menu || !links) return;
 
   menu.addEventListener(
@@ -1561,6 +1975,7 @@ function setupMobileMenu() {
       menu.classList.toggle(
         "active"
       );
+
     }
   );
 
@@ -1579,6 +1994,7 @@ function setupMobileMenu() {
           menu.classList.remove(
             "active"
           );
+
         }
       );
 
@@ -1586,10 +2002,11 @@ function setupMobileMenu() {
 }
 
 /* =========================================================
-   MOBILE NAVIGATION
+   MOBILE NAV
 ========================================================= */
 
 function setupMobileNavigation() {
+
   if (!mobileNav) return;
 
   const items =
@@ -1605,20 +2022,17 @@ function setupMobileNavigation() {
 
         event.preventDefault();
 
-        const targetId =
-          item.dataset
-            .mobileTarget;
-
         const target =
           document.getElementById(
-            targetId
+            item.dataset
+              .mobileTarget
           );
 
         if (!target) return;
 
         items.forEach(
-          navItem =>
-            navItem.classList.remove(
+          element =>
+            element.classList.remove(
               "active"
             )
         );
@@ -1628,9 +2042,9 @@ function setupMobileNavigation() {
         );
 
         target.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
+          behavior: "smooth"
         });
+
       }
     );
 
@@ -1640,6 +2054,7 @@ function setupMobileNavigation() {
 }
 
 function updateMobileNavigation() {
+
   if (!mobileNav) return;
 
   const items =
@@ -1657,25 +2072,24 @@ function updateMobileNavigation() {
 
   let current = "home";
 
-  const scrollPosition =
+  const position =
     window.scrollY +
     window.innerHeight *
-      0.35;
+    0.35;
 
   sections.forEach(id => {
 
     const section =
-      document.getElementById(
-        id
-      );
+      document.getElementById(id);
 
     if (
       section &&
       section.offsetTop <=
-        scrollPosition
+      position
     ) {
       current = id;
     }
+
   });
 
   items.forEach(item => {
@@ -1684,7 +2098,7 @@ function updateMobileNavigation() {
       "active",
       item.dataset
         .mobileTarget ===
-        current
+      current
     );
 
   });
@@ -1695,6 +2109,7 @@ function updateMobileNavigation() {
 ========================================================= */
 
 function setupBackToTop() {
+
   if (!backToTop) return;
 
   window.addEventListener(
@@ -1730,17 +2145,13 @@ function setupBackToTop() {
 ========================================================= */
 
 function setupGeographyMap() {
+
   const map =
     document.getElementById(
       "geoMap"
     );
 
   if (!map) return;
-
-  const points =
-    map.querySelectorAll(
-      ".mapPoint"
-    );
 
   const places = {
 
@@ -1770,67 +2181,43 @@ function setupGeographyMap() {
 
   };
 
-  points.forEach(point => {
+  map
+    .querySelectorAll(
+      ".mapPoint"
+    )
+    .forEach(point => {
 
-    const key =
-      Array.from(
-        point.classList
-      ).find(
-        className =>
-          className.startsWith(
-            "point"
-          )
-      );
-
-    const data =
-      places[key];
-
-    if (!data) return;
-
-    point.addEventListener(
-      "click",
-      event => {
-
-        event.stopPropagation();
-
-        map
-          .querySelectorAll(
-            ".mapPoint"
-          )
-          .forEach(item =>
-            item.classList.remove(
-              "selected"
+      const key =
+        Array.from(
+          point.classList
+        ).find(
+          value =>
+            value.startsWith(
+              "point"
             )
+        );
+
+      const data =
+        places[key];
+
+      if (!data) return;
+
+      point.addEventListener(
+        "click",
+        event => {
+
+          event.stopPropagation();
+
+          showMapTooltip(
+            map,
+            point,
+            data
           );
 
-        point.classList.add(
-          "selected"
-        );
+        }
+      );
 
-        showMapTooltip(
-          map,
-          point,
-          data
-        );
-      }
-    );
-
-  });
-
-  map.addEventListener(
-    "click",
-    event => {
-
-      if (
-        !event.target.closest(
-          ".mapPoint"
-        )
-      ) {
-        removeMapTooltip(map);
-      }
-
-    }
-  );
+    });
 }
 
 function showMapTooltip(
@@ -1838,7 +2225,15 @@ function showMapTooltip(
   point,
   data
 ) {
-  removeMapTooltip(map);
+
+  const old =
+    map.querySelector(
+      ".geoTooltip"
+    );
+
+  if (old) {
+    old.remove();
+  }
 
   const tooltip =
     document.createElement(
@@ -1850,104 +2245,41 @@ function showMapTooltip(
 
   tooltip.innerHTML = `
     <strong>
-      ${escapeHtml(data.title)}
+      ${escapeHtml(
+        data.title
+      )}
     </strong>
 
     <span>
-      ${escapeHtml(data.text)}
+      ${escapeHtml(
+        data.text
+      )}
     </span>
   `;
 
-  map.appendChild(tooltip);
+  map.appendChild(
+    tooltip
+  );
 
-  const pointRect =
+  const p =
     point.getBoundingClientRect();
 
-  const mapRect =
+  const m =
     map.getBoundingClientRect();
 
-  const left =
-    pointRect.left -
-    mapRect.left +
-    pointRect.width / 2;
-
-  const top =
-    pointRect.top -
-    mapRect.top -
-    12;
-
   tooltip.style.left =
-    left + "px";
+    (
+      p.left -
+      m.left +
+      p.width / 2
+    ) + "px";
 
   tooltip.style.top =
-    top + "px";
-}
-
-function removeMapTooltip(map) {
-  const tooltip =
-    map.querySelector(
-      ".geoTooltip"
-    );
-
-  if (tooltip) {
-    tooltip.remove();
-  }
-
-  map
-    .querySelectorAll(
-      ".mapPoint"
-    )
-    .forEach(point =>
-      point.classList.remove(
-        "selected"
-      )
-    );
-}
-
-/* =========================================================
-   SMOOTH LINKS
-========================================================= */
-
-function setupSmoothLinks() {
-  document
-    .querySelectorAll(
-      'a[href^="#"]'
-    )
-    .forEach(link => {
-
-      link.addEventListener(
-        "click",
-        event => {
-
-          const href =
-            link.getAttribute(
-              "href"
-            );
-
-          if (
-            !href ||
-            href === "#"
-          ) {
-            return;
-          }
-
-          const target =
-            document.querySelector(
-              href
-            );
-
-          if (!target) return;
-
-          event.preventDefault();
-
-          target.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-        }
-      );
-
-    });
+    (
+      p.top -
+      m.top -
+      12
+    ) + "px";
 }
 
 /* =========================================================
@@ -1955,7 +2287,10 @@ function setupSmoothLinks() {
 ========================================================= */
 
 function registerPWA() {
-  if (!("serviceWorker" in navigator)) {
+
+  if (
+    !("serviceWorker" in navigator)
+  ) {
     return;
   }
 
@@ -1964,18 +2299,16 @@ function registerPWA() {
     () => {
 
       navigator.serviceWorker
-        .register("./sw.js")
-        .then(() => {
-          console.log(
-            "National Geographic PWA активирован"
-          );
-        })
-        .catch(error => {
-          console.error(
-            "PWA:",
-            error
-          );
-        });
+        .register(
+          "./sw.js"
+        )
+        .catch(
+          error =>
+            console.error(
+              "PWA:",
+              error
+            )
+        );
 
     }
   );
@@ -1984,6 +2317,15 @@ function registerPWA() {
 /* =========================================================
    EVENTS
 ========================================================= */
+
+if (refreshButton) {
+
+  refreshButton.addEventListener(
+    "click",
+    () => loadPosts()
+  );
+
+}
 
 document.addEventListener(
   "visibilitychange",
@@ -2000,7 +2342,7 @@ document.addEventListener(
 );
 
 setInterval(
-  () => loadPosts(),
+  loadPosts,
   5 * 60 * 1000
 );
 
@@ -2012,13 +2354,6 @@ window.addEventListener(
   }
 );
 
-if (refreshButton) {
-  refreshButton.addEventListener(
-    "click",
-    () => loadPosts()
-  );
-}
-
 /* =========================================================
    START
 ========================================================= */
@@ -2027,14 +2362,13 @@ document.addEventListener(
   "DOMContentLoaded",
   () => {
 
-    setupCategoryButtons();
     setupSearch();
+    setupCategoryButtons();
     setupCategoryCards();
     setupMobileMenu();
     setupMobileNavigation();
     setupBackToTop();
     setupGeographyMap();
-    setupSmoothLinks();
     registerPWA();
 
     loadPosts();
@@ -2046,7 +2380,9 @@ document.addEventListener(
    GLOBAL
 ========================================================= */
 
-window.openPost = openPost;
+window.openPost =
+  openPost;
+
 window.closePostModal =
   closePostModal;
 
@@ -2055,6 +2391,9 @@ window.toggleFavorite =
 
 window.toggleLike =
   toggleLike;
+
+window.toggleExpanded =
+  toggleExpanded;
 
 window.sharePost =
   sharePost;
