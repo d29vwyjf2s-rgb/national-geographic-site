@@ -5,26 +5,38 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
 
-  <meta name="theme-color" content="#050505">
+  <meta
+    name="theme-color"
+    content="#111712"
+  >
 
   <meta
     name="description"
-    content="National Geographic — природа, путешествия, животные и удивительные места планеты."
+    content="National Geographic — природа, путешествия, животные и удивительные места нашей планеты."
   >
 
-  <title>National Geographic</title>
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  >
+
+  <title>National Geographic — Мир рядом</title>
 
   <link rel="manifest" href="./manifest.json">
-  <link rel="icon" href="./icon-192.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   >
 
@@ -33,172 +45,188 @@
 
 <body>
 
-  <!-- HEADER -->
-  <header class="ngHeader">
-    <div class="ngHeaderInner">
+  <!-- =====================================
+       HEADER
+  ====================================== -->
 
-      <a href="#home" class="ngBrand">
-        <span class="ngBrandBox">NATIONAL</span>
-        <span class="ngBrandText">GEOGRAPHIC</span>
+  <header class="siteHeader">
+
+    <div class="headerInner">
+
+      <a
+        href="#home"
+        class="siteLogo"
+        aria-label="National Geographic"
+      >
+        <span class="logoFrame">NG</span>
+
+        <span class="logoWords">
+          NATIONAL<br>
+          GEOGRAPHIC
+        </span>
       </a>
 
-      <nav class="ngNav">
-        <a href="#home">Главная</a>
-        <a href="#feed">Лента</a>
-        <a href="#about">О проекте</a>
+
+      <nav class="desktopNav">
+
+        <a href="#home">
+          Главная
+        </a>
+
+        <a href="#explore">
+          Исследовать
+        </a>
+
+        <a href="#feed">
+          Журнал
+        </a>
+
+        <a href="#about">
+          О проекте
+        </a>
+
       </nav>
 
+
       <button
-        class="ngMenu"
-        id="mobileMenuButton"
+        class="menuButton"
+        id="menuButton"
+        type="button"
         aria-label="Открыть меню"
       >
-        <span></span>
         <span></span>
         <span></span>
       </button>
 
     </div>
+
   </header>
 
 
-  <!-- MOBILE MENU -->
-  <div class="ngMobileMenu" id="mobileMenu">
+  <!-- =====================================
+       MOBILE MENU
+  ====================================== -->
 
-    <div class="ngMobileMenuInner">
+  <div
+    class="mobileMenu"
+    id="mobileMenu"
+  >
 
-      <a href="#home">Главная</a>
-      <a href="#feed">Лента</a>
-      <a href="#about">О проекте</a>
+    <div class="mobileMenuInner">
+
+      <a href="#home">
+        <span>01</span>
+        Главная
+      </a>
+
+      <a href="#explore">
+        <span>02</span>
+        Исследовать
+      </a>
+
+      <a href="#feed">
+        <span>03</span>
+        Журнал
+      </a>
+
+      <a href="#about">
+        <span>04</span>
+        О проекте
+      </a>
 
     </div>
 
   </div>
 
 
-  <main>
+  <main id="home">
 
-    <!-- HERO -->
-    <section class="ngHero" id="home">
 
-      <div class="ngHeroOverlay"></div>
+    <!-- =====================================
+         HERO
+    ====================================== -->
 
-      <div class="ngHeroContent">
+    <section class="hero">
 
-        <div class="ngHeroMeta">
-          <span class="ngYellowLine"></span>
-          DIGITAL EDITION
-          <span>2026</span>
-        </div>
+      <div class="heroBackground">
 
-        <h1>
-          МИР,
-          <br>
-          КОТОРЫЙ
-          <br>
-          СТОИТ УВИДЕТЬ
-        </h1>
+        <div class="heroMountain heroMountainOne"></div>
+        <div class="heroMountain heroMountainTwo"></div>
+        <div class="heroMountain heroMountainThree"></div>
 
-        <p>
-          Природа, путешествия, животные и самые удивительные места нашей планеты.
-        </p>
+        <div class="heroSun"></div>
 
-        <a href="#feed" class="ngHeroButton">
-          СМОТРЕТЬ ЛЕНТУ
-          <span>↓</span>
-        </a>
+        <div class="heroGrid"></div>
 
       </div>
 
-    </section>
 
+      <div class="heroContent">
 
-    <!-- COMMUNITY -->
-    <section class="ngCommunityBar">
+        <div class="heroTopLine">
 
-      <div class="ngCommunityIdentity">
+          <span>
+            NATIONAL GEOGRAPHIC
+          </span>
 
-        <div class="ngAvatar">
-          <span>NG</span>
+          <span>
+            DIGITAL JOURNAL · 2026
+          </span>
+
         </div>
 
-        <div>
-          <div class="ngCommunityTitle">
-            National Geographic
-          </div>
 
-          <div class="ngCommunitySubtitle">
-            Официальная лента проекта
-          </div>
-        </div>
+        <div class="heroMain">
 
-      </div>
-
-      <a
-        class="ngVkButton"
-        href="https://vk.ru/national.geograph1c"
-        target="_blank"
-        rel="noopener"
-      >
-        VK
-        <span>↗</span>
-      </a>
-
-    </section>
-
-
-    <!-- FEED -->
-    <section class="ngFeedSection" id="feed">
-
-      <div class="ngContainer">
-
-        <div class="ngSectionHeading">
-
-          <div>
-            <div class="ngEyebrow">
-              NATIONAL GEOGRAPHIC
-            </div>
-
-            <h2>
-              Последние публикации
-            </h2>
-          </div>
-
-          <div class="ngSectionNumber">
+          <div class="heroNumber">
             01
           </div>
 
+
+          <div class="heroText">
+
+            <div class="heroLabel">
+              МИР НАЧИНАЕТСЯ ЗА ГОРИЗОНТОМ
+            </div>
+
+            <h1>
+              УВИДЕТЬ<br>
+              БОЛЬШЕ
+            </h1>
+
+            <p>
+              Путешествия, природа и места,
+              ради которых хочется собрать
+              рюкзак и отправиться в путь.
+            </p>
+
+            <a
+              href="#feed"
+              class="heroLink"
+            >
+              ОТКРЫТЬ ЖУРНАЛ
+              <span>↗</span>
+            </a>
+
+          </div>
+
         </div>
 
 
-        <div class="ngSectionDivider"></div>
+        <div class="heroBottom">
 
+          <span>
+            51° 28′ N
+          </span>
 
-        <div
-          class="ngFeedStatus"
-          id="feedStatus"
-        >
-          ЗАГРУЗКА ПУБЛИКАЦИЙ…
-        </div>
+          <span>
+            EXPLORE / DISCOVER / REMEMBER
+          </span>
 
+          <span>
+            12° 33′ E
+          </span>
 
-        <div
-          class="ngPosts"
-          id="posts"
-        ></div>
-
-
-        <div
-          class="loadMoreWrap"
-          id="loadMoreWrap"
-          hidden
-        >
-          <button
-            class="loadMore"
-            id="loadMore"
-          >
-            ПОКАЗАТЬ ЕЩЁ
-          </button>
         </div>
 
       </div>
@@ -206,46 +234,296 @@
     </section>
 
 
-    <!-- ABOUT -->
-    <section class="ngAbout" id="about">
+    <!-- =====================================
+         INTRO
+    ====================================== -->
 
-      <div class="ngContainer">
+    <section class="introSection">
 
-        <div class="ngAboutGrid">
+      <div class="pageContainer">
+
+        <div class="introGrid">
+
+          <div class="introSmall">
+            <span class="line"></span>
+            ИССЛЕДУЙТЕ ПЛАНЕТУ
+          </div>
+
+
+          <div class="introLarge">
+
+            <h2>
+              Планета огромна.
+              <br>
+              И она всё ещё
+              <em>полна открытий.</em>
+            </h2>
+
+            <p>
+              Мы собираем истории о местах,
+              животных и людях, которые
+              заставляют посмотреть на мир
+              немного иначе.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================
+         EXPLORE
+    ====================================== -->
+
+    <section
+      class="exploreSection"
+      id="explore"
+    >
+
+      <div class="pageContainer">
+
+        <div class="sectionHeader">
 
           <div>
 
-            <div class="ngEyebrow">
-              ABOUT
+            <div class="sectionKicker">
+              EXPLORE
             </div>
 
             <h2>
-              National Geographic
+              НАПРАВЛЕНИЯ
             </h2>
 
           </div>
 
-          <div class="ngAboutText">
+          <div class="sectionIndex">
+            02 / 04
+          </div>
+
+        </div>
+
+
+        <div class="exploreGrid">
+
+
+          <!-- CARD 1 -->
+
+          <a
+            href="#feed"
+            class="exploreCard exploreCardLarge"
+          >
+
+            <div class="exploreImage exploreNature">
+
+              <span class="fakeSun"></span>
+
+              <span class="fakeMountain mountainA"></span>
+              <span class="fakeMountain mountainB"></span>
+              <span class="fakeMountain mountainC"></span>
+
+            </div>
+
+
+            <div class="exploreOverlay"></div>
+
+
+            <div class="exploreContent">
+
+              <span class="exploreNumber">
+                01
+              </span>
+
+              <h3>
+                ДИКАЯ<br>
+                ПРИРОДА
+              </h3>
+
+              <p>
+                Горы · леса · пустыни · океаны
+              </p>
+
+            </div>
+
+          </a>
+
+
+          <!-- CARD 2 -->
+
+          <a
+            href="#feed"
+            class="exploreCard"
+          >
+
+            <div class="exploreImage exploreOcean">
+
+              <div class="oceanSun"></div>
+
+              <div class="oceanWave waveOne"></div>
+              <div class="oceanWave waveTwo"></div>
+              <div class="oceanWave waveThree"></div>
+
+            </div>
+
+            <div class="exploreOverlay"></div>
+
+            <div class="exploreContent">
+
+              <span class="exploreNumber">
+                02
+              </span>
+
+              <h3>
+                ОКЕАН
+              </h3>
+
+              <p>
+                Глубина · жизнь · стихия
+              </p>
+
+            </div>
+
+          </a>
+
+
+          <!-- CARD 3 -->
+
+          <a
+            href="#feed"
+            class="exploreCard"
+          >
+
+            <div class="exploreImage exploreTravel">
+
+              <div class="travelRoad"></div>
+
+              <div class="travelMountain"></div>
+
+            </div>
+
+            <div class="exploreOverlay"></div>
+
+            <div class="exploreContent">
+
+              <span class="exploreNumber">
+                03
+              </span>
+
+              <h3>
+                ПУТЕШЕСТВИЯ
+              </h3>
+
+              <p>
+                Маршруты · города · открытия
+              </p>
+
+            </div>
+
+          </a>
+
+
+          <!-- CARD 4 -->
+
+          <a
+            href="#feed"
+            class="exploreCard exploreCardWide"
+          >
+
+            <div class="exploreImage exploreWildlife">
+
+              <div class="animalEye"></div>
+
+              <div class="animalShape"></div>
+
+            </div>
+
+            <div class="exploreOverlay"></div>
+
+            <div class="exploreContent">
+
+              <span class="exploreNumber">
+                04
+              </span>
+
+              <h3>
+                ЖИВОТНЫЕ
+              </h3>
+
+              <p>
+                Дикие обитатели нашей планеты
+              </p>
+
+            </div>
+
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================
+         FIELD NOTE
+    ====================================== -->
+
+    <section class="fieldSection">
+
+      <div class="pageContainer">
+
+        <div class="fieldCard">
+
+          <div class="fieldImage">
+
+            <div class="fieldCompass">
+              N
+            </div>
+
+            <div class="fieldCoordinates">
+              43° 21′ 12″ N<br>
+              42° 26′ 48″ E
+            </div>
+
+            <div class="fieldLandscape">
+
+              <span></span>
+              <span></span>
+              <span></span>
+
+            </div>
+
+          </div>
+
+
+          <div class="fieldContent">
+
+            <div class="fieldLabel">
+              FIELD NOTE / 001
+            </div>
+
+            <h2>
+              КАЖДЫЙ<br>
+              МАРШРУТ<br>
+              НАЧИНАЕТСЯ<br>
+              С ШАГА.
+            </h2>
 
             <p>
-              Пространство о природе, путешествиях,
-              животных и местах, которые заставляют
-              остановиться и посмотреть вокруг.
-            </p>
-
-            <p>
-              Здесь собраны публикации сообщества
-              National Geographic — прямо из VK.
+              Иногда, чтобы увидеть что-то
+              удивительное, достаточно просто
+              свернуть с привычной дороги.
             </p>
 
             <a
-              href="https://vk.ru/national.geograph1c"
-              target="_blank"
-              rel="noopener"
-              class="ngAboutLink"
+              href="#feed"
+              class="darkButton"
             >
-              ПЕРЕЙТИ В СООБЩЕСТВО
-              <span>↗</span>
+              СМОТРЕТЬ ИСТОРИИ
+              <span>→</span>
             </a>
 
           </div>
@@ -256,21 +534,230 @@
 
     </section>
 
+
+    <!-- =====================================
+         JOURNAL / VK FEED
+    ====================================== -->
+
+    <section
+      class="journalSection"
+      id="feed"
+    >
+
+      <div class="pageContainer">
+
+        <div class="journalHeader">
+
+          <div>
+
+            <div class="sectionKicker">
+              NATIONAL GEOGRAPHIC JOURNAL
+            </div>
+
+            <h2>
+              ПОСЛЕДНИЕ ИСТОРИИ
+            </h2>
+
+          </div>
+
+
+          <div class="journalInfo">
+
+            <span>
+              LIVE
+            </span>
+
+            <i></i>
+
+            <span>
+              VK EDITION
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="feedStatus"
+          class="feedStatus"
+        >
+          Загружаем последние материалы…
+        </div>
+
+
+        <div
+          id="posts"
+          class="postsGrid"
+        ></div>
+
+
+        <div
+          id="loadMoreWrap"
+          class="loadMoreWrap"
+        >
+
+          <button
+            id="loadMore"
+            class="loadMoreButton"
+            type="button"
+          >
+            ЗАГРУЗИТЬ ЕЩЁ
+            <span>↓</span>
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================
+         COMMUNITY
+    ====================================== -->
+
+    <section class="communitySection">
+
+      <div class="pageContainer">
+
+        <div class="communityCard">
+
+          <div class="communityLogo">
+            NG
+          </div>
+
+
+          <div class="communityText">
+
+            <span>
+              OFFICIAL COMMUNITY
+            </span>
+
+            <h2>
+              NATIONAL GEOGRAPHIC
+            </h2>
+
+            <p>
+              Природа · путешествия · планета
+            </p>
+
+          </div>
+
+
+          <a
+            href="https://vk.ru/national.geograph1c"
+            target="_blank"
+            rel="noopener"
+            class="communityButton"
+          >
+            ОТКРЫТЬ VK
+            <span>↗</span>
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================
+         ABOUT
+    ====================================== -->
+
+    <section
+      class="aboutSection"
+      id="about"
+    >
+
+      <div class="pageContainer">
+
+        <div class="aboutGrid">
+
+          <div class="aboutTitle">
+
+            <span>
+              04
+            </span>
+
+            <h2>
+              О<br>
+              ПРОЕКТЕ
+            </h2>
+
+          </div>
+
+
+          <div class="aboutText">
+
+            <p class="aboutLead">
+              National Geographic —
+              цифровой журнал о нашей планете.
+            </p>
+
+            <p>
+              Здесь встречаются большие
+              путешествия и маленькие открытия:
+              дикие места, редкие животные,
+              необычные города, горы, океаны
+              и истории людей.
+            </p>
+
+            <p>
+              Мы верим, что интерес к миру
+              начинается с любопытства.
+              Поэтому просто открывайте,
+              смотрите и отправляйтесь дальше.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
   </main>
 
 
-  <!-- FOOTER -->
-  <footer class="ngFooter">
+  <!-- =====================================
+       FOOTER
+  ====================================== -->
 
-    <div class="ngFooterInner">
+  <footer class="siteFooter">
 
-      <div class="ngFooterBrand">
-        NATIONAL
-        <strong>GEOGRAPHIC</strong>
+    <div class="pageContainer">
+
+      <div class="footerTop">
+
+        <div class="footerLogo">
+          <span>NG</span>
+          NATIONAL<br>
+          GEOGRAPHIC
+        </div>
+
+
+        <div class="footerPhrase">
+          THE WORLD<br>
+          IS WAITING.
+        </div>
+
       </div>
 
-      <div class="ngFooterCopy">
-        © <span id="year"></span> National Geographic
+
+      <div class="footerBottom">
+
+        <span>
+          NATIONAL GEOGRAPHIC DIGITAL EDITION
+        </span>
+
+        <span>
+          © 2026
+        </span>
+
       </div>
 
     </div>
@@ -278,42 +765,63 @@
   </footer>
 
 
-  <!-- MOBILE NAV -->
-  <nav class="ngMobileNav">
+  <!-- =====================================
+       MOBILE BOTTOM NAV
+  ====================================== -->
+
+  <nav class="mobileBottomNav">
 
     <a href="#home">
-      <span>⌂</span>
-      <small>Главная</small>
+      <span>01</span>
+      Главная
+    </a>
+
+    <a href="#explore">
+      <span>02</span>
+      Мир
     </a>
 
     <a href="#feed">
-      <span>▤</span>
-      <small>Лента</small>
+      <span>03</span>
+      Журнал
     </a>
 
     <a href="#about">
-      <span>◎</span>
-      <small>О проекте</small>
+      <span>04</span>
+      О нас
     </a>
 
   </nav>
 
 
-  <!-- BACK TO TOP -->
+  <!-- =====================================
+       TOP BUTTON
+  ====================================== -->
+
   <button
-    class="ngTop"
     id="backToTop"
+    class="backToTop"
+    type="button"
     aria-label="Наверх"
   >
     ↑
   </button>
 
 
+  <!-- =====================================
+       TOAST
+  ====================================== -->
+
   <div
-    class="ngToast"
     id="toast"
+    class="toast"
+    aria-live="polite"
   ></div>
 
+
+  <!-- =====================================
+       SCRIPTS
+  ====================================== -->
 
   <script src="./script.js"></script>
 
