@@ -1,1634 +1,829 @@
-:root {
-  --bg: #f4f2ec;
-  --paper: #faf9f5;
-  --white: #ffffff;
-  --ink: #11130f;
-  --gray: #686b63;
-  --light-gray: #dcdcd4;
-  --yellow: #f5c400;
-  --yellow-dark: #c79d00;
-  --green: #26352d;
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
 
-  --container: 1240px;
-  --radius: 2px;
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
 
-  --shadow:
-    0 18px 50px rgba(24, 29, 24, .10);
-}
+  <meta
+    name="theme-color"
+    content="#111712"
+  >
 
+  <meta
+    name="description"
+    content="National Geographic — природа, путешествия, животные и удивительные места нашей планеты."
+  >
 
-/* =========================
-   RESET
-========================= */
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
 
-* {
-  box-sizing: border-box;
-}
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  >
 
-html {
-  scroll-behavior: smooth;
-}
+  <title>National Geographic — Мир рядом</title>
 
-body {
-  margin: 0;
+  <link rel="manifest" href="./manifest.json">
 
-  background: var(--bg);
-  color: var(--ink);
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  font-family:
-    "Inter",
-    Arial,
-    sans-serif;
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
 
-  -webkit-font-smoothing: antialiased;
-}
+  <link rel="stylesheet" href="./style.css">
+</head>
 
-body,
-button,
-a {
-  -webkit-tap-highlight-color: transparent;
-}
+<body>
 
-button {
-  font: inherit;
-  cursor: pointer;
-}
+  <!-- =====================================
+       HEADER
+  ====================================== -->
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  <header class="siteHeader">
 
-img {
-  display: block;
-  max-width: 100%;
-}
+    <div class="headerInner">
 
-.ngContainer {
-  width: min(
-    calc(100% - 48px),
-    var(--container)
-  );
+      <a
+        href="#home"
+        class="siteLogo"
+        aria-label="National Geographic"
+      >
+        <span class="logoFrame">NG</span>
 
-  margin: 0 auto;
-}
+        <span class="logoWords">
+          NATIONAL<br>
+          GEOGRAPHIC
+        </span>
+      </a>
 
 
-/* =========================
-   HEADER
-========================= */
+      <nav class="desktopNav">
 
-.ngHeader {
-  position: sticky;
-  top: 0;
+        <a href="#home">
+          Главная
+        </a>
 
-  z-index: 1000;
+        <a href="#explore">
+          Исследовать
+        </a>
 
-  height: 78px;
+        <a href="#feed">
+          Журнал
+        </a>
 
-  background:
-    rgba(250,249,245,.94);
+        <a href="#about">
+          О проекте
+        </a>
 
-  border-bottom:
-    1px solid rgba(17,19,15,.12);
+      </nav>
 
-  backdrop-filter:
-    blur(16px);
-}
 
-.ngHeaderInner {
-  width: min(
-    calc(100% - 48px),
-    var(--container)
-  );
+      <button
+        class="menuButton"
+        id="menuButton"
+        type="button"
+        aria-label="Открыть меню"
+      >
+        <span></span>
+        <span></span>
+      </button>
 
-  height: 100%;
+    </div>
 
-  margin: auto;
+  </header>
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 
+  <!-- =====================================
+       MOBILE MENU
+  ====================================== -->
 
-/* LOGO */
+  <div
+    class="mobileMenu"
+    id="mobileMenu"
+  >
 
-.ngBrand {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-}
+    <div class="mobileMenuInner">
 
-.ngBrandBox {
-  height: 31px;
+      <a href="#home">
+        <span>01</span>
+        Главная
+      </a>
 
-  padding: 0 7px;
+      <a href="#explore">
+        <span>02</span>
+        Исследовать
+      </a>
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+      <a href="#feed">
+        <span>03</span>
+        Журнал
+      </a>
 
-  border: 2px solid var(--yellow);
+      <a href="#about">
+        <span>04</span>
+        О проекте
+      </a>
 
-  color: var(--ink);
+    </div>
 
-  font-family: "Oswald", sans-serif;
+  </div>
 
-  font-size: 12px;
-  font-weight: 700;
 
-  letter-spacing: .04em;
-}
+  <main id="home">
 
-.ngBrandText {
-  font-family: "Oswald", sans-serif;
 
-  font-size: 20px;
-  font-weight: 600;
+    <!-- =====================================
+         HERO
+    ====================================== -->
 
-  letter-spacing: .06em;
-}
+    <section class="hero">
 
+      <div class="heroBackground">
 
-/* NAV */
+        <div class="heroMountain heroMountainOne"></div>
+        <div class="heroMountain heroMountainTwo"></div>
+        <div class="heroMountain heroMountainThree"></div>
 
-.ngNav {
-  display: flex;
-  align-items: center;
+        <div class="heroSun"></div>
 
-  gap: 34px;
-}
+        <div class="heroGrid"></div>
 
-.ngNav a {
-  position: relative;
+      </div>
 
-  color: #5f625c;
 
-  font-size: 10px;
-  font-weight: 800;
+      <div class="heroContent">
 
-  letter-spacing: .15em;
+        <div class="heroTopLine">
 
-  text-transform: uppercase;
+          <span>
+            NATIONAL GEOGRAPHIC
+          </span>
 
-  transition: color .2s ease;
-}
+          <span>
+            DIGITAL JOURNAL · 2026
+          </span>
 
-.ngNav a::after {
-  content: "";
+        </div>
 
-  position: absolute;
 
-  left: 0;
-  right: 0;
-  bottom: -9px;
+        <div class="heroMain">
 
-  height: 2px;
+          <div class="heroNumber">
+            01
+          </div>
 
-  background: var(--yellow);
 
-  transform: scaleX(0);
+          <div class="heroText">
 
-  transition:
-    transform .2s ease;
-}
+            <div class="heroLabel">
+              МИР НАЧИНАЕТСЯ ЗА ГОРИЗОНТОМ
+            </div>
 
-.ngNav a:hover {
-  color: var(--ink);
-}
+            <h1>
+              УВИДЕТЬ<br>
+              БОЛЬШЕ
+            </h1>
 
-.ngNav a:hover::after {
-  transform: scaleX(1);
-}
+            <p>
+              Путешествия, природа и места,
+              ради которых хочется собрать
+              рюкзак и отправиться в путь.
+            </p>
 
+            <a
+              href="#feed"
+              class="heroLink"
+            >
+              ОТКРЫТЬ ЖУРНАЛ
+              <span>↗</span>
+            </a>
 
-/* MOBILE BUTTON */
+          </div>
 
-.ngMenu {
-  display: none;
+        </div>
 
-  width: 44px;
-  height: 44px;
 
-  padding: 0;
+        <div class="heroBottom">
 
-  border: 1px solid rgba(17,19,15,.15);
+          <span>
+            51° 28′ N
+          </span>
 
-  background: transparent;
+          <span>
+            EXPLORE / DISCOVER / REMEMBER
+          </span>
 
-  align-items: center;
-  justify-content: center;
+          <span>
+            12° 33′ E
+          </span>
 
-  flex-direction: column;
+        </div>
 
-  gap: 5px;
-}
+      </div>
 
-.ngMenu span {
-  width: 20px;
-  height: 2px;
+    </section>
 
-  background: var(--ink);
-}
 
+    <!-- =====================================
+         INTRO
+    ====================================== -->
 
-/* =========================
-   MOBILE MENU
-========================= */
+    <section class="introSection">
 
-.ngMobileMenu {
-  display: none;
+      <div class="pageContainer">
 
-  position: fixed;
+        <div class="introGrid">
 
-  top: 78px;
-  left: 0;
-  right: 0;
+          <div class="introSmall">
+            <span class="line"></span>
+            ИССЛЕДУЙТЕ ПЛАНЕТУ
+          </div>
 
-  z-index: 900;
 
-  background: var(--paper);
+          <div class="introLarge">
 
-  border-bottom:
-    1px solid var(--light-gray);
+            <h2>
+              Планета огромна.
+              <br>
+              И она всё ещё
+              <em>полна открытий.</em>
+            </h2>
 
-  box-shadow:
-    0 15px 30px rgba(0,0,0,.08);
-}
+            <p>
+              Мы собираем истории о местах,
+              животных и людях, которые
+              заставляют посмотреть на мир
+              немного иначе.
+            </p>
 
-.ngMobileMenu.active {
-  display: block;
-}
+          </div>
 
-.ngMobileMenuInner {
-  width: min(
-    calc(100% - 32px),
-    var(--container)
-  );
+        </div>
 
-  margin: auto;
-}
+      </div>
 
-.ngMobileMenu a {
-  min-height: 58px;
+    </section>
 
-  display: flex;
-  align-items: center;
 
-  border-bottom:
-    1px solid var(--light-gray);
+    <!-- =====================================
+         EXPLORE
+    ====================================== -->
 
-  font-size: 10px;
-  font-weight: 800;
+    <section
+      class="exploreSection"
+      id="explore"
+    >
 
-  letter-spacing: .15em;
+      <div class="pageContainer">
 
-  text-transform: uppercase;
-}
+        <div class="sectionHeader">
 
+          <div>
 
-/* =========================
-   HERO
-========================= */
+            <div class="sectionKicker">
+              EXPLORE
+            </div>
 
-.ngHero {
-  position: relative;
+            <h2>
+              НАПРАВЛЕНИЯ
+            </h2>
 
-  min-height: 680px;
+          </div>
 
-  display: flex;
-  align-items: flex-end;
+          <div class="sectionIndex">
+            02 / 04
+          </div>
 
-  overflow: hidden;
+        </div>
 
-  background:
-    linear-gradient(
-      135deg,
-      #26352d,
-      #111812
-    );
-}
 
-.ngHero::before {
-  content: "";
+        <div class="exploreGrid">
 
-  position: absolute;
-  inset: 0;
 
-  background:
-    radial-gradient(
-      circle at 75% 35%,
-      rgba(245,196,0,.25),
-      transparent 22%
-    ),
-    linear-gradient(
-      90deg,
-      rgba(10,17,13,.95) 0%,
-      rgba(10,17,13,.72) 48%,
-      rgba(10,17,13,.20) 100%
-    );
-}
+          <!-- CARD 1 -->
 
-.ngHero::after {
-  content: "";
+          <a
+            href="#feed"
+            class="exploreCard exploreCardLarge"
+          >
 
-  position: absolute;
+            <div class="exploreImage exploreNature">
 
-  right: 7%;
-  top: 14%;
+              <span class="fakeSun"></span>
 
-  width: 320px;
-  height: 320px;
+              <span class="fakeMountain mountainA"></span>
+              <span class="fakeMountain mountainB"></span>
+              <span class="fakeMountain mountainC"></span>
 
-  border:
-    1px solid rgba(255,255,255,.17);
+            </div>
 
-  border-radius: 50%;
 
-  box-shadow:
-    0 0 0 40px rgba(255,255,255,.025),
-    0 0 0 80px rgba(255,255,255,.018);
-}
+            <div class="exploreOverlay"></div>
 
-.ngHeroContent {
-  position: relative;
 
-  z-index: 2;
+            <div class="exploreContent">
 
-  width: min(
-    calc(100% - 48px),
-    var(--container)
-  );
+              <span class="exploreNumber">
+                01
+              </span>
 
-  margin: 0 auto;
+              <h3>
+                ДИКАЯ<br>
+                ПРИРОДА
+              </h3>
 
-  padding-bottom: 86px;
+              <p>
+                Горы · леса · пустыни · океаны
+              </p>
 
-  color: white;
-}
+            </div>
 
-.ngHeroMeta {
-  display: flex;
-  align-items: center;
+          </a>
 
-  gap: 12px;
 
-  margin-bottom: 25px;
+          <!-- CARD 2 -->
 
-  color: rgba(255,255,255,.68);
+          <a
+            href="#feed"
+            class="exploreCard"
+          >
 
-  font-size: 10px;
-  font-weight: 800;
+            <div class="exploreImage exploreOcean">
 
-  letter-spacing: .18em;
-}
+              <div class="oceanSun"></div>
 
-.ngYellowLine {
-  width: 42px;
-  height: 3px;
+              <div class="oceanWave waveOne"></div>
+              <div class="oceanWave waveTwo"></div>
+              <div class="oceanWave waveThree"></div>
 
-  background: var(--yellow);
-}
+            </div>
 
-.ngHeroMeta span:last-child {
-  color: var(--yellow);
-}
+            <div class="exploreOverlay"></div>
 
-.ngHero h1 {
-  max-width: 850px;
+            <div class="exploreContent">
 
-  margin: 0;
+              <span class="exploreNumber">
+                02
+              </span>
 
-  font-family: "Oswald", sans-serif;
+              <h3>
+                ОКЕАН
+              </h3>
 
-  font-size:
-    clamp(64px, 10vw, 140px);
+              <p>
+                Глубина · жизнь · стихия
+              </p>
 
-  font-weight: 600;
+            </div>
 
-  line-height: .84;
+          </a>
 
-  letter-spacing: -.035em;
-}
 
-.ngHero p {
-  max-width: 570px;
+          <!-- CARD 3 -->
 
-  margin:
-    32px 0 0;
+          <a
+            href="#feed"
+            class="exploreCard"
+          >
 
-  color: rgba(255,255,255,.76);
+            <div class="exploreImage exploreTravel">
 
-  font-size: 15px;
+              <div class="travelRoad"></div>
 
-  line-height: 1.7;
-}
+              <div class="travelMountain"></div>
 
-.ngHeroButton {
-  width: 215px;
-  height: 50px;
+            </div>
 
-  margin-top: 35px;
+            <div class="exploreOverlay"></div>
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+            <div class="exploreContent">
 
-  gap: 18px;
+              <span class="exploreNumber">
+                03
+              </span>
 
-  background: var(--yellow);
+              <h3>
+                ПУТЕШЕСТВИЯ
+              </h3>
 
-  color: var(--ink);
+              <p>
+                Маршруты · города · открытия
+              </p>
 
-  font-size: 10px;
-  font-weight: 900;
+            </div>
 
-  letter-spacing: .14em;
+          </a>
 
-  transition:
-    transform .2s ease,
-    background .2s ease;
-}
 
-.ngHeroButton:hover {
-  background: #ffd83d;
+          <!-- CARD 4 -->
 
-  transform:
-    translateY(-2px);
-}
+          <a
+            href="#feed"
+            class="exploreCard exploreCardWide"
+          >
 
+            <div class="exploreImage exploreWildlife">
 
-/* =========================
-   COMMUNITY BAR
-========================= */
+              <div class="animalEye"></div>
 
-.ngCommunityBar {
-  width: min(
-    calc(100% - 48px),
-    var(--container)
-  );
+              <div class="animalShape"></div>
 
-  min-height: 100px;
+            </div>
 
-  margin: auto;
+            <div class="exploreOverlay"></div>
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+            <div class="exploreContent">
 
-  border-bottom:
-    1px solid rgba(17,19,15,.12);
-}
+              <span class="exploreNumber">
+                04
+              </span>
 
-.ngCommunityIdentity {
-  display: flex;
-  align-items: center;
+              <h3>
+                ЖИВОТНЫЕ
+              </h3>
 
-  gap: 14px;
-}
+              <p>
+                Дикие обитатели нашей планеты
+              </p>
 
-.ngAvatar {
-  width: 48px;
-  height: 48px;
+            </div>
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+          </a>
 
-  background: var(--ink);
+        </div>
 
-  color: var(--yellow);
+      </div>
 
-  font-family: "Oswald", sans-serif;
+    </section>
 
-  font-size: 13px;
-  font-weight: 700;
-}
 
-.ngCommunityTitle {
-  font-size: 13px;
-  font-weight: 800;
-}
+    <!-- =====================================
+         FIELD NOTE
+    ====================================== -->
 
-.ngCommunitySubtitle {
-  margin-top: 5px;
+    <section class="fieldSection">
 
-  color: var(--gray);
+      <div class="pageContainer">
 
-  font-size: 10px;
-}
+        <div class="fieldCard">
 
-.ngVkButton {
-  width: 110px;
-  height: 46px;
+          <div class="fieldImage">
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+            <div class="fieldCompass">
+              N
+            </div>
 
-  gap: 10px;
+            <div class="fieldCoordinates">
+              43° 21′ 12″ N<br>
+              42° 26′ 48″ E
+            </div>
 
-  border:
-    1px solid var(--ink);
+            <div class="fieldLandscape">
 
-  color: var(--ink);
+              <span></span>
+              <span></span>
+              <span></span>
 
-  font-size: 10px;
-  font-weight: 900;
+            </div>
 
-  letter-spacing: .12em;
+          </div>
 
-  transition:
-    background .2s ease,
-    color .2s ease;
-}
 
-.ngVkButton:hover {
-  background: var(--ink);
-  color: var(--yellow);
-}
+          <div class="fieldContent">
 
+            <div class="fieldLabel">
+              FIELD NOTE / 001
+            </div>
 
-/* =========================
-   FEED
-========================= */
+            <h2>
+              КАЖДЫЙ<br>
+              МАРШРУТ<br>
+              НАЧИНАЕТСЯ<br>
+              С ШАГА.
+            </h2>
 
-.ngFeedSection {
-  padding:
-    105px 0 120px;
-}
+            <p>
+              Иногда, чтобы увидеть что-то
+              удивительное, достаточно просто
+              свернуть с привычной дороги.
+            </p>
 
-.ngSectionHeading {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+            <a
+              href="#feed"
+              class="darkButton"
+            >
+              СМОТРЕТЬ ИСТОРИИ
+              <span>→</span>
+            </a>
 
-  gap: 30px;
-}
+          </div>
 
-.ngEyebrow {
-  margin-bottom: 13px;
+        </div>
 
-  color: var(--yellow-dark);
+      </div>
 
-  font-size: 9px;
-  font-weight: 900;
+    </section>
 
-  letter-spacing: .23em;
-}
 
-.ngSectionHeading h2 {
-  margin: 0;
+    <!-- =====================================
+         JOURNAL / VK FEED
+    ====================================== -->
 
-  font-family: "Oswald", sans-serif;
+    <section
+      class="journalSection"
+      id="feed"
+    >
 
-  font-size:
-    clamp(42px, 5vw, 68px);
+      <div class="pageContainer">
 
-  font-weight: 600;
+        <div class="journalHeader">
 
-  line-height: .92;
+          <div>
 
-  letter-spacing: -.025em;
-}
+            <div class="sectionKicker">
+              NATIONAL GEOGRAPHIC JOURNAL
+            </div>
 
-.ngSectionNumber {
-  color: #c8c8c0;
+            <h2>
+              ПОСЛЕДНИЕ ИСТОРИИ
+            </h2>
 
-  font-family: "Oswald", sans-serif;
+          </div>
 
-  font-size: 60px;
-}
 
-.ngSectionDivider {
-  height: 1px;
+          <div class="journalInfo">
 
-  margin:
-    32px 0 27px;
+            <span>
+              LIVE
+            </span>
 
-  background:
-    rgba(17,19,15,.15);
-}
+            <i></i>
 
-.ngFeedStatus {
-  min-height: 18px;
+            <span>
+              VK EDITION
+            </span>
 
-  margin-bottom: 25px;
+          </div>
 
-  color: var(--gray);
+        </div>
 
-  font-size: 9px;
-  font-weight: 800;
 
-  letter-spacing: .16em;
-}
+        <div
+          id="feedStatus"
+          class="feedStatus"
+        >
+          Загружаем последние материалы…
+        </div>
 
 
-/* =========================
-   POSTS GRID
-========================= */
+        <div
+          id="posts"
+          class="postsGrid"
+        ></div>
 
-.ngPosts {
-  display: grid;
 
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+        <div
+          id="loadMoreWrap"
+          class="loadMoreWrap"
+        >
 
-  gap: 30px;
-}
+          <button
+            id="loadMore"
+            class="loadMoreButton"
+            type="button"
+          >
+            ЗАГРУЗИТЬ ЕЩЁ
+            <span>↓</span>
+          </button>
 
+        </div>
 
-/* =========================
-   POST
-========================= */
+      </div>
 
-.vkPost {
-  position: relative;
+    </section>
 
-  overflow: hidden;
 
-  background:
-    var(--paper);
+    <!-- =====================================
+         COMMUNITY
+    ====================================== -->
 
-  border:
-    1px solid rgba(17,19,15,.12);
+    <section class="communitySection">
 
-  box-shadow:
-    0 8px 25px rgba(0,0,0,.04);
+      <div class="pageContainer">
 
-  transition:
-    transform .25s ease,
-    box-shadow .25s ease;
-}
+        <div class="communityCard">
 
-.vkPost:hover {
-  transform:
-    translateY(-4px);
+          <div class="communityLogo">
+            NG
+          </div>
 
-  box-shadow:
-    var(--shadow);
-}
 
-.vkPostHeader {
-  min-height: 76px;
+          <div class="communityText">
 
-  padding:
-    14px 18px;
+            <span>
+              OFFICIAL COMMUNITY
+            </span>
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+            <h2>
+              NATIONAL GEOGRAPHIC
+            </h2>
 
-  background:
-    var(--white);
+            <p>
+              Природа · путешествия · планета
+            </p>
 
-  border-bottom:
-    1px solid rgba(17,19,15,.09);
-}
+          </div>
 
-.vkPostIdentity {
-  display: flex;
-  align-items: center;
 
-  gap: 12px;
-}
+          <a
+            href="https://vk.ru/national.geograph1c"
+            target="_blank"
+            rel="noopener"
+            class="communityButton"
+          >
+            ОТКРЫТЬ VK
+            <span>↗</span>
+          </a>
 
-.vkCommunityAvatar {
-  width: 38px;
-  height: 38px;
+        </div>
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+      </div>
 
-  background: var(--ink);
+    </section>
 
-  color: var(--yellow);
 
-  font-family: "Oswald", sans-serif;
+    <!-- =====================================
+         ABOUT
+    ====================================== -->
 
-  font-size: 11px;
-  font-weight: 700;
-}
+    <section
+      class="aboutSection"
+      id="about"
+    >
 
-.vkPostAuthor {
-  display: flex;
-  flex-direction: column;
+      <div class="pageContainer">
 
-  gap: 4px;
-}
+        <div class="aboutGrid">
 
-.vkPostAuthor strong {
-  font-size: 12px;
-  font-weight: 800;
-}
+          <div class="aboutTitle">
 
-.vkPostAuthor time {
-  color: var(--gray);
+            <span>
+              04
+            </span>
 
-  font-size: 9px;
-}
+            <h2>
+              О<br>
+              ПРОЕКТЕ
+            </h2>
 
-.vkPostMenu {
-  width: 40px;
-  height: 40px;
+          </div>
 
-  border: 0;
 
-  background: transparent;
+          <div class="aboutText">
 
-  color: var(--gray);
+            <p class="aboutLead">
+              National Geographic —
+              цифровой журнал о нашей планете.
+            </p>
 
-  font-size: 20px;
-}
+            <p>
+              Здесь встречаются большие
+              путешествия и маленькие открытия:
+              дикие места, редкие животные,
+              необычные города, горы, океаны
+              и истории людей.
+            </p>
 
-.vkPostMenu:hover {
-  color: var(--ink);
-}
+            <p>
+              Мы верим, что интерес к миру
+              начинается с любопытства.
+              Поэтому просто открывайте,
+              смотрите и отправляйтесь дальше.
+            </p>
 
+          </div>
 
-/* CONTENT */
+        </div>
 
-.vkPostContent {
-  padding:
-    22px 18px 0;
-}
+      </div>
 
-.vkPostText {
-  margin:
-    0 0 20px;
+    </section>
 
-  color: #292d28;
 
-  font-size: 14px;
+  </main>
 
-  line-height: 1.75;
 
-  white-space: pre-wrap;
+  <!-- =====================================
+       FOOTER
+  ====================================== -->
 
-  overflow-wrap:
-    anywhere;
-}
+  <footer class="siteFooter">
 
+    <div class="pageContainer">
 
-/* IMAGE */
+      <div class="footerTop">
 
-.vkPostImage {
-  width:
-    calc(100% + 36px);
+        <div class="footerLogo">
+          <span>NG</span>
+          NATIONAL<br>
+          GEOGRAPHIC
+        </div>
 
-  margin:
-    0 -18px;
 
-  max-height: 580px;
+        <div class="footerPhrase">
+          THE WORLD<br>
+          IS WAITING.
+        </div>
 
-  object-fit: cover;
+      </div>
 
-  cursor: zoom-in;
-}
 
+      <div class="footerBottom">
 
-/* PLACEHOLDER */
+        <span>
+          NATIONAL GEOGRAPHIC DIGITAL EDITION
+        </span>
 
-.vkPostPlaceholder {
-  width:
-    calc(100% + 36px);
+        <span>
+          © 2026
+        </span>
 
-  min-height: 240px;
+      </div>
 
-  margin:
-    0 -18px;
+    </div>
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  </footer>
 
-  background:
-    var(--green);
 
-  color:
-    rgba(245,196,0,.25);
+  <!-- =====================================
+       MOBILE BOTTOM NAV
+  ====================================== -->
 
-  font-family:
-    "Oswald", sans-serif;
+  <nav class="mobileBottomNav">
 
-  font-size: 85px;
-}
+    <a href="#home">
+      <span>01</span>
+      Главная
+    </a>
 
+    <a href="#explore">
+      <span>02</span>
+      Мир
+    </a>
 
-/* VIDEO */
+    <a href="#feed">
+      <span>03</span>
+      Журнал
+    </a>
 
-.vkPostVideo {
-  width:
-    calc(100% + 36px);
+    <a href="#about">
+      <span>04</span>
+      О нас
+    </a>
 
-  margin:
-    0 -18px;
-}
+  </nav>
 
-.vkVideoLink {
-  min-height: 240px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  <!-- =====================================
+       TOP BUTTON
+  ====================================== -->
 
-  background:
-    var(--green);
+  <button
+    id="backToTop"
+    class="backToTop"
+    type="button"
+    aria-label="Наверх"
+  >
+    ↑
+  </button>
 
-  color:
-    var(--yellow);
 
-  font-size: 10px;
-  font-weight: 900;
+  <!-- =====================================
+       TOAST
+  ====================================== -->
 
-  letter-spacing: .15em;
-}
+  <div
+    id="toast"
+    class="toast"
+    aria-live="polite"
+  ></div>
 
 
-/* =========================
-   ACTIONS
-========================= */
+  <!-- =====================================
+       SCRIPTS
+  ====================================== -->
 
-.vkPostActions {
-  display: grid;
+  <script src="./script.js"></script>
 
-  grid-template-columns:
-    repeat(3, 1fr);
-
-  width: 100%;
-
-  margin-top: 20px;
-
-  border-top:
-    1px solid rgba(17,19,15,.10);
-
-  border-bottom:
-    1px solid rgba(17,19,15,.10);
-}
-
-.vkAction {
-  width: 100%;
-  height: 48px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0 6px;
-
-  border: 0;
-  border-right:
-    1px solid rgba(17,19,15,.10);
-
-  background:
-    transparent;
-
-  color: var(--gray);
-
-  font-size: 9px;
-  font-weight: 900;
-
-  letter-spacing: .04em;
-
-  white-space: nowrap;
-
-  transition:
-    background .2s ease,
-    color .2s ease;
-}
-
-.vkAction:last-child {
-  border-right: 0;
-}
-
-.vkAction:hover {
-  background:
-    rgba(245,196,0,.08);
-
-  color: var(--ink);
-}
-
-.vkAction.active {
-  color:
-    var(--yellow-dark);
-}
-
-
-/* =========================
-   POST BOTTOM
-========================= */
-
-.vkPostBottom {
-  min-height: 52px;
-
-  padding:
-    0 18px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 15px;
-
-  color:
-    var(--gray);
-
-  font-size: 8px;
-}
-
-.vkOpenPost {
-  color:
-    var(--yellow-dark);
-
-  font-size: 9px;
-  font-weight: 900;
-
-  letter-spacing: .09em;
-}
-
-.vkOpenPost:hover {
-  color: var(--ink);
-}
-
-
-/* =========================
-   COMMENTS
-========================= */
-
-.vkComments {
-  margin-top: 18px;
-
-  padding: 16px;
-
-  background:
-    #f0efe8;
-
-  border:
-    1px solid rgba(17,19,15,.09);
-}
-
-.vkCommentsHeader {
-  margin-bottom: 12px;
-
-  color:
-    var(--yellow-dark);
-
-  font-size: 9px;
-  font-weight: 900;
-
-  letter-spacing: .15em;
-}
-
-.vkComment {
-  padding:
-    10px 0;
-
-  border-bottom:
-    1px solid rgba(17,19,15,.09);
-
-  color:
-    #4f534d;
-
-  font-size: 11px;
-
-  line-height: 1.5;
-}
-
-.vkComment:last-child {
-  border-bottom: 0;
-}
-
-.vkCommentsEmpty {
-  color:
-    var(--gray);
-
-  font-size: 10px;
-
-  line-height: 1.5;
-}
-
-
-/* =========================
-   LOAD MORE
-========================= */
-
-.loadMoreWrap {
-  display: flex;
-  justify-content: center;
-
-  padding-top: 45px;
-}
-
-.loadMore {
-  width: 210px;
-  height: 48px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 0;
-
-  border:
-    1px solid var(--ink);
-
-  background:
-    transparent;
-
-  color:
-    var(--ink);
-
-  font-size: 9px;
-  font-weight: 900;
-
-  letter-spacing: .15em;
-
-  transition:
-    background .2s ease,
-    color .2s ease;
-}
-
-.loadMore:hover {
-  background:
-    var(--ink);
-
-  color:
-    var(--yellow);
-}
-
-
-/* =========================
-   ABOUT
-========================= */
-
-.ngAbout {
-  padding:
-    110px 0;
-
-  background:
-    var(--green);
-
-  color:
-    var(--white);
-}
-
-.ngAboutGrid {
-  display: grid;
-
-  grid-template-columns:
-    .8fr 1.2fr;
-
-  gap: 100px;
-}
-
-.ngAbout .ngEyebrow {
-  color:
-    var(--yellow);
-}
-
-.ngAbout h2 {
-  margin: 0;
-
-  font-family:
-    "Oswald", sans-serif;
-
-  font-size:
-    clamp(48px, 6vw, 80px);
-
-  font-weight: 600;
-
-  line-height: .9;
-}
-
-.ngAboutText {
-  max-width: 650px;
-}
-
-.ngAboutText p {
-  margin:
-    0 0 22px;
-
-  color:
-    rgba(255,255,255,.75);
-
-  font-size: 15px;
-
-  line-height: 1.8;
-}
-
-.ngAboutLink {
-  width: 240px;
-  height: 48px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 15px;
-
-  margin-top: 15px;
-
-  border:
-    1px solid var(--yellow);
-
-  color:
-    var(--yellow);
-
-  font-size: 9px;
-  font-weight: 900;
-
-  letter-spacing: .12em;
-
-  transition:
-    background .2s ease,
-    color .2s ease;
-}
-
-.ngAboutLink:hover {
-  background:
-    var(--yellow);
-
-  color:
-    var(--ink);
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-.ngFooter {
-  padding:
-    35px 0 90px;
-
-  background:
-    var(--ink);
-
-  color:
-    var(--white);
-}
-
-.ngFooterInner {
-  width: min(
-    calc(100% - 48px),
-    var(--container)
-  );
-
-  min-height: 40px;
-
-  margin: auto;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.ngFooterBrand {
-  display: flex;
-
-  gap: 8px;
-
-  font-family:
-    "Oswald", sans-serif;
-
-  font-size: 13px;
-
-  letter-spacing: .08em;
-}
-
-.ngFooterBrand strong {
-  color:
-    var(--yellow);
-}
-
-.ngFooterCopy {
-  color:
-    #777b74;
-
-  font-size: 9px;
-}
-
-
-/* =========================
-   MOBILE NAV
-========================= */
-
-.ngMobileNav {
-  display: none;
-}
-
-
-/* =========================
-   BACK TO TOP
-========================= */
-
-.ngTop {
-  position: fixed;
-
-  right: 24px;
-  bottom: 24px;
-
-  z-index: 800;
-
-  width: 48px;
-  height: 48px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border:
-    1px solid var(--ink);
-
-  background:
-    var(--paper);
-
-  color:
-    var(--ink);
-
-  font-size: 18px;
-
-  opacity: 0;
-  visibility: hidden;
-
-  transition:
-    opacity .2s ease,
-    background .2s ease;
-}
-
-.ngTop.visible {
-  opacity: 1;
-  visibility: visible;
-}
-
-.ngTop:hover {
-  background:
-    var(--yellow);
-
-  border-color:
-    var(--yellow);
-}
-
-
-/* =========================
-   TOAST
-========================= */
-
-.ngToast {
-  position: fixed;
-
-  left: 50%;
-  bottom: 28px;
-
-  z-index: 3000;
-
-  min-width: 220px;
-  min-height: 44px;
-
-  padding: 0 18px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  transform:
-    translate(-50%, 20px);
-
-  background:
-    var(--ink);
-
-  color:
-    var(--yellow);
-
-  font-size: 10px;
-  font-weight: 900;
-
-  opacity: 0;
-  visibility: hidden;
-
-  transition:
-    opacity .2s ease,
-    transform .2s ease;
-}
-
-.ngToast.visible {
-  opacity: 1;
-  visibility: visible;
-
-  transform:
-    translate(-50%, 0);
-}
-
-
-/* =========================
-   POPUP
-========================= */
-
-.postPopupMenu {
-  position: fixed;
-
-  z-index: 4000;
-
-  min-width: 190px;
-
-  padding: 6px;
-
-  background:
-    var(--paper);
-
-  border:
-    1px solid rgba(17,19,15,.15);
-
-  box-shadow:
-    var(--shadow);
-}
-
-.postPopupMenu button {
-  width: 100%;
-  min-height: 42px;
-
-  padding:
-    0 12px;
-
-  border: 0;
-
-  background:
-    transparent;
-
-  color:
-    var(--ink);
-
-  text-align:
-    left;
-
-  font-size: 10px;
-}
-
-.postPopupMenu button:hover {
-  background:
-    rgba(245,196,0,.12);
-
-  color:
-    var(--yellow-dark);
-}
-
-
-/* =========================
-   TABLET
-========================= */
-
-@media (max-width: 900px) {
-
-  .ngNav {
-    display: none;
-  }
-
-  .ngMenu {
-    display: flex;
-  }
-
-  .ngPosts {
-    grid-template-columns:
-      1fr;
-  }
-
-  .ngAboutGrid {
-    gap: 50px;
-  }
-
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 700px) {
-
-  .ngContainer,
-  .ngHeaderInner,
-  .ngHeroContent,
-  .ngCommunityBar,
-  .ngFooterInner {
-    width:
-      calc(100% - 32px);
-  }
-
-  .ngHeader {
-    height: 68px;
-  }
-
-  .ngMobileMenu {
-    top: 68px;
-  }
-
-  .ngBrandText {
-    font-size: 16px;
-  }
-
-  .ngHero {
-    min-height: 610px;
-  }
-
-  .ngHeroContent {
-    padding-bottom: 70px;
-  }
-
-  .ngHero h1 {
-    font-size:
-      clamp(54px, 16vw, 90px);
-  }
-
-  .ngHero p {
-    font-size: 13px;
-  }
-
-  .ngHero::after {
-    width: 400px;
-    height: 400px;
-
-    right: -200px;
-  }
-
-  .ngCommunityBar {
-    min-height: 88px;
-  }
-
-  .ngFeedSection,
-  .ngAbout {
-    padding:
-      78px 0;
-  }
-
-  .ngSectionHeading h2 {
-    font-size: 43px;
-  }
-
-  .ngSectionNumber {
-    display: none;
-  }
-
-  .ngAboutGrid {
-    grid-template-columns:
-      1fr;
-
-    gap: 38px;
-  }
-
-  .ngFooter {
-    padding-bottom: 90px;
-  }
-
-  .ngFooterInner {
-    align-items:
-      flex-start;
-
-    flex-direction:
-      column;
-
-    gap: 16px;
-  }
-
-  .ngTop {
-    right: 16px;
-    bottom: 78px;
-  }
-
-  .ngToast {
-    bottom: 78px;
-  }
-
-  .ngMobileNav {
-    position: fixed;
-
-    left: 0;
-    right: 0;
-    bottom: 0;
-
-    z-index: 1000;
-
-    height: 64px;
-
-    display: grid;
-
-    grid-template-columns:
-      repeat(3, 1fr);
-
-    background:
-      rgba(250,249,245,.96);
-
-    border-top:
-      1px solid rgba(17,19,15,.12);
-
-    backdrop-filter:
-      blur(18px);
-  }
-
-  .ngMobileNav a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    flex-direction: column;
-
-    gap: 4px;
-
-    color:
-      var(--gray);
-  }
-
-  .ngMobileNav a:hover {
-    color:
-      var(--ink);
-  }
-
-  .ngMobileNav span {
-    font-size: 16px;
-  }
-
-  .ngMobileNav small {
-    font-size: 7px;
-    font-weight: 900;
-
-    letter-spacing: .08em;
-
-    text-transform: uppercase;
-  }
-
-}
-
-
-/* =========================
-   SMALL PHONE
-========================= */
-
-@media (max-width: 390px) {
-
-  .ngContainer,
-  .ngHeaderInner,
-  .ngHeroContent,
-  .ngCommunityBar,
-  .ngFooterInner {
-    width:
-      calc(100% - 24px);
-  }
-
-  .ngBrandBox {
-    height: 25px;
-
-    font-size: 10px;
-  }
-
-  .ngBrandText {
-    font-size: 14px;
-  }
-
-  .ngHero h1 {
-    font-size: 51px;
-  }
-
-  .ngHeroMeta {
-    font-size: 8px;
-  }
-
-  .ngCommunityTitle {
-    font-size: 12px;
-  }
-
-  .ngVkButton {
-    width: 92px;
-  }
-
-  .vkPostContent {
-    padding-inline: 14px;
-  }
-
-  .vkPostImage,
-  .vkPostPlaceholder,
-  .vkPostVideo {
-    width:
-      calc(100% + 28px);
-
-    margin-inline:
-      -14px;
-  }
-
-  .vkAction {
-    height: 46px;
-
-    padding-inline: 3px;
-
-    font-size: 8px;
-  }
-
-  .vkPostBottom {
-    padding-inline: 14px;
-  }
-
-  .ngAboutLink {
-    width: 100%;
-  }
-
-}
+</body>
+</html>
