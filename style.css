@@ -1,3430 +1,1884 @@
 /* =========================================================
-   NATIONAL GEOGRAPHIC — VK STYLE v5.0
+   NATIONAL GEOGRAPHIC
+   ORIGINAL EDITION
 ========================================================= */
 
 :root {
-  --bg: #050505;
-  --panel: #111111;
-  --panel2: #171717;
-  --panel3: #202020;
-  --line: rgba(255,255,255,.08);
-  --text: #f5f5f5;
-  --muted: #8f8f8f;
+
+  --black: #050505;
+  --black2: #0b0b0b;
+  --black3: #111111;
+
   --yellow: #ffcc00;
-  --yellow2: #e6b800;
-  --blue: #447bff;
-  --green: #55d66b;
-  --radius: 14px;
-  --shadow: 0 10px 35px rgba(0,0,0,.28);
+  --yellow2: #ffd633;
+
+  --white: #ffffff;
+  --gray: #999999;
+  --gray2: #666666;
+
+  --line: rgba(255,255,255,.1);
+
 }
+
 
 * {
   box-sizing: border-box;
 }
 
+
 html {
   scroll-behavior: smooth;
 }
 
+
 body {
+
   margin: 0;
-  background:
-    radial-gradient(
-      circle at 50% -10%,
-      rgba(255,204,0,.055),
-      transparent 35%
-    ),
-    var(--bg);
-  color: var(--text);
+
+  background: var(--black);
+
+  color: var(--white);
+
   font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
+    Inter,
     Arial,
+    Helvetica,
     sans-serif;
-  line-height: 1.5;
+
+  overflow-x: hidden;
+
 }
 
-body.modalOpen {
-  overflow: hidden;
-}
 
 a {
   color: inherit;
   text-decoration: none;
 }
 
+
 button,
 input {
   font: inherit;
 }
 
-button {
-  cursor: pointer;
-}
 
 
 /* =========================================================
    HEADER
 ========================================================= */
 
-.header {
+.ngHeader {
+
   position: sticky;
+
   top: 0;
-  z-index: 900;
 
-  height: 64px;
+  z-index: 1000;
 
-  background: rgba(5,5,5,.92);
-  border-bottom: 1px solid var(--line);
+  height: 74px;
 
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background:
+    rgba(5,5,5,.94);
+
+  backdrop-filter:
+    blur(18px);
+
+  border-bottom:
+    1px solid var(--line);
+
 }
 
-.nav {
-  width: min(1180px, calc(100% - 32px));
+
+.ngHeaderInner {
+
+  max-width: 1250px;
+
   height: 100%;
+
   margin: auto;
 
+  padding:
+    0 24px;
+
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
+
 }
 
-.logo {
-  display: inline-flex;
+
+.ngBrand {
+
+  display: flex;
+
   align-items: center;
-  gap: 10px;
 
-  font-size: 10px;
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: 1px;
+  gap: 12px;
+
 }
 
-.logo i,
-.aboutLogo i {
+
+.ngBrandBox {
+
+  width: 27px;
+
+  height: 37px;
+
+  border:
+    3px solid var(--yellow);
+
+}
+
+
+.ngBrandText {
+
+  line-height: 1;
+
+}
+
+
+.ngBrandText small {
+
   display: block;
 
-  width: 24px;
-  height: 31px;
+  font-size: 10px;
 
-  border: 3px solid var(--yellow);
+  letter-spacing: 4px;
+
 }
 
-.logo b {
-  color: var(--yellow);
+
+.ngBrandText strong {
+
+  display: block;
+
+  font-size: 16px;
+
+  letter-spacing: 3px;
+
 }
 
-#links {
+
+.ngNav {
+
   display: flex;
-  align-items: center;
-  gap: 5px;
+
+  gap: 34px;
+
 }
 
-#links a {
-  padding: 9px 13px;
+
+.ngNav a {
 
   color: #aaa;
 
   font-size: 13px;
-  font-weight: 600;
 
-  border-radius: 9px;
+  letter-spacing: 1px;
 
-  transition:
-    background .2s ease,
-    color .2s ease;
+  transition: .2s;
+
 }
 
-#links a:hover {
-  background: #191919;
-  color: #fff;
+
+.ngNav a:hover {
+
+  color: var(--yellow);
+
 }
 
-#menu {
+
+.ngMenu {
+
   display: none;
 
-  width: 40px;
-  height: 40px;
+  background: none;
 
   border: 0;
-  background: transparent;
 
-  color: #fff;
-  font-size: 24px;
+  color: white;
+
+  font-size: 25px;
+
 }
+
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.ngHero {
+
+  min-height: 570px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  display: flex;
+
+  align-items: center;
+
+  background:
+
+    radial-gradient(
+      circle at 70% 40%,
+      rgba(255,204,0,.08),
+      transparent 30%
+    ),
+
+    linear-gradient(
+      135deg,
+      #050505 0%,
+      #111 50%,
+      #050505 100%
+    );
+
+}
+
+
+.ngHero::before {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  background-image:
+
+    linear-gradient(
+      120deg,
+      transparent 48%,
+      rgba(255,255,255,.035) 49%,
+      transparent 50%
+    );
+
+  background-size:
+    90px 90px;
+
+  opacity: .4;
+
+}
+
+
+.ngHeroNoise {
+
+  position: absolute;
+
+  width: 650px;
+
+  height: 650px;
+
+  right: -200px;
+
+  top: -150px;
+
+  border-radius: 50%;
+
+  border:
+    1px solid rgba(255,204,0,.15);
+
+  box-shadow:
+
+    0 0 0 80px rgba(255,204,0,.02),
+    0 0 0 160px rgba(255,204,0,.015);
+
+}
+
+
+.ngHeroContent {
+
+  position: relative;
+
+  z-index: 2;
+
+  max-width: 1250px;
+
+  width: 100%;
+
+  margin: auto;
+
+  padding:
+    90px 24px;
+
+}
+
+
+.ngEdition {
+
+  color: var(--yellow);
+
+  font-size: 11px;
+
+  letter-spacing: 4px;
+
+  margin-bottom: 25px;
+
+}
+
+
+.ngHero h1 {
+
+  margin: 0;
+
+  font-size:
+    clamp(58px, 10vw, 130px);
+
+  line-height: .82;
+
+  letter-spacing: -6px;
+
+  font-weight: 900;
+
+}
+
+
+.ngHero h1 span {
+
+  display: block;
+
+  color: transparent;
+
+  -webkit-text-stroke:
+    1px rgba(255,255,255,.8);
+
+}
+
+
+.ngHero p {
+
+  margin-top: 45px;
+
+  max-width: 520px;
+
+  color: #aaa;
+
+  font-size: 20px;
+
+  line-height: 1.5;
+
+}
+
+
+.ngHeroLine {
+
+  width: 90px;
+
+  height: 4px;
+
+  background: var(--yellow);
+
+  margin:
+    40px 0 25px;
+
+}
+
+
+.ngHeroMeta {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 20px;
+
+  color: #777;
+
+  font-size: 10px;
+
+  letter-spacing: 2px;
+
+}
+
 
 
 /* =========================================================
    COMMUNITY
 ========================================================= */
 
-.community {
-  width: min(1100px, calc(100% - 32px));
-  margin: 24px auto 0;
+.ngCommunityBar {
 
-  background: var(--panel);
+  max-width: 1050px;
 
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  margin:
+    -35px auto 0;
 
-  overflow: hidden;
-
-  box-shadow: var(--shadow);
-}
-
-.communityCover {
   position: relative;
 
-  height: 260px;
+  z-index: 10;
 
-  overflow: hidden;
+  padding:
+    22px 25px;
 
-  background:
-    radial-gradient(
-      circle at 75% 20%,
-      rgba(255,204,0,.25),
-      transparent 25%
-    ),
-    linear-gradient(
-      135deg,
-      #050505 0%,
-      #151515 45%,
-      #050505 100%
-    );
-}
+  background: #101010;
 
-.coverPattern {
-  position: absolute;
-  inset: 0;
-
-  opacity: .5;
-
-  background:
-    linear-gradient(
-      120deg,
-      transparent 20%,
-      rgba(255,204,0,.09) 20.5%,
-      transparent 21%
-    ),
-    linear-gradient(
-      120deg,
-      transparent 55%,
-      rgba(255,255,255,.035) 55.5%,
-      transparent 56%
-    );
-
-  background-size: 90px 90px;
-}
-
-.coverPattern::after {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(0,0,0,.9),
-      transparent 60%
-    );
-}
-
-.coverText {
-  position: absolute;
-  left: 42px;
-  bottom: 32px;
-
-  display: flex;
-  flex-direction: column;
-
-  color: #fff;
-
-  text-shadow: 0 3px 15px #000;
-}
-
-.coverText span {
-  font-size: 22px;
-  letter-spacing: 8px;
-  font-weight: 800;
-}
-
-.coverText strong {
-  color: var(--yellow);
-
-  font-size: 48px;
-  line-height: .95;
-
-  letter-spacing: 2px;
-}
-
-
-/* =========================================================
-   COMMUNITY INFO
-========================================================= */
-
-.communityInfo {
-  position: relative;
+  border:
+    1px solid var(--line);
 
   display: flex;
 
-  gap: 24px;
-
-  padding: 0 32px 24px;
-}
-
-.communityAvatar {
-  position: relative;
-
-  width: 132px;
-  min-width: 132px;
-
-  margin-top: -66px;
-}
-
-.avatarFrame {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 132px;
-  height: 132px;
-
-  background: #050505;
-
-  border: 5px solid var(--panel);
-
-  outline: 3px solid var(--yellow);
-
-  color: var(--yellow);
-
-  font-size: 40px;
-  font-weight: 900;
-  letter-spacing: -3px;
-
-  box-shadow: 0 8px 30px rgba(0,0,0,.5);
-}
-
-.communityMain {
-  flex: 1;
-  padding-top: 18px;
-}
-
-.communityTitleRow {
-  display: flex;
-  align-items: flex-start;
   justify-content: space-between;
 
-  gap: 20px;
-}
-
-.communityTitleRow h1 {
-  margin: 0;
-
-  font-size: 26px;
-  line-height: 1.2;
-}
-
-.verified {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
 
-  width: 18px;
-  height: 18px;
-
-  margin-left: 5px;
-
-  background: var(--blue);
-  border-radius: 50%;
-
-  color: #fff;
-  font-size: 12px;
 }
 
-.communityStatus {
-  margin-top: 4px;
 
-  color: var(--green);
+.ngCommunityIdentity {
 
-  font-size: 12px;
-}
+  display: flex;
 
-.communityDescription {
-  max-width: 680px;
-
-  margin: 12px 0 14px;
-
-  color: #aaa;
-
-  font-size: 14px;
-}
-
-.communityButton {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
 
-  min-height: 40px;
+  gap: 15px;
 
-  padding: 0 17px;
-
-  background: var(--yellow);
-
-  color: #050505;
-
-  border-radius: 9px;
-
-  font-size: 12px;
-  font-weight: 800;
-
-  transition:
-    transform .2s ease,
-    filter .2s ease;
-}
-
-.communityButton:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.08);
-}
-
-.communityStats {
-  display: flex;
-  gap: 22px;
-
-  color: #777;
-
-  font-size: 11px;
-}
-
-.communityStats span {
-  display: flex;
-  flex-direction: column;
-}
-
-.communityStats b {
-  color: #fff;
-
-  font-size: 15px;
 }
 
 
-/* =========================================================
-   TABS
-========================================================= */
+.ngAvatar {
 
-.communityTabs {
-  display: flex;
+  width: 52px;
 
-  padding: 0 32px;
+  height: 52px;
 
-  border-top: 1px solid var(--line);
-}
-
-.communityTabs a {
-  position: relative;
-
-  padding: 16px 15px;
-
-  color: #888;
-
-  font-size: 13px;
-  font-weight: 650;
-}
-
-.communityTabs a:hover,
-.communityTabs a.active {
-  color: #fff;
-}
-
-.communityTabs a.active::after {
-  content: "";
-
-  position: absolute;
-
-  left: 15px;
-  right: 15px;
-  bottom: 0;
-
-  height: 3px;
-
-  background: var(--yellow);
-  border-radius: 3px 3px 0 0;
-}
-
-
-/* =========================================================
-   QUICK CATEGORIES
-========================================================= */
-
-.quickCategories {
-  width: min(1100px, calc(100% - 32px));
-
-  margin: 14px auto;
+  border:
+    3px solid var(--yellow);
 
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
 
-  gap: 10px;
-}
-
-.quickCategories a {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  padding: 13px 15px;
-
-  background: var(--panel);
-
-  border: 1px solid var(--line);
-  border-radius: 11px;
-
-  transition:
-    transform .2s ease,
-    background .2s ease,
-    border-color .2s ease;
-}
-
-.quickCategories a:hover {
-  transform: translateY(-2px);
-
-  background: var(--panel2);
-
-  border-color: rgba(255,204,0,.35);
-}
-
-.quickCategories span {
-  font-size: 21px;
-}
-
-.quickCategories b {
-  font-size: 12px;
-}
-
-
-/* =========================================================
-   VK LAYOUT
-========================================================= */
-
-.vkLayout {
-  width: min(1100px, calc(100% - 32px));
-
-  margin: 0 auto 50px;
-
-  display: grid;
-  grid-template-columns: 270px minmax(0, 1fr);
-
-  gap: 16px;
-
-  align-items: start;
-}
-
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
-
-.vkSidebar {
-  position: sticky;
-  top: 80px;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 12px;
-}
-
-.sideCard {
-  padding: 18px;
-
-  background: var(--panel);
-
-  border: 1px solid var(--line);
-  border-radius: 12px;
-
-  box-shadow: 0 5px 20px rgba(0,0,0,.16);
-}
-
-.sideTitle {
-  margin-bottom: 9px;
-
-  color: #fff;
-
-  font-size: 14px;
-  font-weight: 750;
-}
-
-.sideCard p {
-  margin: 0 0 15px;
-
-  color: #888;
-
-  font-size: 12px;
-  line-height: 1.55;
-}
-
-.sideVK {
-  display: flex;
-  justify-content: center;
-
-  padding: 10px;
-
-  background: #222;
-
-  border-radius: 8px;
+  place-items: center;
 
   color: var(--yellow);
 
-  font-size: 11px;
-  font-weight: 700;
+  font-weight: 900;
+
+  font-size: 15px;
+
 }
 
-.sideHeading {
-  margin-bottom: 9px;
+
+.ngCommunityIdentity h2 {
+
+  margin: 0 0 4px;
+
+  font-size: 17px;
+
+}
+
+
+.ngCommunityIdentity span {
 
   color: #777;
-
-  font-size: 10px;
-  font-weight: 800;
-
-  text-transform: uppercase;
-  letter-spacing: .8px;
-}
-
-.sideCard > a:not(.sideVK) {
-  display: block;
-
-  margin: 0 -7px;
-  padding: 8px;
-
-  border-radius: 7px;
-
-  color: #aaa;
 
   font-size: 12px;
+
 }
 
-.sideCard > a:not(.sideVK):hover {
-  background: #1d1d1d;
-  color: #fff;
+
+.ngVerified {
+
+  color: #4a9cff;
+
 }
 
-.sideInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
+
+.ngVkButton {
+
+  border:
+    1px solid #444;
+
+  padding:
+    10px 18px;
+
+  font-size: 12px;
+
+  transition: .2s;
+
 }
 
-.sideInfo span {
-  color: #777;
-  font-size: 11px;
+
+.ngVkButton:hover {
+
+  border-color: var(--yellow);
+
+  color: var(--yellow);
+
 }
+
 
 
 /* =========================================================
    FEED
 ========================================================= */
 
-.vkFeed {
-  min-width: 0;
+.ngFeedSection {
+
+  max-width: 760px;
+
+  margin:
+    100px auto;
+
+  padding:
+    0 20px;
+
 }
 
-.feedBlock {
-  margin-bottom: 16px;
 
-  padding: 20px;
+.ngSectionHeading {
 
-  background: var(--panel);
-
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-
-  box-shadow: 0 5px 20px rgba(0,0,0,.16);
-}
-
-.feedBlockHeader {
   display: flex;
-  align-items: center;
+
   justify-content: space-between;
 
-  gap: 20px;
+  align-items: end;
 
-  margin-bottom: 18px;
+  margin-bottom: 30px;
+
 }
 
-.feedBlockHeader small {
+
+.ngSectionHeading > div:first-child > span {
+
   color: var(--yellow);
 
-  font-size: 9px;
-  font-weight: 800;
+  font-size: 10px;
 
-  letter-spacing: 1.2px;
+  letter-spacing: 4px;
+
 }
 
-.feedBlockHeader h2 {
-  margin: 3px 0 0;
 
-  font-size: 20px;
+.ngSectionHeading h2 {
+
+  margin:
+    10px 0 0;
+
+  font-size: 32px;
+
 }
 
-.resultCounter,
-.photoCount {
+
+.ngLive {
+
+  font-size: 10px;
+
   color: #777;
 
-  font-size: 11px;
+  letter-spacing: 2px;
+
 }
 
-.resultCounter span,
-.photoCount span {
-  color: #fff;
-  font-weight: 700;
-}
 
-.live {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.ngLive i {
 
-  color: #888;
+  display: inline-block;
 
-  font-size: 9px;
-  font-weight: 800;
-}
-
-.live i {
   width: 7px;
+
   height: 7px;
 
-  background: #55d66b;
+  background: #45d36a;
 
   border-radius: 50%;
 
+  margin-right: 7px;
+
   box-shadow:
-    0 0 9px rgba(85,214,107,.7);
+    0 0 10px #45d36a;
+
 }
+
 
 
 /* =========================================================
-   FEATURED
+   SEARCH
 ========================================================= */
 
-.featuredCard {
-  display: grid;
-  grid-template-columns: 44% 1fr;
+.ngSearchRow {
 
-  min-height: 280px;
-
-  overflow: hidden;
-
-  background: #171717;
-
-  border: 1px solid var(--line);
-  border-radius: 12px;
-}
-
-.featuredImage {
-  position: relative;
-
-  min-height: 280px;
-
-  overflow: hidden;
-
-  background: #0b0b0b;
-}
-
-.featuredImage img {
-  width: 100%;
-  height: 100%;
-
-  object-fit: cover;
-
-  transition: transform .5s ease;
-}
-
-.featuredCard:hover .featuredImage img {
-  transform: scale(1.04);
-}
-
-.featuredPlaceholder,
-.cardPlaceholder,
-.modalPlaceholder {
   display: flex;
-  align-items: center;
-  justify-content: center;
 
-  width: 100%;
-  height: 100%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(255,204,0,.12),
-      transparent 50%
-    ),
-    #0b0b0b;
-}
-
-.featuredPlaceholder span,
-.modalPlaceholder span {
-  font-size: 65px;
-}
-
-.featuredContent {
-  display: flex;
-  flex-direction: column;
-
-  padding: 25px;
-}
-
-.postMeta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 10px;
-
-  color: #777;
-
-  font-size: 10px;
-}
-
-.tag {
-  color: var(--yellow);
-
-  font-weight: 750;
-}
-
-.featuredContent h3 {
-  margin: 17px 0 10px;
-
-  font-size: 24px;
-  line-height: 1.18;
-}
-
-.featuredContent p {
-  margin: 0;
-
-  color: #999;
-
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.featuredActions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  margin-top: auto;
-  padding-top: 20px;
-}
-
-.readButton,
-.vkButton,
-.moreButton,
-.vkLarge {
-  border: 0;
-
-  background: var(--yellow);
-
-  color: #050505;
-
-  border-radius: 8px;
-
-  font-size: 10px;
-  font-weight: 850;
-}
-
-.readButton {
-  padding: 11px 15px;
-}
-
-.vkButton {
-  padding: 11px 14px;
-}
-
-.favoriteButton {
-  width: 38px;
-  height: 38px;
-
-  border: 1px solid var(--line);
-
-  background: #222;
-
-  color: #777;
-
-  border-radius: 8px;
-
-  font-size: 20px;
-}
-
-.favoriteButton.active {
-  color: var(--yellow);
-}
-
-
-/* =========================================================
-   TOOLS
-========================================================= */
-
-.vkTools {
-  display: flex;
   align-items: center;
 
   gap: 10px;
 
-  margin-bottom: 12px;
+  margin-bottom: 20px;
+
 }
 
-.searchBox {
-  position: relative;
+
+.ngSearch {
+
   flex: 1;
+
+  position: relative;
+
 }
 
-.searchBox input {
+
+.ngSearch span {
+
+  position: absolute;
+
+  left: 15px;
+
+  top: 50%;
+
+  transform:
+    translateY(-50%);
+
+  color: #777;
+
+}
+
+
+.ngSearch input {
+
   width: 100%;
 
-  height: 42px;
+  height: 44px;
 
-  padding: 0 42px 0 14px;
+  padding:
+    0 15px 0 42px;
 
-  border: 1px solid var(--line);
+  background: #101010;
 
-  background: #191919;
+  border:
+    1px solid #222;
 
-  color: #fff;
+  color: white;
 
   outline: none;
 
-  border-radius: 9px;
-
-  font-size: 12px;
 }
 
-.searchBox input:focus {
-  border-color: rgba(255,204,0,.5);
+
+.ngSearch input:focus {
+
+  border-color:
+    rgba(255,204,0,.6);
+
 }
 
-.searchBox span {
-  position: absolute;
 
-  right: 14px;
-  top: 50%;
+.ngRefresh {
 
-  transform: translateY(-50%);
+  width: 44px;
 
-  color: #777;
+  height: 44px;
 
-  font-size: 20px;
+  border:
+    1px solid #222;
+
+  background: #101010;
+
+  color: white;
+
+  cursor: pointer;
+
 }
 
-.refreshPanel {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
 
-.refreshPanel button {
-  height: 42px;
+.ngRefresh:hover {
 
-  padding: 0 13px;
-
-  border: 1px solid var(--line);
-
-  background: #191919;
-
-  color: #aaa;
-
-  border-radius: 9px;
-
-  font-size: 9px;
-  font-weight: 800;
-}
-
-.refreshPanel button:hover {
   color: var(--yellow);
-  border-color: rgba(255,204,0,.4);
+
+  border-color: var(--yellow);
+
 }
 
-.refreshPanel button.loading {
-  opacity: .5;
+
+.ngRefreshTime {
+
+  color: #555;
+
+  font-size: 10px;
+
 }
 
-.refreshPanel span {
-  white-space: nowrap;
-
-  color: #666;
-
-  font-size: 9px;
-}
 
 
 /* =========================================================
    FILTERS
 ========================================================= */
 
-.categoryButtons {
+.ngFilters {
+
   display: flex;
-  gap: 7px;
 
-  margin-bottom: 18px;
+  gap: 8px;
 
-  overflow-x: auto;
+  margin-bottom: 25px;
 
-  scrollbar-width: none;
 }
 
-.categoryButtons::-webkit-scrollbar {
-  display: none;
-}
 
 .categoryBtn {
-  flex: 0 0 auto;
 
-  padding: 8px 11px;
+  background: transparent;
 
-  border: 1px solid var(--line);
+  border:
+    1px solid #292929;
 
-  background: #181818;
+  color: #777;
 
-  color: #888;
-
-  border-radius: 8px;
+  padding:
+    9px 13px;
 
   font-size: 10px;
-  font-weight: 700;
 
-  transition: .2s ease;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
 }
+
 
 .categoryBtn:hover,
 .categoryBtn.active {
+
   background: var(--yellow);
-  border-color: var(--yellow);
 
   color: #050505;
+
+  border-color: var(--yellow);
+
 }
+
 
 
 /* =========================================================
-   POSTS GRID
+   POST
 ========================================================= */
 
-.grid {
-  display: grid;
+.ngPosts {
 
-  grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+  display: flex;
 
-  gap: 12px;
+  flex-direction: column;
+
+  gap: 25px;
+
 }
 
-.card {
-  overflow: hidden;
 
-  background: #171717;
-
-  border: 1px solid var(--line);
-  border-radius: 11px;
-
-  transition:
-    transform .22s ease,
-    border-color .22s ease,
-    box-shadow .22s ease;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-
-  border-color: rgba(255,204,0,.2);
-
-  box-shadow:
-    0 12px 30px rgba(0,0,0,.3);
-}
-
-.cardImage {
-  position: relative;
-
-  height: 205px;
-
-  overflow: hidden;
+.vkPost {
 
   background: #0d0d0d;
 
-  cursor: pointer;
+  border:
+    1px solid #1c1c1c;
+
+  transition:
+    transform .25s,
+    border-color .25s;
+
 }
 
-.cardImage img {
-  width: 100%;
-  height: 100%;
 
-  object-fit: cover;
+.vkPost:hover {
 
-  transition: transform .4s ease;
+  border-color:
+    rgba(255,204,0,.3);
+
 }
 
-.card:hover .cardImage img {
-  transform: scale(1.04);
+
+.vkPostHeader {
+
+  padding:
+    18px 20px;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
 }
 
-.cardCategory {
-  position: absolute;
 
-  left: 10px;
-  bottom: 10px;
+.vkPostIdentity {
 
-  padding: 6px 8px;
+  display: flex;
 
-  background: rgba(0,0,0,.72);
+  align-items: center;
 
-  color: #fff;
+  gap: 12px;
 
-  border-radius: 6px;
-
-  font-size: 9px;
-  font-weight: 750;
-
-  backdrop-filter: blur(7px);
 }
 
-.cardFavorite {
-  position: absolute;
 
-  top: 9px;
-  right: 9px;
+.vkCommunityAvatar {
 
-  width: 34px;
-  height: 34px;
+  width: 42px;
 
-  border: 1px solid rgba(255,255,255,.12);
+  height: 42px;
 
-  background: rgba(0,0,0,.6);
+  display: grid;
 
-  color: #aaa;
+  place-items: center;
 
-  border-radius: 8px;
+  border:
+    2px solid var(--yellow);
 
-  font-size: 18px;
-}
-
-.cardFavorite.active {
   color: var(--yellow);
+
+  font-weight: 900;
+
+  font-size: 12px;
+
 }
 
-.cardPlaceholder {
-  flex-direction: column;
 
-  gap: 8px;
+.vkPostAuthor strong {
+
+  display: block;
+
+  font-size: 14px;
+
 }
 
-.cardPlaceholder span {
-  font-size: 55px;
-}
 
-.cardPlaceholder small {
-  color: #555;
+.vkPostAuthor > span {
 
-  font-size: 8px;
-  font-weight: 800;
-  letter-spacing: 1px;
-}
+  display: block;
 
-.cardBody {
-  padding: 14px;
-}
-
-.cardDate {
-  margin-bottom: 6px;
+  margin-top: 4px;
 
   color: #666;
 
-  font-size: 9px;
+  font-size: 11px;
+
 }
 
-.cardBody h3 {
-  margin: 0 0 7px;
 
-  color: #fff;
+.vkPostMenu {
 
-  font-size: 15px;
-  line-height: 1.3;
+  background: none;
+
+  border: 0;
+
+  color: #666;
+
+  font-size: 17px;
 
   cursor: pointer;
+
 }
 
-.cardBody p {
-  margin: 0;
 
-  color: #888;
+.vkPostMenu:hover {
 
-  font-size: 11px;
-  line-height: 1.5;
+  color: white;
+
 }
 
-.cardFooter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 
-  margin-top: 14px;
+.vkPostContent {
+
+  padding-bottom: 0;
+
 }
 
-.moreButton {
-  padding: 8px 10px;
 
-  font-size: 9px;
+.vkPostText {
+
+  padding:
+    0 20px 20px;
+
+  color: #ddd;
+
+  font-size: 15px;
+
+  line-height: 1.65;
+
+  white-space: pre-line;
+
 }
 
-.cardFooter > a {
-  color: #777;
 
-  font-size: 9px;
-  font-weight: 700;
+.vkPostImage {
+
+  width: 100%;
+
+  background: #000;
+
 }
 
-.cardFooter > a:hover {
-  color: var(--yellow);
+
+.vkPostImage img {
+
+  display: block;
+
+  width: 100%;
+
+  max-height: 750px;
+
+  object-fit: contain;
+
+  background: #000;
+
 }
+
 
 
 /* =========================================================
-   LOAD MORE / EMPTY
+   VIDEO
+========================================================= */
+
+.vkPostVideo {
+
+  width: 100%;
+
+  background: #000;
+
+  aspect-ratio: 16 / 9;
+
+}
+
+
+.vkPostVideo iframe,
+.vkPostVideo video {
+
+  width: 100%;
+
+  height: 100%;
+
+  display: block;
+
+  border: 0;
+
+  object-fit: contain;
+
+  background: #000;
+
+}
+
+
+
+/* =========================================================
+   PLACEHOLDER
+========================================================= */
+
+.vkPostPlaceholder {
+
+  min-height: 220px;
+
+  background:
+
+    radial-gradient(
+      circle,
+      rgba(255,204,0,.09),
+      transparent 50%
+    ),
+
+    #080808;
+
+  display: grid;
+
+  place-items: center;
+
+}
+
+
+.placeholderLogo {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  color: #777;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+}
+
+
+.placeholderLogo i {
+
+  width: 22px;
+
+  height: 32px;
+
+  border:
+    3px solid var(--yellow);
+
+}
+
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.vkPostActions {
+
+  min-height: 55px;
+
+  padding:
+    0 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  border-top:
+    1px solid #1b1b1b;
+
+}
+
+
+.vkAction {
+
+  border: 0;
+
+  background: transparent;
+
+  color: #777;
+
+  padding:
+    10px 8px;
+
+  font-size: 11px;
+
+  cursor: pointer;
+
+  transition: .2s;
+
+}
+
+
+.vkAction:hover {
+
+  color: white;
+
+}
+
+
+.vkAction.liked {
+
+  color: #ff5577;
+
+}
+
+
+.vkAction.favoriteActive {
+
+  color: var(--yellow);
+
+}
+
+
+.vkPostBottom {
+
+  padding:
+    0 20px 17px;
+
+}
+
+
+.vkOpenPost {
+
+  color: #555;
+
+  font-size: 10px;
+
+  letter-spacing: 1px;
+
+}
+
+
+.vkOpenPost:hover {
+
+  color: var(--yellow);
+
+}
+
+
+
+/* =========================================================
+   POPUP
+========================================================= */
+
+.postPopupMenu {
+
+  z-index: 5000;
+
+  min-width: 190px;
+
+  background: #151515;
+
+  border:
+    1px solid #333;
+
+  box-shadow:
+    0 15px 40px rgba(0,0,0,.5);
+
+}
+
+
+.postPopupMenu button,
+.postPopupMenu a {
+
+  display: block;
+
+  width: 100%;
+
+  padding:
+    12px 15px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #bbb;
+
+  text-align: left;
+
+  font-size: 12px;
+
+  cursor: pointer;
+
+}
+
+
+.postPopupMenu button:hover,
+.postPopupMenu a:hover {
+
+  background: #222;
+
+  color: var(--yellow);
+
+}
+
+
+
+/* =========================================================
+   LOAD
 ========================================================= */
 
 .loadMoreWrap {
-  grid-column: 1 / -1;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 15px;
-
-  padding: 18px 0;
-}
-
-.loadMore {
-  padding: 11px 18px;
-
-  border: 1px solid var(--line);
-
-  background: #1b1b1b;
-
-  color: var(--yellow);
-
-  border-radius: 8px;
-
-  font-size: 10px;
-  font-weight: 800;
-}
-
-.loadMoreWrap span {
-  color: #666;
-
-  font-size: 10px;
-}
-
-.emptyState,
-.errorState {
-  grid-column: 1 / -1;
-
-  padding: 45px 20px;
 
   text-align: center;
 
-  background: #171717;
+  padding: 20px;
 
-  border: 1px solid var(--line);
-
-  border-radius: 12px;
 }
 
-.emptyIcon {
-  font-size: 32px;
-}
 
-.emptyState h3,
-.errorState h3 {
-  margin: 10px 0 5px;
-}
+.loadMore {
 
-.emptyState p,
-.errorState p {
-  margin: 0 0 15px;
-
-  color: #777;
-
-  font-size: 12px;
-}
-
-.emptyState button,
-.errorState button {
-  padding: 10px 14px;
-
-  border: 0;
+  padding:
+    13px 25px;
 
   background: var(--yellow);
+
+  border: 0;
 
   color: #050505;
 
-  border-radius: 7px;
+  font-size: 11px;
 
-  font-size: 9px;
-  font-weight: 800;
-}
-
-
-/* =========================================================
-   SKELETON
-========================================================= */
-
-.skeleton {
-  position: relative;
-
-  overflow: hidden;
-
-  background: #181818;
-}
-
-.skeleton::after {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  transform: translateX(-100%);
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      rgba(255,255,255,.05),
-      transparent
-    );
-
-  animation:
-    skeletonMove 1.4s infinite;
-}
-
-@keyframes skeletonMove {
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-.featuredLoading {
-  min-height: 280px;
-  border-radius: 10px;
-}
-
-.skeletonCard {
-  height: 380px;
-  border-radius: 11px;
-}
-
-
-/* =========================================================
-   GEOGRAPHY
-========================================================= */
-
-.geoPanel {
-  display: grid;
-
-  grid-template-columns: 40% 60%;
-
-  min-height: 350px;
-
-  overflow: hidden;
-
-  background: #0d0d0d;
-
-  border: 1px solid var(--line);
-
-  border-radius: 12px;
-}
-
-.geoContent {
-  padding: 28px;
-}
-
-.geoIcon {
-  font-size: 42px;
-}
-
-.geoContent h3 {
-  margin: 14px 0 8px;
-
-  font-size: 22px;
-}
-
-.geoContent p {
-  color: #888;
-
-  font-size: 12px;
-}
-
-.geoStats {
-  display: grid;
-
-  grid-template-columns: 1fr 1fr;
-
-  gap: 10px;
-
-  margin-top: 25px;
-}
-
-.geoStats div {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  padding: 9px;
-
-  background: #171717;
-
-  border-radius: 8px;
-}
-
-.geoStats strong {
-  font-size: 18px;
-}
-
-.geoStats span {
-  color: #777;
-
-  font-size: 8px;
-  font-weight: 800;
-}
-
-.geoMap {
-  position: relative;
-
-  overflow: hidden;
-
-  min-height: 350px;
-
-  background:
-    radial-gradient(
-      ellipse at center,
-      rgba(255,204,0,.08),
-      transparent 55%
-    ),
-    #090909;
-}
-
-.mapGrid {
-  position: absolute;
-  inset: 0;
-
-  background-image:
-    linear-gradient(
-      rgba(255,255,255,.04) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(255,255,255,.04) 1px,
-      transparent 1px
-    );
-
-  background-size: 35px 35px;
-}
-
-.mapLabel {
-  position: absolute;
-
-  left: 50%;
-  top: 50%;
-
-  transform: translate(-50%,-50%);
-
-  color: rgba(255,204,0,.12);
-
-  font-size: 70px;
-  font-weight: 900;
-
-  letter-spacing: 8px;
-}
-
-.mapPoint {
-  position: absolute;
-
-  width: 16px;
-  height: 16px;
-
-  z-index: 3;
-
-  border: 3px solid var(--yellow);
-
-  background: #050505;
-
-  border-radius: 50%;
+  font-weight: 700;
 
   cursor: pointer;
 
-  box-shadow:
-    0 0 0 7px rgba(255,204,0,.08),
-    0 0 20px rgba(255,204,0,.45);
 }
 
-.mapPoint span {
-  position: absolute;
 
-  inset: 3px;
+.loadMoreWrap span {
 
-  background: var(--yellow);
-
-  border-radius: 50%;
-}
-
-.point1 {
-  left: 30%;
-  top: 32%;
-}
-
-.point2 {
-  left: 70%;
-  top: 27%;
-}
-
-.point3 {
-  left: 57%;
-  top: 64%;
-}
-
-.point4 {
-  left: 42%;
-  top: 70%;
-}
-
-.mapPoint.selected {
-  transform: scale(1.35);
-}
-
-.geoTooltip {
-  position: absolute;
-
-  z-index: 20;
-
-  min-width: 170px;
-
-  padding: 12px;
-
-  transform:
-    translate(-50%, -100%);
-
-  background: #191919;
-
-  border: 1px solid rgba(255,204,0,.3);
-
-  border-radius: 9px;
-
-  box-shadow: 0 10px 30px rgba(0,0,0,.5);
-}
-
-.geoTooltip strong {
   display: block;
 
-  color: var(--yellow);
+  margin-top: 10px;
 
-  font-size: 12px;
-}
-
-.geoTooltip span {
-  display: block;
-
-  margin-top: 3px;
-
-  color: #aaa;
+  color: #555;
 
   font-size: 10px;
+
 }
 
-
-/* =========================================================
-   PHOTOS
-========================================================= */
-
-.photos {
-  display: grid;
-
-  grid-template-columns:
-    repeat(4, 1fr);
-
-  grid-auto-rows: 160px;
-
-  gap: 8px;
-}
-
-.photoItem {
-  position: relative;
-
-  overflow: hidden;
-
-  padding: 0;
-
-  border: 0;
-
-  background: #111;
-
-  border-radius: 8px;
-}
-
-.photoItem img {
-  width: 100%;
-  height: 100%;
-
-  object-fit: cover;
-
-  transition: transform .4s ease;
-}
-
-.photoItem:hover img {
-  transform: scale(1.07);
-}
-
-.photoItem:nth-child(1) {
-  grid-column: span 2;
-  grid-row: span 2;
-}
-
-.photoItem:nth-child(4) {
-  grid-row: span 2;
-}
-
-.photoOverlay {
-  position: absolute;
-
-  inset: auto 0 0 0;
-
-  display: flex;
-  align-items: center;
-  gap: 7px;
-
-  padding: 25px 10px 10px;
-
-  background:
-    linear-gradient(
-      transparent,
-      rgba(0,0,0,.8)
-    );
-
-  text-align: left;
-}
-
-.photoOverlay strong {
-  font-size: 16px;
-}
-
-.photoOverlay small {
-  color: #fff;
-
-  font-size: 9px;
-  font-weight: 700;
-}
-
-.galleryLoading,
-.galleryEmpty {
-  grid-column: 1 / -1;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  min-height: 180px;
-
-  color: #666;
-
-  font-size: 10px;
-}
-
-.galleryEmpty {
-  flex-direction: column;
-}
-
-.galleryEmpty span {
-  font-size: 35px;
-}
 
 
 /* =========================================================
    ABOUT
 ========================================================= */
 
-.aboutBlock {
-  padding: 30px;
+.ngAbout {
+
+  border-top:
+    1px solid #181818;
+
+  border-bottom:
+    1px solid #181818;
+
+  min-height: 500px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 90px;
+
+  padding:
+    80px 30px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #080808,
+      #111
+    );
+
 }
 
-.aboutLogo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
 
-  width: max-content;
+.ngAboutMark {
+
+  color: #555;
+
+  font-weight: 900;
+
+  font-size: 24px;
+
+  letter-spacing: 3px;
+
+  line-height: 1.1;
+
+}
+
+
+.ngAboutMark span {
+
+  display: block;
+
+  width: 55px;
+
+  height: 75px;
+
+  border:
+    5px solid var(--yellow);
 
   margin-bottom: 20px;
 
-  font-size: 10px;
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: 1px;
 }
 
-.aboutLogo b {
+
+.ngAboutContent {
+
+  max-width: 500px;
+
+}
+
+
+.ngAboutContent > span {
+
   color: var(--yellow);
+
+  font-size: 10px;
+
+  letter-spacing: 4px;
+
 }
 
-.aboutBlock h2 {
-  margin: 0 0 8px;
 
-  font-size: 24px;
+.ngAboutContent h2 {
+
+  font-size: 42px;
+
+  margin:
+    12px 0 25px;
+
 }
 
-.aboutBlock p {
-  max-width: 650px;
 
-  margin: 8px 0;
+.ngAboutContent p {
 
   color: #888;
 
-  font-size: 13px;
+  line-height: 1.7;
+
 }
 
-.aboutBlock .communityButton {
-  margin-top: 15px;
+
+.ngAboutButton {
+
+  display: inline-block;
+
+  margin-top: 20px;
+
+  border:
+    1px solid var(--yellow);
+
+  color: var(--yellow);
+
+  padding:
+    12px 20px;
+
+  font-size: 11px;
+
+  letter-spacing: 1px;
+
 }
+
+
+.ngAboutButton:hover {
+
+  background: var(--yellow);
+
+  color: #000;
+
+}
+
 
 
 /* =========================================================
    FOOTER
 ========================================================= */
 
-footer {
-  width: min(1100px, calc(100% - 32px));
+.ngFooter {
 
-  margin: 30px auto 100px;
+  min-height: 100px;
 
-  padding-top: 20px;
+  padding:
+    25px;
+
+  max-width: 1250px;
+
+  margin: auto;
 
   display: flex;
-  align-items: center;
+
   justify-content: space-between;
 
-  border-top: 1px solid var(--line);
+  align-items: center;
 
   color: #555;
 
   font-size: 10px;
-}
 
-footer a {
-  color: #777;
-}
-
-footer a:hover {
-  color: var(--yellow);
 }
 
 
-/* =========================================================
-   MODAL
-========================================================= */
-
-.postModal {
-  position: fixed;
-
-  inset: 0;
-
-  z-index: 5000;
+.ngFooterBrand {
 
   display: flex;
+
   align-items: center;
-  justify-content: center;
 
-  padding: 20px;
-
-  opacity: 0;
-
-  transition: opacity .2s ease;
-}
-
-.postModal.visible {
-  opacity: 1;
-}
-
-.modalBackdrop {
-  position: absolute;
-  inset: 0;
-
-  background: rgba(0,0,0,.82);
-
-  backdrop-filter: blur(8px);
-}
-
-.modalWindow {
-  position: relative;
-
-  z-index: 2;
-
-  width: min(850px, 100%);
-
-  max-height: 92vh;
-
-  overflow: auto;
-
-  background: #111;
-
-  border: 1px solid var(--line);
-
-  border-radius: 14px;
-
-  box-shadow: 0 25px 80px rgba(0,0,0,.7);
-}
-
-.modalClose {
-  position: absolute;
-
-  top: 12px;
-  right: 12px;
-
-  z-index: 5;
-
-  width: 38px;
-  height: 38px;
-
-  border: 0;
-
-  background: rgba(0,0,0,.65);
-
-  color: #fff;
-
-  border-radius: 50%;
-
-  font-size: 25px;
-}
-
-.modalImage {
-  width: 100%;
-  max-height: 500px;
-
-  overflow: hidden;
-
-  background: #050505;
-}
-
-.modalImage img {
-  display: block;
-
-  width: 100%;
-  max-height: 500px;
-
-  object-fit: contain;
-}
-
-.modalContent {
-  padding: 24px;
-}
-
-.modalMeta {
-  display: flex;
-  justify-content: space-between;
+  gap: 10px;
 
   color: #777;
 
-  font-size: 10px;
-}
+  font-weight: 700;
 
-.modalContent h2 {
-  margin: 13px 0;
-
-  font-size: 23px;
-  line-height: 1.25;
-}
-
-.modalText {
-  white-space: pre-wrap;
-
-  color: #aaa;
-
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-.modalActions {
-  display: flex;
-  flex-wrap: wrap;
-
-  gap: 8px;
-
-  margin-top: 22px;
-}
-
-.modalActions button,
-.vkLarge {
-  min-height: 38px;
-
-  padding: 0 13px;
-
-  border: 1px solid var(--line);
-
-  background: #1b1b1b;
-
-  color: #aaa;
-
-  border-radius: 8px;
-
-  font-size: 10px;
-  font-weight: 750;
-}
-
-.modalActions button:hover,
-.vkLarge:hover {
-  color: #fff;
-}
-
-.favoriteLarge.active {
-  color: var(--yellow);
-}
-
-.vkLarge {
-  display: inline-flex;
-  align-items: center;
-
-  background: var(--yellow);
-
-  color: #050505;
-}
-
-.viewerStatus {
-  height: 0;
-
-  margin-top: 0;
-
-  overflow: hidden;
-
-  color: var(--green);
-
-  font-size: 11px;
-
-  transition: .2s ease;
-}
-
-.viewerStatus.show {
-  height: 20px;
-
-  margin-top: 12px;
 }
 
 
-/* =========================================================
-   BACK TO TOP
-========================================================= */
+.ngFooterBrand span {
 
-#backToTop {
-  position: fixed;
+  width: 20px;
 
-  right: 22px;
-  bottom: 22px;
-
-  z-index: 800;
-
-  width: 42px;
-  height: 42px;
-
-  border: 1px solid var(--line);
-
-  background: #181818;
-
-  color: var(--yellow);
-
-  border-radius: 50%;
-
-  font-size: 20px;
-
-  opacity: 0;
-  pointer-events: none;
-
-  transform: translateY(10px);
-
-  transition: .25s ease;
-}
-
-#backToTop.show {
-  opacity: 1;
-
-  pointer-events: auto;
-
-  transform: translateY(0);
-}
-
-
-/* =========================================================
-   MOBILE NAV
-========================================================= */
-
-.mobileNav {
-  display: none;
-}
-
-
-/* =========================================================
-   PWA
-========================================================= */
-
-#pwaInstallBox {
-  position: fixed;
-
-  left: 50%;
-  bottom: 24px;
-
-  z-index: 9998;
-
-  width: min(560px, calc(100% - 32px));
-
-  transform:
-    translate(-50%, 140px);
-
-  opacity: 0;
-
-  pointer-events: none;
-
-  transition:
-    transform .35s ease,
-    opacity .35s ease;
-}
-
-#pwaInstallBox.show {
-  transform:
-    translate(-50%, 0);
-
-  opacity: 1;
-
-  pointer-events: auto;
-}
-
-.pwaInstallInner {
-  display: flex;
-  align-items: center;
-
-  gap: 12px;
-
-  padding: 13px;
-
-  background: #151515;
-
-  border: 1px solid rgba(255,204,0,.35);
-
-  border-radius: 14px;
-
-  box-shadow: 0 15px 50px rgba(0,0,0,.55);
-}
-
-.pwaInstallIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 44px;
-  height: 44px;
-
-  flex-shrink: 0;
-
-  border: 3px solid var(--yellow);
-
-  color: var(--yellow);
-
-  font-size: 12px;
-  font-weight: 900;
-}
-
-.pwaInstallText {
-  flex: 1;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 2px;
-}
-
-.pwaInstallText strong {
-  font-size: 12px;
-}
-
-.pwaInstallText span {
-  color: #777;
-
-  font-size: 9px;
-}
-
-#pwaInstallButton {
-  padding: 10px 13px;
-
-  border: 0;
-
-  background: var(--yellow);
-
-  color: #050505;
-
-  border-radius: 7px;
-
-  font-size: 9px;
-  font-weight: 900;
-}
-
-#pwaInstallClose {
-  width: 28px;
   height: 28px;
 
-  border: 0;
-
-  background: transparent;
-
-  color: #777;
-
-  font-size: 20px;
-}
-
-#pwaStandaloneBadge {
-  position: fixed;
-
-  top: 75px;
-  right: 15px;
-
-  z-index: 9997;
-
-  display: flex;
-  align-items: center;
-
-  gap: 6px;
-
-  padding: 7px 10px;
-
-  background: rgba(20,20,20,.95);
-
-  border: 1px solid rgba(255,204,0,.3);
-
-  border-radius: 999px;
-
-  color: #888;
-
-  font-size: 8px;
-  font-weight: 800;
-
-  opacity: 0;
-
-  transform: translateY(-10px);
-
-  transition: .3s ease;
-
-  pointer-events: none;
-}
-
-#pwaStandaloneBadge.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-#pwaStandaloneBadge span {
-  width: 6px;
-  height: 6px;
-
-  background: var(--green);
-
-  border-radius: 50%;
-}
-
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (max-width: 900px) {
-
-  .vkLayout {
-    grid-template-columns: 1fr;
-  }
-
-  .vkSidebar {
-    position: static;
-
-    display: grid;
-
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
-  }
-
-  .sideInfo {
-    display: none;
-  }
-
-  .quickCategories {
-    grid-template-columns:
-      repeat(3, 1fr);
-  }
-
-  .quickCategories a:nth-child(4),
-  .quickCategories a:nth-child(5) {
-    display: none;
-  }
+  border:
+    3px solid var(--yellow);
 
 }
+
+
+.ngFooter a:hover {
+
+  color: var(--yellow);
+
+}
+
 
 
 /* =========================================================
    MOBILE
 ========================================================= */
 
-@media (max-width: 650px) {
+.ngMobileNav {
 
-  body {
-    padding-bottom:
-      calc(68px + env(safe-area-inset-bottom));
+  display: none;
+
+}
+
+
+.ngTop {
+
+  position: fixed;
+
+  right: 20px;
+
+  bottom: 20px;
+
+  width: 42px;
+
+  height: 42px;
+
+  background: var(--yellow);
+
+  border: 0;
+
+  color: #000;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  transition: .2s;
+
+}
+
+
+.ngTop.show {
+
+  opacity: 1;
+
+  pointer-events: auto;
+
+}
+
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.ngLoading {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 15px;
+
+}
+
+
+.ngLoading div {
+
+  height: 300px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #0d0d0d,
+      #181818,
+      #0d0d0d
+    );
+
+  animation:
+    loading 1.4s infinite;
+
+}
+
+
+@keyframes loading {
+
+  0% {
+    opacity: .5;
   }
 
-  .header {
-    height: 56px;
+  50% {
+    opacity: 1;
   }
 
-  .nav {
-    width: calc(100% - 20px);
+  100% {
+    opacity: .5;
   }
 
-  #links {
-    position: absolute;
+}
 
-    top: 56px;
-    left: 10px;
-    right: 10px;
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+#siteStatus {
+
+  position: fixed;
+
+  left: 50%;
+
+  bottom: 30px;
+
+  transform:
+    translate(-50%, 30px);
+
+  background: #222;
+
+  border:
+    1px solid #444;
+
+  color: white;
+
+  padding:
+    12px 20px;
+
+  font-size: 12px;
+
+  opacity: 0;
+
+  pointer-events: none;
+
+  z-index: 10000;
+
+  transition: .25s;
+
+}
+
+
+#siteStatus.show {
+
+  opacity: 1;
+
+  transform:
+    translate(-50%, 0);
+
+}
+
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .ngHeader {
+
+    height: 62px;
+
+  }
+
+
+  .ngHeaderInner {
+
+    padding:
+      0 16px;
+
+  }
+
+
+  .ngNav {
 
     display: none;
 
-    flex-direction: column;
-    align-items: stretch;
-
-    padding: 8px;
-
-    background: #111;
-
-    border: 1px solid var(--line);
-    border-radius: 10px;
-
-    box-shadow: var(--shadow);
   }
 
-  #links.open {
-    display: flex;
-  }
 
-  #links a {
-    padding: 12px;
-  }
+  .ngMenu {
 
-  #menu {
     display: block;
+
   }
 
-  .community {
-    width: calc(100% - 16px);
 
-    margin-top: 8px;
-  }
+  .ngBrandText strong {
 
-  .communityCover {
-    height: 165px;
-  }
-
-  .coverText {
-    left: 20px;
-    bottom: 20px;
-  }
-
-  .coverText span {
     font-size: 13px;
-    letter-spacing: 5px;
+
   }
 
-  .coverText strong {
-    font-size: 30px;
+
+  .ngHero {
+
+    min-height: 480px;
+
   }
 
-  .communityInfo {
-    gap: 13px;
+
+  .ngHeroContent {
 
     padding:
-      0 15px 18px;
+      70px 20px;
+
   }
 
-  .communityAvatar {
-    width: 76px;
-    min-width: 76px;
 
-    margin-top: -38px;
+  .ngHero h1 {
+
+    font-size:
+      clamp(48px, 16vw, 85px);
+
+    letter-spacing: -4px;
+
   }
 
-  .avatarFrame {
-    width: 76px;
-    height: 76px;
 
-    border-width: 3px;
-    outline-width: 2px;
+  .ngHero p {
+
+    font-size: 17px;
+
+  }
+
+
+  .ngHeroMeta {
+
+    gap: 10px;
+
+  }
+
+
+  .ngCommunityBar {
+
+    margin:
+      0;
+
+    border-left: 0;
+
+    border-right: 0;
+
+    padding:
+      15px;
+
+  }
+
+
+  .ngCommunityIdentity h2 {
+
+    font-size: 14px;
+
+  }
+
+
+  .ngCommunityIdentity > div:last-child > span {
+
+    font-size: 10px;
+
+  }
+
+
+  .ngVkButton {
+
+    padding:
+      8px 12px;
+
+  }
+
+
+  .ngFeedSection {
+
+    margin:
+      65px auto;
+
+    padding:
+      0 10px;
+
+  }
+
+
+  .ngSectionHeading h2 {
 
     font-size: 25px;
+
   }
 
-  .communityMain {
-    padding-top: 10px;
+
+  .ngSectionHeading {
+
+    align-items: center;
+
   }
 
-  .communityTitleRow {
-    display: block;
+
+  .ngSearchRow {
+
+    flex-wrap: wrap;
+
   }
 
-  .communityTitleRow h1 {
-    font-size: 17px;
+
+  .ngSearch {
+
+    flex-basis: 100%;
+
   }
 
-  .communityDescription {
-    font-size: 11px;
-    line-height: 1.45;
+
+  .ngRefreshTime {
+
+    margin-left: 5px;
+
   }
 
-  .communityButton {
-    min-height: 35px;
 
-    margin-top: 5px;
-
-    padding: 0 12px;
-
-    font-size: 9px;
-  }
-
-  .communityStats {
-    gap: 12px;
-
-    font-size: 8px;
-  }
-
-  .communityStats b {
-    font-size: 12px;
-  }
-
-  .communityTabs {
-    padding: 0 8px;
+  .ngFilters {
 
     overflow-x: auto;
 
-    scrollbar-width: none;
   }
 
-  .communityTabs::-webkit-scrollbar {
-    display: none;
+
+  .categoryBtn {
+
+    white-space: nowrap;
+
   }
 
-  .communityTabs a {
-    flex: 0 0 auto;
 
-    padding: 12px 10px;
-
-    font-size: 10px;
-  }
-
-  .communityTabs a.active::after {
-    left: 10px;
-    right: 10px;
-  }
-
-  .quickCategories {
-    width: calc(100% - 16px);
-
-    grid-template-columns:
-      repeat(2, 1fr);
-
-    gap: 7px;
-  }
-
-  .quickCategories a {
-    padding: 10px;
-
-    font-size: 10px;
-  }
-
-  .quickCategories a:nth-child(5) {
-    display: flex;
-  }
-
-  .vkLayout {
-    width: calc(100% - 16px);
-
-    display: block;
-  }
-
-  .vkSidebar {
-    display: none;
-  }
-
-  .feedBlock {
-    padding: 13px;
-
-    border-radius: 11px;
-  }
-
-  .feedBlockHeader {
-    margin-bottom: 13px;
-  }
-
-  .feedBlockHeader h2 {
-    font-size: 17px;
-  }
-
-  .featuredCard {
-    display: block;
-  }
-
-  .featuredImage {
-    height: 220px;
-    min-height: 220px;
-  }
-
-  .featuredContent {
-    padding: 16px;
-  }
-
-  .featuredContent h3 {
-    font-size: 18px;
-  }
-
-  .featuredContent p {
-    font-size: 11px;
-  }
-
-  .vkTools {
-    display: block;
-  }
-
-  .refreshPanel {
-    margin-top: 7px;
-  }
-
-  .refreshPanel button {
-    flex: 1;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  .cardImage {
-    height: 220px;
-  }
-
-  .geoPanel {
-    grid-template-columns: 1fr;
-  }
-
-  .geoContent {
-    padding: 20px;
-  }
-
-  .geoMap {
-    min-height: 260px;
-  }
-
-  .photos {
-    grid-template-columns:
-      repeat(2, 1fr);
-
-    grid-auto-rows: 125px;
-  }
-
-  .photoItem:nth-child(1) {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
-
-  .photoItem:nth-child(4) {
-    grid-row: span 1;
-  }
-
-  .aboutBlock {
-    padding: 20px;
-  }
-
-  footer {
-    width: calc(100% - 20px);
-
-    flex-direction: column;
-
-    gap: 12px;
-
-    text-align: center;
-
-    margin-bottom: 30px;
-  }
-
-  .mobileNav {
-    position: fixed;
-
-    left: 0;
-    right: 0;
-    bottom: 0;
-
-    z-index: 1000;
-
-    display: grid;
-    grid-template-columns:
-      repeat(5, 1fr);
+  .vkPostHeader {
 
     padding:
-      7px 5px
-      calc(7px + env(safe-area-inset-bottom));
+      14px;
 
-    background: rgba(10,10,10,.96);
-
-    border-top: 1px solid var(--line);
-
-    backdrop-filter: blur(18px);
   }
 
-  .mobileNavItem {
-    display: flex;
+
+  .vkPostText {
+
+    padding:
+      0 14px 16px;
+
+    font-size: 14px;
+
+  }
+
+
+  .vkPostActions {
+
+    overflow-x: auto;
+
+    white-space: nowrap;
+
+  }
+
+
+  .vkAction {
+
+    flex-shrink: 0;
+
+  }
+
+
+  .ngAbout {
+
     flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 35px;
+
+    padding:
+      60px 20px 100px;
+
+  }
+
+
+  .ngAboutContent h2 {
+
+    font-size: 34px;
+
+  }
+
+
+  .ngFooter {
+
+    padding:
+      25px 15px 90px;
+
+    flex-wrap: wrap;
+
+    gap: 15px;
+
+  }
+
+
+  .ngMobileNav {
+
+    position: fixed;
+
+    display: flex;
+
+    left: 0;
+
+    right: 0;
+
+    bottom: 0;
+
+    z-index: 3000;
+
+    height: 64px;
+
+    background:
+      rgba(8,8,8,.96);
+
+    border-top:
+      1px solid #222;
+
+    backdrop-filter:
+      blur(15px);
+
+  }
+
+
+  .ngMobileNav a {
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
     align-items: center;
 
-    gap: 2px;
+    justify-content: center;
 
     color: #666;
 
-    font-size: 8px;
+    gap: 4px;
+
   }
 
-  .mobileNavItem span {
-    font-size: 18px;
-  }
 
-  .mobileNavItem.active {
+  .ngMobileNav a.active {
+
     color: var(--yellow);
+
   }
 
-  #backToTop {
-    right: 14px;
-    bottom: 82px;
+
+  .ngMobileNav span {
+
+    font-size: 18px;
+
   }
 
-  #pwaInstallBox {
-    bottom:
-      calc(
-        74px +
-        env(safe-area-inset-bottom)
-      );
+
+  .ngMobileNav small {
+
+    font-size: 9px;
+
   }
 
-  .pwaInstallInner {
-    padding: 10px;
-  }
 
-  .pwaInstallIcon {
-    width: 38px;
-    height: 38px;
+  .ngTop {
 
-    font-size: 10px;
-  }
-
-  .pwaInstallText strong {
-    font-size: 11px;
-  }
-
-  .pwaInstallText span {
-    font-size: 8px;
-  }
-
-  #pwaInstallButton {
-    padding: 9px 10px;
-    font-size: 8px;
-  }
-
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: .01ms !important;
-    transition-duration: .01ms !important;
-  }
-
-}
-/* =========================================================
-   NATIONAL GEOGRAPHIC v5.1
-   VK FEED
-========================================================= */
-
-.vkFeed {
-  width: 100%;
-  min-width: 0;
-}
-
-#posts {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-/* POST */
-
-.vkPost {
-  position: relative;
-  width: 100%;
-  background: #ffffff;
-  border: 1px solid #dce1e6;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 1px 2px rgba(0,0,0,.04);
-  transition:
-    transform .18s ease,
-    box-shadow .18s ease;
-}
-
-.vkPost:hover {
-  box-shadow: 0 5px 22px rgba(0,0,0,.08);
-}
-
-/* HEADER */
-
-.vkPostHeader {
-  min-height: 72px;
-  padding: 14px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.vkPostIdentity {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  gap: 12px;
-}
-
-.vkCommunityAvatar {
-  width: 46px;
-  height: 46px;
-  flex: 0 0 46px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: #050505;
-  border: 3px solid #ffcc00;
-  border-radius: 50%;
-
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: -.5px;
-
-  box-shadow: 0 1px 5px rgba(0,0,0,.18);
-}
-
-.vkCommunityAvatar span {
-  display: block;
-}
-
-.vkPostAuthor {
-  min-width: 0;
-}
-
-.vkAuthorLine {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-
-  color: #000000;
-  font-size: 15px;
-  line-height: 1.2;
-}
-
-.vkAuthorLine strong {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.verifiedBadge {
-  width: 17px;
-  height: 17px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  background: #447bba;
-  color: #ffffff;
-
-  border-radius: 50%;
-  font-size: 10px;
-  font-weight: 900;
-}
-
-.vkPostDate {
-  margin-top: 4px;
-
-  color: #818c99;
-  font-size: 13px;
-  line-height: 1.2;
-}
-
-.vkPostMenu {
-  width: 36px;
-  height: 36px;
-
-  border: 0;
-  background: transparent;
-
-  color: #99a2ad;
-  font-size: 17px;
-  font-weight: 900;
-  letter-spacing: 1px;
-
-  border-radius: 50%;
-  cursor: pointer;
-
-  transition:
-    background .15s ease,
-    color .15s ease;
-}
-
-.vkPostMenu:hover {
-  background: #f0f2f5;
-  color: #222222;
-}
-
-/* CONTENT */
-
-.vkPostContent {
-  padding: 0 18px 14px;
-}
-
-.vkPostText {
-  color: #222222;
-
-  font-size: 16px;
-  line-height: 1.55;
-
-  white-space: normal;
-  word-break: break-word;
-
-  margin-bottom: 12px;
-}
-
-.emptyPostText {
-  color: #626d78;
-}
-
-.vkPostCategory {
-  margin-bottom: 13px;
-}
-
-.vkPostCategory span {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-
-  padding: 5px 9px;
-
-  background: #f2f4f6;
-  color: #626d78;
-
-  border-radius: 7px;
-
-  font-size: 12px;
-  font-weight: 600;
-}
-
-/* IMAGE */
-
-.vkPostImage {
-  position: relative;
-
-  width: 100%;
-  max-height: 700px;
-
-  background: #080808;
-
-  border-radius: 9px;
-  overflow: hidden;
-
-  cursor: pointer;
-}
-
-.vkPostImage img {
-  display: block;
-
-  width: 100%;
-  height: auto;
-  max-height: 700px;
-
-  object-fit: contain;
-
-  transition: transform .3s ease;
-}
-
-.vkPostImage:hover img {
-  transform: scale(1.01);
-}
-
-.vkPostImage.imageError {
-  min-height: 180px;
-}
-
-/* NO IMAGE */
-
-.vkPostNoImage {
-  min-height: 300px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  gap: 24px;
-
-  background:
-    radial-gradient(
-      circle at center,
-      #222 0,
-      #090909 65%
-    );
-
-  border-radius: 9px;
-
-  cursor: pointer;
-}
-
-.vkPostNoImageLogo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  color: #ffffff;
-}
-
-.vkPostNoImageLogo span {
-  font-size: 22px;
-  font-weight: 300;
-  letter-spacing: 4px;
-}
-
-.vkPostNoImageLogo strong {
-  padding: 3px 5px;
-
-  background: #ffcc00;
-  color: #050505;
-
-  font-size: 24px;
-  letter-spacing: 1px;
-}
-
-.vkPostNoImageIcon {
-  font-size: 48px;
-}
-
-/* ACTIONS */
-
-.vkPostActions {
-  min-height: 52px;
-
-  display: flex;
-  align-items: center;
-
-  padding: 7px 12px;
-
-  border-top: 1px solid #edf0f2;
-  background: #ffffff;
-
-  gap: 4px;
-}
-
-.vkAction {
-  min-height: 38px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 7px;
-
-  padding: 0 12px;
-
-  border: 0;
-  border-radius: 8px;
-
-  background: transparent;
-  color: #626d78;
-
-  font-size: 13px;
-  font-weight: 600;
-
-  cursor: pointer;
-  text-decoration: none;
-
-  transition:
-    background .15s ease,
-    color .15s ease;
-}
-
-.vkAction:hover {
-  background: #f1f3f5;
-  color: #222222;
-}
-
-.vkActionIcon {
-  font-size: 19px;
-  line-height: 1;
-}
-
-.vkAction.liked {
-  color: #e53935;
-}
-
-.vkAction.favoriteActive {
-  color: #d5a900;
-}
-
-.vkOpenAction {
-  margin-left: auto;
-}
-
-.vkOpenAction .vkActionIcon {
-  font-size: 11px;
-  font-weight: 900;
-}
-
-/* MENU */
-
-.vkPostMenuPopup {
-  position: fixed;
-  z-index: 99999;
-
-  top: 70px;
-  right: 20px;
-
-  width: 220px;
-
-  padding: 6px;
-
-  background: #ffffff;
-
-  border: 1px solid #dce1e6;
-  border-radius: 10px;
-
-  box-shadow:
-    0 12px 40px rgba(0,0,0,.18);
-
-  opacity: 0;
-  transform: translateY(-5px);
-
-  transition:
-    opacity .15s ease,
-    transform .15s ease;
-}
-
-.vkPostMenuPopup.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.vkPostMenuPopup button {
-  width: 100%;
-
-  padding: 11px 12px;
-
-  border: 0;
-  border-radius: 7px;
-
-  background: transparent;
-  color: #222222;
-
-  text-align: left;
-  font-size: 14px;
-
-  cursor: pointer;
-}
-
-.vkPostMenuPopup button:hover {
-  background: #f1f3f5;
-}
-
-/* FEATURED */
-
-.featuredCard {
-  overflow: hidden;
-
-  background: #ffffff;
-
-  border: 1px solid #dce1e6;
-  border-radius: 12px;
-
-  box-shadow: 0 1px 2px rgba(0,0,0,.04);
-}
-
-.featuredImage {
-  cursor: pointer;
-}
-
-.featuredImage img {
-  display: block;
-
-  width: 100%;
-  max-height: 520px;
-
-  object-fit: cover;
-}
-
-.featuredContent {
-  padding: 20px;
-}
-
-/* LOAD MORE */
-
-.loadMoreWrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  gap: 9px;
-
-  padding: 10px 0 4px;
-}
-
-.loadMoreWrap span {
-  color: #818c99;
-  font-size: 12px;
-}
-
-.loadMore {
-  min-height: 42px;
-
-  padding: 0 22px;
-
-  border: 0;
-  border-radius: 8px;
-
-  background: #ffcc00;
-  color: #050505;
-
-  font-size: 12px;
-  font-weight: 900;
-
-  cursor: pointer;
-
-  transition:
-    transform .15s ease,
-    background .15s ease;
-}
-
-.loadMore:hover {
-  background: #ffd633;
-  transform: translateY(-1px);
-}
-
-/* MODAL */
-
-.vkModalWindow {
-  max-width: 900px;
-}
-
-.vkModalHeader {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  padding: 16px 20px;
-
-  border-bottom: 1px solid #edf0f2;
-}
-
-.vkModalHeader > div:last-child {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 5px;
-}
-
-.vkModalHeader strong {
-  color: #222222;
-  font-size: 15px;
-}
-
-.vkModalHeader small {
-  width: 100%;
-  color: #818c99;
-  font-size: 12px;
-}
-
-.vkModalWindow .modalImage {
-  max-height: 650px;
-  background: #050505;
-}
-
-.vkModalWindow .modalImage img {
-  width: 100%;
-  max-height: 650px;
-  object-fit: contain;
-}
-
-/* MOBILE */
-
-@media (max-width: 760px) {
-
-  #posts {
-    gap: 10px;
-  }
-
-  .vkPost {
-    border-radius: 9px;
-  }
-
-  .vkPostHeader {
-    padding: 12px 13px;
-    min-height: 65px;
-  }
-
-  .vkCommunityAvatar {
-    width: 42px;
-    height: 42px;
-    flex-basis: 42px;
-  }
-
-  .vkPostContent {
-    padding: 0 13px 12px;
-  }
-
-  .vkPostText {
-    font-size: 15px;
-    line-height: 1.5;
-  }
-
-  .vkPostImage,
-  .vkPostNoImage {
-    border-radius: 7px;
-  }
-
-  .vkPostImage img {
-    max-height: 520px;
-  }
-
-  .vkPostNoImage {
-    min-height: 230px;
-  }
-
-  .vkPostActions {
-    overflow-x: auto;
-    padding: 5px 7px;
-
-    scrollbar-width: none;
-  }
-
-  .vkPostActions::-webkit-scrollbar {
-    display: none;
-  }
-
-  .vkAction {
-    flex: 0 0 auto;
-    padding: 0 9px;
-
-    font-size: 12px;
-  }
-
-  .vkOpenAction {
-    margin-left: 0;
-  }
-
-  .featuredImage img {
-    max-height: 350px;
-  }
-
-  .vkPostMenuPopup {
-    right: 10px;
-    top: auto;
     bottom: 80px;
-  }
 
-}
-
-@media (max-width: 480px) {
-
-  .vkPostText {
-    font-size: 14px;
-  }
-
-  .vkPostCategory {
-    margin-bottom: 9px;
-  }
-
-  .vkAction span:last-child {
-    display: none;
-  }
-
-  .vkAction {
-    min-width: 42px;
-    padding: 0 10px;
-  }
-
-  .vkActionIcon {
-    font-size: 20px;
-  }
-
-  .vkPostNoImage {
-    min-height: 200px;
-  }
-
-  .vkPostNoImageLogo span {
-    font-size: 17px;
-  }
-
-  .vkPostNoImageLogo strong {
-    font-size: 20px;
-  }
-
-}
-/* =========================================================
-   v5.2 — VK FEED POLISH
-========================================================= */
-
-.vkPost {
-  animation: vkPostAppear .35s ease both;
-}
-
-@keyframes vkPostAppear {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.showMoreText {
-  display: block;
-
-  margin-top: 5px;
-  padding: 0;
-
-  border: 0;
-  background: transparent;
-
-  color: #447bba;
-
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-}
-
-.showMoreText:hover {
-  text-decoration: underline;
-}
-
-/* SKELETON */
-
-.vkSkeleton {
-  overflow: hidden;
-
-  padding: 18px;
-
-  background: #ffffff;
-
-  border: 1px solid #dce1e6;
-  border-radius: 12px;
-}
-
-.vkSkeletonHeader {
-  display: flex;
-  align-items: center;
-
-  gap: 12px;
-}
-
-.skeletonAvatar {
-  width: 46px;
-  height: 46px;
-
-  flex: 0 0 46px;
-
-  border-radius: 50%;
-
-  background:
-    linear-gradient(
-      90deg,
-      #edf0f2,
-      #f8f9fa,
-      #edf0f2
-    );
-
-  background-size: 200% 100%;
-
-  animation:
-    skeletonMove 1.2s infinite;
-}
-
-.skeletonLines {
-  display: flex;
-  flex-direction: column;
-
-  gap: 7px;
-
-  width: 180px;
-}
-
-.skeletonLines span,
-.skeletonText span,
-.skeletonImage {
-  display: block;
-
-  background:
-    linear-gradient(
-      90deg,
-      #edf0f2,
-      #f8f9fa,
-      #edf0f2
-    );
-
-  background-size: 200% 100%;
-
-  animation:
-    skeletonMove 1.2s infinite;
-}
-
-.skeletonLines span:first-child {
-  width: 140px;
-  height: 12px;
-  border-radius: 5px;
-}
-
-.skeletonLines span:last-child {
-  width: 90px;
-  height: 9px;
-  border-radius: 5px;
-}
-
-.skeletonText {
-  display: flex;
-  flex-direction: column;
-
-  gap: 8px;
-
-  margin-top: 20px;
-}
-
-.skeletonText span {
-  width: 90%;
-  height: 11px;
-  border-radius: 5px;
-}
-
-.skeletonText span:last-child {
-  width: 55%;
-}
-
-.skeletonImage {
-  height: 300px;
-
-  margin-top: 18px;
-
-  border-radius: 8px;
-}
-
-@keyframes skeletonMove {
-  from {
-    background-position: 200% 0;
-  }
-
-  to {
-    background-position: -200% 0;
-  }
-}
-
-/* REFRESH */
-
-#refreshButton.loading {
-  pointer-events: none;
-  opacity: .65;
-}
-
-#refreshButton.loading::before {
-  content: "";
-
-  width: 13px;
-  height: 13px;
-
-  margin-right: 7px;
-
-  display: inline-block;
-
-  border: 2px solid currentColor;
-  border-right-color: transparent;
-
-  border-radius: 50%;
-
-  animation:
-    refreshSpin .7s linear infinite;
-}
-
-@keyframes refreshSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* MOBILE */
-
-@media (max-width: 760px) {
-
-  .vkSkeleton {
-    padding: 13px;
-    border-radius: 9px;
-  }
-
-  .skeletonImage {
-    height: 220px;
-  }
-
-  .showMoreText {
-    font-size: 13px;
-  }
-
-}
-
-@media (max-width: 480px) {
-
-  .vkPostHeader {
-    padding: 11px;
-  }
-
-  .vkPostContent {
-    padding-left: 11px;
-    padding-right: 11px;
-  }
-
-  .vkPostActions {
-    min-height: 48px;
   }
 
 }
