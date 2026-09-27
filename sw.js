@@ -1,6 +1,6 @@
-const CACHE_NAME = "national-geographic-v5";
+const CACHE_NAME = "national-geographic-v6";
 
-const APP_FILES = [
+const ASSETS = [
   "./",
   "./index.html",
   "./style.css",
@@ -9,110 +9,48 @@ const APP_FILES = [
 ];
 
 self.addEventListener("install", event => {
-
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache =>
-        cache.addAll(APP_FILES)
-      )
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(ASSETS);
+    })
   );
 
   self.skipWaiting();
 });
 
-
 self.addEventListener("activate", event => {
-
   event.waitUntil(
-
-    caches.keys()
-      .then(keys => {
-
-        return Promise.all(
-
-          keys
-            .filter(
-              key =>
-                key !== CACHE_NAME
-            )
-            .map(
-              key =>
-                caches.delete(key)
-            )
-
-        );
-
-      })
-
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys
+          .filter(key => key !== CACHE_NAME)
+          .map(key => caches.delete(key))
+      );
+    })
   );
 
   self.clients.claim();
 });
 
-
 self.addEventListener("fetch", event => {
-
-  const request =
-    event.request;
-
-  if (
-    request.method !== "GET"
-  ) {
+  if (event.request.method !== "GET") {
     return;
   }
-
-
-  if (
-    request.url.includes(
-      "national-geographic-backend"
-    )
-  ) {
-
-    event.respondWith(
-
-      fetch(request)
-        .catch(
-          () => caches.match(request)
-        )
-
-    );
-
-    return;
-  }
-
 
   event.respondWith(
-
-    fetch(request)
+    fetch(event.request)
       .then(response => {
 
-        if (
-          !response ||
-          response.status !== 200
-        ) {
+        const copy = response.clone();
 
-          return response;
-
-        }
-
-        const copy =
-          response.clone();
-
-        caches.open(CACHE_NAME)
-          .then(cache =>
-            cache.put(
-              request,
-              copy
-            )
-          );
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, copy);
+        });
 
         return response;
-
       })
-      .catch(
-        () => caches.match(request)
-      )
-
+      .catch(() => {
+        return caches.match(event.request);
+      })
   );
-
 });
