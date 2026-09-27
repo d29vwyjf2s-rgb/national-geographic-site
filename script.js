@@ -9,12 +9,11 @@ const POSTS_PER_PAGE = 12;
 let allPosts = [];
 let visibleCount = POSTS_PER_PAGE;
 
-const likedPosts =
-  JSON.parse(
-    localStorage.getItem(
-      "national_geographic_likes"
-    ) || "{}"
-  );
+const likedPosts = JSON.parse(
+  localStorage.getItem(
+    "national_geographic_likes"
+  ) || "{}"
+);
 
 document.addEventListener(
   "DOMContentLoaded",
@@ -33,36 +32,30 @@ document.addEventListener(
 );
 
 /* =========================================================
-   LOAD POSTS
+   ЗАГРУЗКА
 ========================================================= */
 
 async function loadPosts() {
   const status =
-    document.getElementById(
-      "feedStatus"
-    );
+    document.getElementById("feedStatus");
 
   const container =
-    document.getElementById(
-      "posts"
-    );
+    document.getElementById("posts");
 
   if (!container) return;
 
-  if (!allPosts.length) {
+  if (!allPosts.length && status) {
     status.textContent =
       "Загружаем публикации…";
   }
 
   try {
-    const response =
-      await fetch(
-        API_URL +
-          "?limit=100&offset=0",
-        {
-          cache: "no-store"
-        }
-      );
+    const response = await fetch(
+      API_URL + "?limit=100&offset=0",
+      {
+        cache: "no-store"
+      }
+    );
 
     if (!response.ok) {
       throw new Error(
@@ -78,54 +71,54 @@ async function loadPosts() {
       !Array.isArray(data.posts)
     ) {
       throw new Error(
-        "Неверный формат API"
+        "API вернул неверный формат данных"
       );
     }
 
-    allPosts =
-      data.posts;
+    allPosts = data.posts;
 
-    visibleCount =
-      Math.min(
-        POSTS_PER_PAGE,
-        allPosts.length
-      );
+    visibleCount = Math.min(
+      POSTS_PER_PAGE,
+      allPosts.length
+    );
 
     renderPosts();
 
-    status.textContent =
-      allPosts.length
-        ? ""
-        : "Публикаций пока нет.";
+    if (status) {
+      status.textContent =
+        allPosts.length
+          ? ""
+          : "Публикаций пока нет.";
+    }
 
   } catch (error) {
-
     console.error(
-      "Ошибка загрузки:",
+      "National Geographic API:",
       error
     );
 
-    if (!allPosts.length) {
-      status.innerHTML =
-        `
+    if (!allPosts.length && status) {
+      status.innerHTML = `
         <div class="emptyState">
-          <strong>Не удалось загрузить публикации</strong>
-          <span>Попробуйте обновить страницу.</span>
+          <strong>
+            Не удалось загрузить публикации
+          </strong>
+          <span>
+            Проверьте соединение и обновите страницу.
+          </span>
         </div>
-        `;
+      `;
     }
   }
 }
 
 /* =========================================================
-   RENDER POSTS
+   ОТРИСОВКА
 ========================================================= */
 
 function renderPosts() {
   const container =
-    document.getElementById(
-      "posts"
-    );
+    document.getElementById("posts");
 
   if (!container) return;
 
@@ -137,22 +130,20 @@ function renderPosts() {
 
   container.innerHTML =
     posts
-      .map(
-        (post, index) =>
-          renderPost(
-            post,
-            index
-          )
+      .map((post, index) =>
+        renderPost(
+          post,
+          index
+        )
       )
       .join("");
 
   updateLoadMore();
-
   bindPostEvents();
 }
 
 /* =========================================================
-   POST
+   ПОСТ
 ========================================================= */
 
 function renderPost(
@@ -174,7 +165,7 @@ function renderPost(
     getVideo(post);
 
   const postId =
-    escapeHtml(
+    String(
       post.vk_id ||
       post.id ||
       index
@@ -186,7 +177,7 @@ function renderPost(
   return `
     <article
       class="vkPost"
-      data-post-id="${postId}"
+      data-post-id="${escapeAttribute(postId)}"
     >
 
       <header class="vkPostHeader">
@@ -202,7 +193,7 @@ function renderPost(
           </div>
 
           <div class="vkPostDate">
-            ${date}
+            ${escapeHtml(date)}
           </div>
 
         </div>
@@ -244,20 +235,20 @@ function renderPost(
             liked ? "liked" : ""
           }"
           data-action="like"
-          data-post-id="${postId}"
+          data-post-id="${escapeAttribute(postId)}"
           type="button"
-          aria-label="Нравится"
         >
           <span class="likeIcon">
             ${liked ? "♥" : "♡"}
           </span>
+
           <span>Нравится</span>
         </button>
 
         <button
           class="postAction"
           data-action="share"
-          data-post-id="${postId}"
+          data-post-id="${escapeAttribute(postId)}"
           type="button"
         >
           ↗ Поделиться
@@ -265,7 +256,9 @@ function renderPost(
 
         <a
           class="postAction"
-          href="${getVkUrl(post)}"
+          href="${escapeAttribute(
+            getVkUrl(post)
+          )}"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -283,43 +276,48 @@ function renderPost(
 }
 
 /* =========================================================
-   VIDEO
+   ВИДЕО
 ========================================================= */
 
 function getVideo(post) {
   const hasVideo =
     post.video_type === "video" ||
     post.video_type === "clip" ||
-    post.video_url ||
-    post.video_player ||
-    post.video_vk_url ||
-    post.video_id;
+    !!post.video_url ||
+    !!post.video_player ||
+    !!post.video_vk_url ||
+    !!post.video_id;
 
   if (!hasVideo) {
     return null;
   }
 
-  let preview = null;
+  let vkUrl =
+    post.video_vk_url ||
+    null;
 
   /*
-   * Если Worker в будущем начнёт
-   * отдавать video_preview — используем его.
-   */
-  if (post.video_preview) {
-    preview =
-      post.video_preview;
-  }
-
-  /*
-   * Некоторые версии API могут
-   * отдавать превью отдельно.
+   * Если Worker не передал video_vk_url,
+   * собираем ссылку из ID.
    */
   if (
-    !preview &&
-    post.video_image
+    !vkUrl &&
+    post.video_owner_id != null &&
+    post.video_id != null
   ) {
-    preview =
-      post.video_image;
+    vkUrl =
+      "https://vk.ru/video" +
+      post.video_owner_id +
+      "_" +
+      post.video_id;
+
+    if (post.video_access_key) {
+      vkUrl +=
+        "?access_key=" +
+        encodeURIComponent(
+          post.video_access_key
+        );
+    }
   }
 
   return {
@@ -331,19 +329,23 @@ function getVideo(post) {
       post.video_player ||
       null,
 
-    vkUrl:
-      post.video_vk_url ||
-      buildVkVideoUrl(post),
+    vkUrl,
 
     title:
       post.video_title ||
       "Видео",
 
-    preview,
+    accessKey:
+      post.video_access_key ||
+      null,
 
-    processing:
-      !post.video_url &&
-      !post.video_player
+    ownerId:
+      post.video_owner_id ??
+      null,
+
+    videoId:
+      post.video_id ??
+      null
   };
 }
 
@@ -352,7 +354,7 @@ function renderVideo(
   postId
 ) {
   /*
-   * 1. Есть прямой MP4
+   * ПРЯМОЙ MP4
    */
   if (video.url) {
     return `
@@ -362,29 +364,20 @@ function renderVideo(
           controls
           playsinline
           preload="metadata"
-          src="${escapeAttribute(
-            video.url
-          )}"
+          class="vkVideoElement"
+          src="${escapeAttribute(video.url)}"
         ></video>
 
-        ${
-          video.title
-            ? `
-              <div class="videoTitle">
-                ${escapeHtml(
-                  video.title
-                )}
-              </div>
-            `
-            : ""
-        }
+        <div class="videoTitle">
+          ${escapeHtml(video.title)}
+        </div>
 
       </div>
     `;
   }
 
   /*
-   * 2. Есть player VK
+   * PLAYER
    */
   if (video.player) {
     return `
@@ -392,63 +385,61 @@ function renderVideo(
 
         <div class="vkVideoFrame">
           <iframe
-            src="${escapeAttribute(
-              video.player
-            )}"
+            src="${escapeAttribute(video.player)}"
             loading="lazy"
-            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+            allow="
+              autoplay;
+              encrypted-media;
+              fullscreen;
+              picture-in-picture
+            "
             allowfullscreen
             frameborder="0"
           ></iframe>
         </div>
 
-        ${
-          video.title
-            ? `
-              <div class="videoTitle">
-                ${escapeHtml(
-                  video.title
-                )}
-              </div>
-            `
-            : ""
-        }
+        <div class="videoTitle">
+          ${escapeHtml(video.title)}
+        </div>
 
       </div>
     `;
   }
 
   /*
-   * 3. VK не дал прямой поток.
+   * ЕСТЬ ССЫЛКА VK
    *
-   * Показываем красивую карточку
-   * и отправляем пользователя
-   * непосредственно на видео VK.
+   * Это как раз твой текущий случай:
+   *
+   * video_vk_url:
+   * https://vk.ru/video-222376958_456247546?access_key=...
    */
   if (video.vkUrl) {
     return `
       <div
-        class="vkPostMedia vkPostVideo videoFallback"
-        data-video-url="${escapeAttribute(
-          video.vkUrl
-        )}"
+        class="vkPostMedia vkPostVideo"
+        data-video-card="${escapeAttribute(postId)}"
       >
 
-        <div class="videoFallbackInner">
+        <div
+          class="videoFallbackInner"
+          role="button"
+          tabindex="0"
+          data-video-open="${escapeAttribute(
+            video.vkUrl
+          )}"
+        >
 
           <div class="videoPlayCircle">
-            ▶
+            <span>▶</span>
           </div>
 
           <div class="videoFallbackTitle">
-            ${escapeHtml(
-              video.title ||
-              "Видео"
-            )}
+            ${escapeHtml(video.title)}
           </div>
 
           <div class="videoFallbackText">
-            Видео доступно в VK
+            Видео из VK
           </div>
 
           <a
@@ -469,23 +460,23 @@ function renderVideo(
   }
 
   /*
-   * 4. Видео есть, но VK пока
-   * не дал URL.
+   * ВИДЕО ОБНАРУЖЕНО,
+   * НО VK ПОКА НЕ ДАЛ ССЫЛКУ.
    */
   return `
-    <div class="vkPostMedia vkPostVideo">
+    <div
+      class="vkPostMedia vkPostVideo"
+      data-video-card="${escapeAttribute(postId)}"
+    >
 
       <div class="videoFallbackInner">
 
         <div class="videoPlayCircle">
-          ▶
+          <span>▶</span>
         </div>
 
         <div class="videoFallbackTitle">
-          ${escapeHtml(
-            video.title ||
-            "Видео"
-          )}
+          ${escapeHtml(video.title)}
         </div>
 
         <div class="videoFallbackText">
@@ -499,17 +490,13 @@ function renderVideo(
 }
 
 /* =========================================================
-   IMAGES
+   ФОТО
 ========================================================= */
 
 function getImages(post) {
   let images = [];
 
-  if (
-    Array.isArray(
-      post.images
-    )
-  ) {
+  if (Array.isArray(post.images)) {
     images =
       post.images.filter(Boolean);
   }
@@ -524,14 +511,15 @@ function getImages(post) {
           post.images_json
         );
 
-      if (
-        Array.isArray(parsed)
-      ) {
+      if (Array.isArray(parsed)) {
         images =
           parsed.filter(Boolean);
       }
-    } catch {
-      // ignore
+    } catch (error) {
+      console.warn(
+        "Ошибка images_json:",
+        error
+      );
     }
   }
 
@@ -558,7 +546,7 @@ function renderGallery(
   }
 
   /*
-   * Одна фотография
+   * ОДНА ФОТОГРАФИЯ
    */
   if (images.length === 1) {
     return `
@@ -567,14 +555,12 @@ function renderGallery(
         <button
           class="vkPostImageButton"
           type="button"
-          data-gallery-id="${postId}"
+          data-gallery-id="${escapeAttribute(postId)}"
           data-index="0"
         >
           <img
             class="vkPostImage"
-            src="${escapeAttribute(
-              images[0]
-            )}"
+            src="${escapeAttribute(images[0])}"
             alt=""
             loading="lazy"
           >
@@ -585,27 +571,27 @@ function renderGallery(
   }
 
   /*
-   * Несколько фотографий
+   * ГАЛЕРЕЯ
    */
   return `
     <div
       class="vkPostMedia vkPostGallery"
-      data-gallery="${postId}"
+      data-gallery="${escapeAttribute(postId)}"
     >
 
       ${images
+        .slice(0, 4)
         .map(
           (image, index) => `
             <button
               class="vkGalleryItem"
               type="button"
-              data-gallery-id="${postId}"
+              data-gallery-id="${escapeAttribute(postId)}"
               data-index="${index}"
             >
+
               <img
-                src="${escapeAttribute(
-                  image
-                )}"
+                src="${escapeAttribute(image)}"
                 alt=""
                 loading="lazy"
               />
@@ -615,9 +601,7 @@ function renderGallery(
                 images.length > 4
                   ? `
                     <span class="galleryMore">
-                      +${
-                        images.length - 4
-                      }
+                      +${images.length - 4}
                     </span>
                   `
                   : ""
@@ -626,7 +610,6 @@ function renderGallery(
             </button>
           `
         )
-        .slice(0, 4)
         .join("")}
 
     </div>
@@ -634,12 +617,13 @@ function renderGallery(
 }
 
 /* =========================================================
-   EVENTS
+   СОБЫТИЯ
 ========================================================= */
 
 function bindPostEvents() {
+
   /*
-   * Likes
+   * LIKE
    */
   document
     .querySelectorAll(
@@ -652,19 +636,12 @@ function bindPostEvents() {
         () => {
 
           const id =
-            button.dataset
-              .postId;
+            button.dataset.postId;
 
-          if (
-            likedPosts[id]
-          ) {
-
+          if (likedPosts[id]) {
             delete likedPosts[id];
-
           } else {
-
-            likedPosts[id] =
-              true;
+            likedPosts[id] = true;
           }
 
           localStorage.setItem(
@@ -695,7 +672,7 @@ function bindPostEvents() {
     });
 
   /*
-   * Share
+   * SHARE
    */
   document
     .querySelectorAll(
@@ -709,17 +686,13 @@ function bindPostEvents() {
 
           const post =
             findPost(
-              button.dataset
-                .postId
+              button.dataset.postId
             );
 
           if (!post) return;
 
           const url =
             getVkUrl(post);
-
-          const title =
-            "National Geographic";
 
           if (
             navigator.share
@@ -728,17 +701,18 @@ function bindPostEvents() {
             try {
 
               await navigator.share({
-                title,
+                title:
+                  "National Geographic",
                 text:
                   post.text ||
-                  title,
+                  "National Geographic",
                 url
               });
 
               return;
 
             } catch {
-              // пользователь отменил
+              // отмена
             }
           }
 
@@ -764,7 +738,7 @@ function bindPostEvents() {
     });
 
   /*
-   * Gallery
+   * ФОТО
    */
   document
     .querySelectorAll(
@@ -782,8 +756,7 @@ function bindPostEvents() {
 
           const index =
             Number(
-              button.dataset
-                .index
+              button.dataset.index
             ) || 0;
 
           const post =
@@ -798,6 +771,73 @@ function bindPostEvents() {
             images,
             index
           );
+        }
+      );
+    });
+
+  /*
+   * ВИДЕО-КАРТОЧКА
+   */
+  document
+    .querySelectorAll(
+      "[data-video-open]"
+    )
+    .forEach(element => {
+
+      element.addEventListener(
+        "click",
+        event => {
+
+          /*
+           * Если нажали именно
+           * на кнопку "Смотреть видео",
+           * обычная ссылка работает сама.
+           */
+          if (
+            event.target.closest(
+              "a"
+            )
+          ) {
+            return;
+          }
+
+          const url =
+            element.dataset
+              .videoOpen;
+
+          if (url) {
+            window.open(
+              url,
+              "_blank",
+              "noopener,noreferrer"
+            );
+          }
+        }
+      );
+
+      element.addEventListener(
+        "keydown",
+        event => {
+
+          if (
+            event.key === "Enter" ||
+            event.key === " "
+          ) {
+
+            event.preventDefault();
+
+            const url =
+              element.dataset
+                .videoOpen;
+
+            if (url) {
+              window.open(
+                url,
+                "_blank",
+                "noopener,noreferrer"
+              );
+            }
+          }
         }
       );
     });
@@ -819,12 +859,13 @@ function initLoadMore() {
     "click",
     () => {
 
-      visibleCount +=
-        POSTS_PER_PAGE;
+      const oldCount =
+        visibleCount;
 
       visibleCount =
         Math.min(
-          visibleCount,
+          visibleCount +
+            POSTS_PER_PAGE,
           allPosts.length
         );
 
@@ -838,13 +879,7 @@ function initLoadMore() {
           );
 
         const target =
-          posts[
-            Math.max(
-              0,
-              visibleCount -
-                POSTS_PER_PAGE
-            )
-          ];
+          posts[oldCount];
 
         if (target) {
           target.scrollIntoView({
@@ -874,7 +909,7 @@ function updateLoadMore() {
 }
 
 /* =========================================================
-   MENU
+   МЕНЮ
 ========================================================= */
 
 function initMenu() {
@@ -927,7 +962,7 @@ function initMenu() {
 }
 
 /* =========================================================
-   BACK TO TOP
+   НАВЕРХ
 ========================================================= */
 
 function initBackToTop() {
@@ -948,7 +983,7 @@ function initBackToTop() {
       );
     },
     {
-      passive:true
+      passive: true
     }
   );
 
@@ -957,8 +992,8 @@ function initBackToTop() {
     () => {
 
       window.scrollTo({
-        top:0,
-        behavior:"smooth"
+        top: 0,
+        behavior: "smooth"
       });
     }
   );
@@ -973,6 +1008,7 @@ let viewerImages = [];
 let viewerIndex = 0;
 
 function initImageViewer() {
+
   viewer =
     document.getElementById(
       "imageViewer"
@@ -1023,9 +1059,7 @@ function initImageViewer() {
           ›
         </button>
 
-        <div
-          class="imageViewerCounter"
-        ></div>
+        <div class="imageViewerCounter"></div>
 
       </div>
     `;
@@ -1199,9 +1233,7 @@ function changeViewerImage(
   viewerIndex +=
     direction;
 
-  if (
-    viewerIndex < 0
-  ) {
+  if (viewerIndex < 0) {
     viewerIndex =
       viewerImages.length - 1;
   }
@@ -1242,66 +1274,22 @@ function findPost(id) {
 }
 
 function getVkUrl(post) {
-  if (
-    post.vk_id
-  ) {
+  if (post.vk_id) {
     return (
       "https://vk.ru/wall" +
       post.vk_id
     );
   }
 
-  if (
-    post.id
-  ) {
+  if (post.id) {
     return (
       VK_GROUP_URL +
       "?w=wall" +
-      OWNER_ID +
-      "_" +
       post.id
     );
   }
 
   return VK_GROUP_URL;
-}
-
-function buildVkVideoUrl(
-  post
-) {
-  if (
-    post.video_vk_url
-  ) {
-    return post.video_vk_url;
-  }
-
-  if (
-    post.video_owner_id !==
-      undefined &&
-    post.video_owner_id !==
-      null &&
-    post.video_id !==
-      undefined &&
-    post.video_id !==
-      null
-  ) {
-
-    let url =
-      `https://vk.ru/video${post.video_owner_id}_${post.video_id}`;
-
-    if (
-      post.video_access_key
-    ) {
-      url +=
-        `?access_key=${encodeURIComponent(
-          post.video_access_key
-        )}`;
-    }
-
-    return url;
-  }
-
-  return null;
 }
 
 function formatDate(timestamp) {
@@ -1325,9 +1313,9 @@ function formatDate(timestamp) {
   return date.toLocaleDateString(
     "ru-RU",
     {
-      day:"numeric",
-      month:"long",
-      year:"numeric"
+      day: "numeric",
+      month: "long",
+      year: "numeric"
     }
   );
 }
@@ -1382,17 +1370,11 @@ function escapeHtml(value) {
     );
 }
 
-function escapeAttribute(
-  value
-) {
-  return escapeHtml(
-    value
-  );
+function escapeAttribute(value) {
+  return escapeHtml(value);
 }
 
-function showToast(
-  message
-) {
+function showToast(message) {
   const toast =
     document.getElementById(
       "toast"
