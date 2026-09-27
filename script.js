@@ -7,6 +7,7 @@ let allPosts = [];
 let visiblePosts = 6;
 let activeCategory = "Все";
 let searchText = "";
+let isLoading = false;
 
 const categories = {
   "Природа": [
@@ -28,7 +29,7 @@ const categories = {
   ],
 
   "Мир": [
-    "мир", "европ", "ази", "америк", "африк",
+    "европ", "ази", "америк", "африк",
     "австрали", "япони", "китай", "франци",
     "итал", "испан", "инд"
   ],
@@ -59,6 +60,28 @@ function formatDate(timestamp) {
 
 
 /* =========================
+   ВРЕМЯ ОБНОВЛЕНИЯ
+========================= */
+
+function updateRefreshTime() {
+
+  const element =
+    document.querySelector("#refreshTime");
+
+  if (!element) return;
+
+  const now = new Date();
+
+  element.textContent =
+    "Обновлено в " +
+    now.toLocaleTimeString("ru-RU", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+}
+
+
+/* =========================
    ТЕКСТ
 ========================= */
 
@@ -75,7 +98,7 @@ function cleanText(text) {
 
 
 /* =========================
-   ССЫЛКА VK
+   VK
 ========================= */
 
 function getPostLink(vkId) {
@@ -95,18 +118,17 @@ function getPostLink(vkId) {
 
 
 /* =========================
-   ОПРЕДЕЛЕНИЕ КАТЕГОРИИ
+   КАТЕГОРИЯ
 ========================= */
 
 function detectCategory(text) {
 
-  const lower = text.toLowerCase();
+  const lower =
+    text.toLowerCase();
 
   for (const category in categories) {
 
-    const words = categories[category];
-
-    for (const word of words) {
+    for (const word of categories[category]) {
 
       if (lower.includes(word)) {
         return category;
@@ -121,7 +143,7 @@ function detectCategory(text) {
 
 
 /* =========================
-   ФИЛЬТРАЦИЯ
+   ФИЛЬТР
 ========================= */
 
 function getFilteredPosts() {
@@ -132,9 +154,9 @@ function getFilteredPosts() {
 
     posts = posts.filter(post => {
 
-      const text = cleanText(post.text);
-
-      return detectCategory(text) === activeCategory;
+      return detectCategory(
+        cleanText(post.text)
+      ) === activeCategory;
 
     });
 
@@ -147,10 +169,9 @@ function getFilteredPosts() {
 
     posts = posts.filter(post => {
 
-      const text =
-        cleanText(post.text).toLowerCase();
-
-      return text.includes(query);
+      return cleanText(post.text)
+        .toLowerCase()
+        .includes(query);
 
     });
 
@@ -161,7 +182,7 @@ function getFilteredPosts() {
 
 
 /* =========================
-   КАРТОЧКА ПОСТА
+   КАРТОЧКА
 ========================= */
 
 function createPost(post) {
@@ -201,9 +222,7 @@ function createPost(post) {
 
       <div class="postBody">
 
-        <h3>
-          ${text}
-        </h3>
+        <h3>${text}</h3>
 
         ${
           date
@@ -236,20 +255,19 @@ function renderPosts() {
     getFilteredPosts();
 
   const postsToShow =
-    filteredPosts.slice(0, visiblePosts);
+    filteredPosts.slice(
+      0,
+      visiblePosts
+    );
 
   if (!filteredPosts.length) {
 
     postsContainer.innerHTML = `
       <div class="loading">
-
         Ничего не найдено
-
         <br><br>
-
         Попробуйте изменить запрос
         или выбрать другую категорию.
-
       </div>
     `;
 
@@ -261,7 +279,10 @@ function renderPosts() {
       .map(createPost)
       .join("");
 
-  if (visiblePosts < filteredPosts.length) {
+  if (
+    visiblePosts <
+    filteredPosts.length
+  ) {
 
     postsContainer.innerHTML += `
       <div class="loadMoreWrap">
@@ -275,22 +296,30 @@ function renderPosts() {
 
     document
       .querySelector("#loadMore")
-      .addEventListener("click", () => {
+      .onclick = () => {
 
         visiblePosts += 6;
 
         renderPosts();
 
-      });
+      };
+
   }
+
 }
 
 
 /* =========================
-   ЗАГРУЗКА
+   ЗАГРУЗКА API
 ========================= */
 
-async function loadPosts(showLoading = true) {
+async function loadPosts(
+  showLoading = true
+) {
+
+  if (isLoading) return;
+
+  isLoading = true;
 
   if (showLoading) {
 
@@ -299,25 +328,20 @@ async function loadPosts(showLoading = true) {
         ЗАГРУЖАЕМ ПОСЛЕДНИЕ ПУБЛИКАЦИИ...
       </div>
     `;
+
   }
 
   try {
 
     const response =
       await fetch(API_URL, {
-        method: "GET",
-        headers: {
-          "Accept": "application/json"
-        },
         cache: "no-store"
       });
 
     if (!response.ok) {
-
       throw new Error(
-        `API error ${response.status}`
+        `API ${response.status}`
       );
-
     }
 
     const data =
@@ -327,28 +351,21 @@ async function loadPosts(showLoading = true) {
       !data ||
       !Array.isArray(data.posts)
     ) {
-
       throw new Error(
         "Неверный формат API"
       );
-
     }
 
     allPosts =
       data.posts;
 
-    if (showLoading) {
-      visiblePosts = 6;
-    }
-
     renderPosts();
+
+    updateRefreshTime();
 
   } catch (error) {
 
-    console.error(
-      "Ошибка загрузки:",
-      error
-    );
+    console.error(error);
 
     if (showLoading) {
 
@@ -371,13 +388,17 @@ async function loadPosts(showLoading = true) {
 
     }
 
+  } finally {
+
+    isLoading = false;
+
   }
 
 }
 
 
 /* =========================
-   ПОИСК + КАТЕГОРИИ
+   ФИЛЬТРЫ
 ========================= */
 
 function createFilters() {
@@ -415,50 +436,49 @@ function createFilters() {
 
     <div class="categoryButtons">
 
-      <button
-        class="categoryBtn active"
-        data-category="Все"
-      >
+      <button class="categoryBtn active"
+        data-category="Все">
         Все
       </button>
 
-      <button
-        class="categoryBtn"
-        data-category="Природа"
-      >
+      <button class="categoryBtn"
+        data-category="Природа">
         🏔️ Природа
       </button>
 
-      <button
-        class="categoryBtn"
-        data-category="Путешествия"
-      >
+      <button class="categoryBtn"
+        data-category="Путешествия">
         ✈️ Путешествия
       </button>
 
-      <button
-        class="categoryBtn"
-        data-category="Россия"
-      >
+      <button class="categoryBtn"
+        data-category="Россия">
         🇷🇺 Россия
       </button>
 
-      <button
-        class="categoryBtn"
-        data-category="Мир"
-      >
+      <button class="categoryBtn"
+        data-category="Мир">
         🌍 Мир
       </button>
 
-      <button
-        class="categoryBtn"
-        data-category="Животные"
-      >
+      <button class="categoryBtn"
+        data-category="Животные">
         🐾 Животные
       </button>
 
     </div>
 
+    <div class="refreshPanel">
+
+      <button id="refreshButton">
+        ↻ ОБНОВИТЬ
+      </button>
+
+      <span id="refreshTime">
+        Загрузка...
+      </span>
+
+    </div>
   `;
 
   heading.after(filters);
@@ -467,48 +487,62 @@ function createFilters() {
   const search =
     document.querySelector("#postSearch");
 
-  search.addEventListener(
-    "input",
-    event => {
+  search.oninput = event => {
 
-      searchText =
-        event.target.value;
+    searchText =
+      event.target.value;
 
-      visiblePosts = 6;
+    visiblePosts = 6;
 
-      renderPosts();
+    renderPosts();
 
-    }
-  );
+  };
 
 
   document
     .querySelectorAll(".categoryBtn")
     .forEach(button => {
 
-      button.addEventListener(
-        "click",
-        () => {
+      button.onclick = () => {
 
-          document
-            .querySelectorAll(".categoryBtn")
-            .forEach(btn =>
-              btn.classList.remove("active")
-            );
+        document
+          .querySelectorAll(".categoryBtn")
+          .forEach(btn =>
+            btn.classList.remove("active")
+          );
 
-          button.classList.add("active");
+        button.classList.add("active");
 
-          activeCategory =
-            button.dataset.category;
+        activeCategory =
+          button.dataset.category;
 
-          visiblePosts = 6;
+        visiblePosts = 6;
 
-          renderPosts();
+        renderPosts();
 
-        }
-      );
+      };
 
     });
+
+
+  document
+    .querySelector("#refreshButton")
+    .onclick = async () => {
+
+      const button =
+        document.querySelector(
+          "#refreshButton"
+        );
+
+      button.textContent =
+        "↻ ОБНОВЛЕНИЕ...";
+
+      await loadPosts(false);
+
+      button.textContent =
+        "↻ ОБНОВИТЬ";
+
+    };
 
 }
 
@@ -521,8 +555,10 @@ const year =
   document.querySelector("#year");
 
 if (year) {
+
   year.textContent =
     new Date().getFullYear();
+
 }
 
 
@@ -549,7 +585,6 @@ if (menu && links) {
 
   };
 
-
   links
     .querySelectorAll("a")
     .forEach(link => {
@@ -568,7 +603,7 @@ if (menu && links) {
 
 
 /* =========================
-   ЗАПУСК
+   СТАРТ
 ========================= */
 
 createFilters();
@@ -578,7 +613,6 @@ loadPosts();
 
 /* =========================
    АВТООБНОВЛЕНИЕ
-   КАЖДЫЕ 5 МИНУТ
 ========================= */
 
 setInterval(() => {
@@ -589,7 +623,7 @@ setInterval(() => {
 
 
 /* =========================
-   ОБНОВЛЕНИЕ ПРИ ВОЗВРАТЕ
+   ВОЗВРАТ НА СТРАНИЦУ
 ========================= */
 
 document.addEventListener(
@@ -597,7 +631,8 @@ document.addEventListener(
   () => {
 
     if (
-      document.visibilityState === "visible"
+      document.visibilityState ===
+      "visible"
     ) {
 
       loadPosts(false);
