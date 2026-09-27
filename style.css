@@ -1,11 +1,6 @@
-/* =========================================================
-   NATIONAL GEOGRAPHIC — ORIGINAL DIGITAL EDITION
-   style.css
-   ========================================================= */
-
 :root {
   --black: #050505;
-  --black-2: #0a0a0a;
+  --black-2: #0b0b0b;
   --black-3: #111111;
   --black-4: #171717;
 
@@ -13,31 +8,22 @@
   --yellow-dark: #d9aa00;
 
   --white: #ffffff;
-  --text: #f2f2f2;
-  --text-soft: #b5b5b5;
-  --text-muted: #777777;
+  --gray: #a4a4a4;
+  --gray-2: #707070;
 
-  --border: rgba(255, 255, 255, 0.09);
-  --border-yellow: rgba(255, 204, 0, 0.35);
+  --border: rgba(255,255,255,.10);
+  --border-yellow: rgba(255,204,0,.45);
 
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
+  --max-width: 1240px;
 
-  --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  --radius: 0px;
 
-  --container: 1180px;
-  --transition: 180ms ease;
+  --shadow:
+    0 20px 60px rgba(0,0,0,.45);
 }
-
-/* =========================================================
-   RESET
-   ========================================================= */
 
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {
@@ -45,40 +31,20 @@ html {
 }
 
 body {
-  min-height: 100vh;
-  background:
-    radial-gradient(
-      circle at 50% -20%,
-      rgba(255, 204, 0, 0.08),
-      transparent 35%
-    ),
-    var(--black);
+  margin: 0;
+  background: var(--black);
+  color: var(--white);
 
-  color: var(--text);
+  font-family: "Inter", Arial, sans-serif;
 
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Arial,
-    sans-serif;
-
-  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-body::selection {
-  background: var(--yellow);
-  color: #000;
-}
-
-img,
-video {
-  display: block;
-  max-width: 100%;
+body,
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 button,
@@ -86,179 +52,95 @@ input {
   font: inherit;
 }
 
-button {
-  border: 0;
-}
-
 a {
   color: inherit;
   text-decoration: none;
 }
 
-ul,
-ol {
-  list-style: none;
+img {
+  display: block;
+  max-width: 100%;
 }
 
-/* =========================================================
-   GLOBAL
-   ========================================================= */
-
 .ngContainer {
-  width: min(var(--container), calc(100% - 40px));
+  width: min(var(--max-width), calc(100% - 48px));
   margin: 0 auto;
 }
 
-.ngSection {
-  padding: 80px 0;
-}
 
-.ngLoading {
-  min-height: 220px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: var(--text-muted);
-  font-size: 14px;
-  letter-spacing: 0.04em;
-}
-
-.ngLoading::before {
-  content: "";
-  width: 18px;
-  height: 18px;
-  margin-right: 12px;
-
-  border: 2px solid rgba(255, 204, 0, 0.2);
-  border-top-color: var(--yellow);
-  border-radius: 50%;
-
-  animation: ngSpin 0.8s linear infinite;
-}
-
-@keyframes ngSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* =========================================================
+/* =========================
    HEADER
-   ========================================================= */
+========================= */
 
 .ngHeader {
   position: sticky;
   top: 0;
   z-index: 1000;
 
-  width: 100%;
-
-  background: rgba(5, 5, 5, 0.92);
+  background: rgba(5,5,5,.94);
   border-bottom: 1px solid var(--border);
 
   backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
 }
 
 .ngHeaderInner {
-  width: min(var(--container), calc(100% - 40px));
-  min-height: 76px;
-
+  width: min(var(--max-width), calc(100% - 48px));
+  height: 78px;
   margin: 0 auto;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 30px;
 }
-
-/* =========================================================
-   BRAND
-   ========================================================= */
 
 .ngBrand {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 
-  min-width: max-content;
-
-  color: var(--white);
+  font-family: "Oswald", sans-serif;
+  font-weight: 600;
+  letter-spacing: .08em;
 }
 
-.ngBrandMark {
-  width: 34px;
-  height: 34px;
-
-  border: 3px solid var(--yellow);
-
-  display: flex;
+.ngBrandBox {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  position: relative;
-}
+  height: 28px;
+  padding: 0 7px;
 
-.ngBrandMark::after {
-  content: "";
+  border: 2px solid var(--yellow);
 
-  width: 12px;
-  height: 12px;
+  color: var(--yellow);
 
-  background: var(--yellow);
+  font-size: 13px;
+  letter-spacing: .06em;
 }
 
 .ngBrandText {
-  display: flex;
-  flex-direction: column;
-
-  line-height: 1;
+  font-size: 19px;
+  color: var(--white);
 }
-
-.ngBrandText strong {
-  font-size: 15px;
-  font-weight: 900;
-  letter-spacing: 0.14em;
-}
-
-.ngBrandText span {
-  margin-top: 5px;
-
-  color: var(--text-muted);
-
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-/* =========================================================
-   NAVIGATION
-   ========================================================= */
 
 .ngNav {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 28px;
+  gap: 36px;
 }
 
 .ngNav a {
   position: relative;
 
-  padding: 8px 0;
-
-  color: var(--text-soft);
+  color: #bdbdbd;
 
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: .14em;
   text-transform: uppercase;
 
-  transition:
-    color var(--transition),
-    transform var(--transition);
+  transition: color .2s ease;
 }
 
 .ngNav a::after {
@@ -266,17 +148,14 @@ ol {
 
   position: absolute;
   left: 0;
-  right: 0;
-  bottom: 0;
+  bottom: -8px;
 
+  width: 0;
   height: 2px;
 
   background: var(--yellow);
 
-  transform: scaleX(0);
-  transform-origin: center;
-
-  transition: transform var(--transition);
+  transition: width .2s ease;
 }
 
 .ngNav a:hover {
@@ -284,41 +163,100 @@ ol {
 }
 
 .ngNav a:hover::after {
-  transform: scaleX(1);
+  width: 100%;
 }
 
 .ngMenu {
   display: none;
+
+  width: 44px;
+  height: 44px;
+
+  border: 1px solid var(--border);
+  background: transparent;
+
+  cursor: pointer;
+
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
 }
 
-/* =========================================================
+.ngMenu span {
+  display: block;
+
+  width: 20px;
+  height: 2px;
+
+  background: var(--white);
+}
+
+
+/* =========================
+   MOBILE MENU
+========================= */
+
+.ngMobileMenu {
+  display: none;
+
+  position: fixed;
+  inset: 78px 0 auto 0;
+
+  z-index: 900;
+
+  background: rgba(5,5,5,.98);
+
+  border-bottom: 1px solid var(--border);
+}
+
+.ngMobileMenu.active {
+  display: block;
+}
+
+.ngMobileMenuInner {
+  display: flex;
+  flex-direction: column;
+}
+
+.ngMobileMenu a {
+  padding: 20px 24px;
+
+  border-bottom: 1px solid var(--border);
+
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+
+/* =========================
    HERO
-   ========================================================= */
+========================= */
 
 .ngHero {
   position: relative;
-  overflow: hidden;
 
-  min-height: 520px;
+  min-height: 680px;
 
   display: flex;
-  align-items: flex-end;
+  align-items: center;
+
+  overflow: hidden;
 
   background:
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.1) 0%,
-      rgba(0, 0, 0, 0.4) 45%,
-      rgba(0, 0, 0, 0.96) 100%
-    ),
     radial-gradient(
-      circle at 70% 25%,
-      rgba(255, 204, 0, 0.14),
-      transparent 30%
+      circle at 75% 35%,
+      rgba(255,204,0,.12),
+      transparent 28%
     ),
-    #080808;
-
-  border-bottom: 1px solid var(--border);
+    linear-gradient(
+      120deg,
+      #050505 0%,
+      #090909 48%,
+      #111111 100%
+    );
 }
 
 .ngHero::before {
@@ -330,50 +268,39 @@ ol {
   background:
     linear-gradient(
       90deg,
-      rgba(255, 204, 0, 0.04) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      0deg,
-      rgba(255, 204, 0, 0.025) 1px,
-      transparent 1px
+      rgba(5,5,5,1) 0%,
+      rgba(5,5,5,.94) 42%,
+      rgba(5,5,5,.55) 72%,
+      rgba(5,5,5,.15) 100%
     );
-
-  background-size: 80px 80px;
-
-  opacity: 0.5;
-
-  pointer-events: none;
 }
 
 .ngHero::after {
-  content: "";
+  content: "NG";
 
   position: absolute;
 
-  width: 420px;
-  height: 420px;
+  right: 5%;
+  bottom: -80px;
 
-  right: -140px;
-  top: -160px;
+  font-family: "Oswald", sans-serif;
 
-  border: 1px solid rgba(255, 204, 0, 0.15);
-  border-radius: 50%;
+  font-size: min(42vw, 520px);
+  font-weight: 700;
 
-  box-shadow:
-    0 0 0 50px rgba(255, 204, 0, 0.02),
-    0 0 0 100px rgba(255, 204, 0, 0.015);
+  line-height: .8;
+
+  color: rgba(255,255,255,.025);
+
+  pointer-events: none;
 }
 
 .ngHeroContent {
   position: relative;
   z-index: 2;
 
-  width: min(var(--container), calc(100% - 40px));
-
+  width: min(var(--max-width), calc(100% - 48px));
   margin: 0 auto;
-
-  padding: 90px 0 70px;
 }
 
 .ngHeroMeta {
@@ -381,21 +308,24 @@ ol {
   align-items: center;
   gap: 12px;
 
-  margin-bottom: 20px;
+  margin-bottom: 28px;
 
-  color: var(--yellow);
+  color: var(--gray);
 
   font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: .2em;
 }
 
-.ngHeroMeta::before {
-  content: "";
+.ngHeroMeta span:last-child {
+  color: var(--yellow);
+}
 
-  width: 28px;
-  height: 2px;
+.ngYellowLine {
+  display: block;
+
+  width: 38px;
+  height: 3px;
 
   background: var(--yellow);
 }
@@ -403,1027 +333,600 @@ ol {
 .ngHero h1 {
   max-width: 850px;
 
-  color: var(--white);
+  margin: 0;
 
-  font-size: clamp(48px, 8vw, 94px);
-  font-weight: 900;
+  font-family: "Oswald", sans-serif;
 
-  line-height: 0.92;
-  letter-spacing: -0.055em;
+  font-size: clamp(58px, 9vw, 132px);
+  font-weight: 700;
 
-  text-transform: uppercase;
+  line-height: .86;
+  letter-spacing: -.025em;
 }
 
-.ngHero h1 span {
-  color: var(--yellow);
-}
+.ngHero p {
+  max-width: 530px;
 
-.ngHeroDescription {
-  max-width: 620px;
+  margin: 34px 0 0;
 
-  margin-top: 28px;
-
-  color: var(--text-soft);
+  color: #b8b8b8;
 
   font-size: 16px;
   line-height: 1.7;
 }
 
-/* =========================================================
-   COMMUNITY BAR
-   ========================================================= */
+.ngHeroButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 24px;
+
+  margin-top: 38px;
+  padding: 16px 22px;
+
+  background: var(--yellow);
+  color: #050505;
+
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .14em;
+
+  transition:
+    transform .2s ease,
+    background .2s ease;
+}
+
+.ngHeroButton:hover {
+  background: #ffe064;
+  transform: translateY(-2px);
+}
+
+.ngHeroButton span {
+  font-size: 17px;
+}
+
+
+/* =========================
+   COMMUNITY
+========================= */
 
 .ngCommunityBar {
-  position: relative;
-  z-index: 10;
+  width: min(var(--max-width), calc(100% - 48px));
 
-  width: min(var(--container), calc(100% - 40px));
+  margin: 0 auto;
 
-  margin: -35px auto 0;
-
-  padding: 20px 22px;
+  min-height: 96px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
 
-  background: rgba(17, 17, 17, 0.96);
-
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-
-  box-shadow: var(--shadow);
-
-  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
 }
 
 .ngCommunityIdentity {
-  min-width: 0;
-
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
-.ngAvatar,
-.ngCommunityAvatar,
-.vkCommunityAvatar {
+.ngAvatar {
   width: 48px;
   height: 48px;
-
-  flex: 0 0 48px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background: var(--yellow);
+  border: 2px solid var(--yellow);
 
-  color: #000;
-
-  font-size: 16px;
-  font-weight: 900;
-
-  border-radius: 50%;
-
-  overflow: hidden;
-}
-
-.ngAvatar img,
-.ngCommunityAvatar img,
-.vkCommunityAvatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.ngCommunityName {
-  color: var(--white);
-
+  font-family: "Oswald", sans-serif;
   font-size: 15px;
+  font-weight: 700;
+
+  color: var(--yellow);
+}
+
+.ngCommunityTitle {
+  font-size: 14px;
   font-weight: 800;
 }
 
-.ngCommunityMeta {
-  margin-top: 3px;
+.ngCommunitySubtitle {
+  margin-top: 5px;
 
-  color: var(--text-muted);
+  color: var(--gray-2);
 
   font-size: 11px;
 }
 
 .ngVkButton {
-  min-width: 145px;
-  height: 42px;
-
-  padding: 0 20px;
-
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 12px;
 
-  border: 1px solid var(--yellow);
-  border-radius: 8px;
+  padding: 11px 16px;
 
-  background: var(--yellow);
-  color: #000;
+  border: 1px solid var(--border);
 
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  color: var(--white);
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
 
   transition:
-    background var(--transition),
-    color var(--transition),
-    transform var(--transition),
-    box-shadow var(--transition);
+    border-color .2s ease,
+    color .2s ease;
 }
 
 .ngVkButton:hover {
-  background: transparent;
+  border-color: var(--yellow);
   color: var(--yellow);
-
-  transform: translateY(-2px);
-
-  box-shadow: 0 8px 24px rgba(255, 204, 0, 0.12);
 }
 
-.ngVkButton:active {
-  transform: translateY(0);
-}
 
-/* =========================================================
+/* =========================
    FEED
-   ========================================================= */
+========================= */
 
 .ngFeedSection {
-  padding: 90px 0 100px;
+  padding: 110px 0 120px;
 }
 
 .ngSectionHeading {
   display: flex;
-  align-items: flex-end;
   justify-content: space-between;
+  align-items: flex-end;
   gap: 30px;
-
-  margin-bottom: 30px;
 }
 
-.ngSectionTitle {
-  color: var(--white);
-
-  font-size: clamp(30px, 4vw, 48px);
-  font-weight: 900;
-
-  line-height: 1;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
-}
-
-.ngSectionTitle span {
-  color: var(--yellow);
-}
-
-.ngSectionSubtitle {
-  max-width: 430px;
-
-  color: var(--text-muted);
-
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-/* =========================================================
-   SEARCH + REFRESH
-   ========================================================= */
-
-.ngSearchRow {
-  display: grid;
-
-  grid-template-columns: minmax(0, 1fr) auto;
-
-  gap: 12px;
-
+.ngEyebrow {
   margin-bottom: 14px;
-}
 
-.ngSearch {
-  width: 100%;
-  height: 48px;
-
-  padding: 0 16px;
-
-  background: var(--black-3);
-  color: var(--white);
-
-  border: 1px solid var(--border);
-  border-radius: 9px;
-
-  outline: none;
-
-  transition:
-    border-color var(--transition),
-    box-shadow var(--transition);
-}
-
-.ngSearch::placeholder {
-  color: var(--text-muted);
-}
-
-.ngSearch:focus {
-  border-color: rgba(255, 204, 0, 0.55);
-
-  box-shadow:
-    0 0 0 3px rgba(255, 204, 0, 0.06);
-}
-
-.ngRefresh {
-  min-width: 118px;
-  height: 48px;
-
-  padding: 0 18px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-
-  background: var(--black-3);
-  color: var(--white);
-
-  border: 1px solid var(--border);
-  border-radius: 9px;
-
-  cursor: pointer;
-
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-
-  transition:
-    background var(--transition),
-    border-color var(--transition),
-    color var(--transition),
-    transform var(--transition);
-}
-
-.ngRefresh:hover {
-  border-color: var(--yellow);
   color: var(--yellow);
 
-  transform: translateY(-1px);
-}
-
-.ngRefresh:active {
-  transform: translateY(0);
-}
-
-.ngRefresh.isLoading {
-  pointer-events: none;
-  opacity: 0.65;
-}
-
-/* =========================================================
-   FILTERS
-   ========================================================= */
-
-.ngFilters {
-  display: grid;
-
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  gap: 10px;
-
-  margin-bottom: 28px;
-}
-
-.categoryBtn {
-  min-height: 44px;
-
-  padding: 0 18px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: var(--black-3);
-  color: var(--text-soft);
-
-  border: 1px solid var(--border);
-  border-radius: 9px;
-
-  cursor: pointer;
-
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
-  letter-spacing: 0.1em;
+  letter-spacing: .22em;
+}
+
+.ngSectionHeading h2 {
+  margin: 0;
+
+  font-family: "Oswald", sans-serif;
+
+  font-size: clamp(38px, 5vw, 64px);
+  font-weight: 600;
+
+  line-height: .95;
+  letter-spacing: -.02em;
+}
+
+.ngSectionNumber {
+  color: #3a3a3a;
+
+  font-family: "Oswald", sans-serif;
+
+  font-size: 60px;
+  font-weight: 600;
+}
+
+.ngSectionDivider {
+  width: 100%;
+  height: 1px;
+
+  margin: 34px 0 28px;
+
+  background: var(--border);
+}
+
+.ngFeedStatus {
+  margin-bottom: 26px;
+
+  color: var(--gray-2);
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .16em;
   text-transform: uppercase;
-
-  transition:
-    background var(--transition),
-    color var(--transition),
-    border-color var(--transition),
-    transform var(--transition);
 }
-
-.categoryBtn:hover {
-  color: var(--white);
-  border-color: rgba(255, 204, 0, 0.35);
-}
-
-.categoryBtn.active {
-  background: var(--yellow);
-  color: #000;
-
-  border-color: var(--yellow);
-}
-
-.categoryBtn:active {
-  transform: scale(0.985);
-}
-
-/* =========================================================
-   POSTS GRID
-   ========================================================= */
 
 .ngPosts {
-  width: 100%;
-
   display: grid;
 
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
 
-  gap: 22px;
+  gap: 28px;
 }
 
-/* =========================================================
-   VK POST CARD
-   ========================================================= */
+
+/* =========================
+   POST
+========================= */
 
 .vkPost {
-  width: 100%;
-
-  background:
-    linear-gradient(
-      145deg,
-      rgba(255, 255, 255, 0.025),
-      transparent 40%
-    ),
-    var(--black-3);
-
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  position: relative;
 
   overflow: hidden;
 
-  box-shadow:
-    0 8px 30px rgba(0, 0, 0, 0.2);
+  background: var(--black-2);
+
+  border: 1px solid var(--border);
 
   transition:
-    border-color 220ms ease,
-    transform 220ms ease,
-    box-shadow 220ms ease;
+    border-color .25s ease,
+    transform .25s ease,
+    box-shadow .25s ease;
 }
 
 .vkPost:hover {
-  border-color: rgba(255, 204, 0, 0.22);
+  border-color: rgba(255,204,0,.35);
 
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 
-  box-shadow:
-    0 18px 50px rgba(0, 0, 0, 0.32);
+  box-shadow: var(--shadow);
 }
-
-/* =========================================================
-   POST HEADER
-   ========================================================= */
 
 .vkPostHeader {
   min-height: 76px;
 
-  padding: 16px 18px;
+  padding: 18px 20px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  gap: 16px;
-
-  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+  border-bottom: 1px solid var(--border);
 }
 
 .vkPostIdentity {
-  min-width: 0;
-
   display: flex;
   align-items: center;
-
   gap: 12px;
 }
 
 .vkCommunityAvatar {
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
 
-  flex-basis: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  border-radius: 10px;
+  border: 1px solid var(--yellow);
+
+  color: var(--yellow);
+
+  font-family: "Oswald", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .vkPostAuthor {
-  min-width: 0;
-
   display: flex;
   flex-direction: column;
+  gap: 4px;
 }
 
 .vkPostAuthor strong {
-  overflow: hidden;
-
-  color: var(--white);
-
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 800;
-
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
-.vkPostAuthor span {
-  margin-top: 2px;
+.vkPostAuthor time {
+  color: var(--gray-2);
 
-  color: var(--text-muted);
-
-  font-size: 11px;
+  font-size: 10px;
 }
 
 .vkPostMenu {
   width: 34px;
   height: 34px;
 
-  flex: 0 0 34px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+  border: 0;
   background: transparent;
-  color: var(--text-muted);
 
-  border-radius: 50%;
+  color: #777;
+
+  font-size: 20px;
 
   cursor: pointer;
-
-  font-size: 18px;
-
-  transition:
-    color var(--transition),
-    background var(--transition);
 }
-
-.vkPostMenu:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--white);
-}
-
-/* =========================================================
-   POST CONTENT
-   ========================================================= */
 
 .vkPostContent {
-  width: 100%;
+  padding: 24px 20px 0;
 }
 
 .vkPostText {
-  padding: 22px 20px;
+  margin: 0 0 22px;
 
   color: #e9e9e9;
 
   font-size: 15px;
   line-height: 1.7;
 
+  white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
-.vkPostText:empty {
-  display: none;
-}
-
-.vkPostText a {
-  color: var(--yellow);
-
-  text-decoration: underline;
-  text-decoration-color: rgba(255, 204, 0, 0.35);
-  text-underline-offset: 3px;
-}
-
-.vkPostText a:hover {
-  text-decoration-color: var(--yellow);
-}
-
-/* =========================================================
-   POST IMAGE
-   ========================================================= */
-
 .vkPostImage {
   width: 100%;
-
-  max-height: 720px;
+  max-height: 560px;
 
   object-fit: cover;
 
-  background: #000;
-
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  margin: 0 -20px;
+  width: calc(100% + 40px);
 
   cursor: zoom-in;
-
-  transition: opacity 200ms ease;
-}
-
-.vkPostImage:hover {
-  opacity: 0.96;
 }
 
 .vkPostPlaceholder {
-  min-height: 180px;
+  min-height: 220px;
+
+  margin: 0 -20px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   background:
-    radial-gradient(
-      circle at center,
-      rgba(255, 204, 0, 0.08),
-      transparent 45%
-    ),
-    #090909;
+    linear-gradient(
+      135deg,
+      #111 0%,
+      #080808 100%
+    );
 
-  color: var(--text-muted);
+  color: #292929;
 
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: "Oswald", sans-serif;
+  font-size: 72px;
+  font-weight: 700;
 }
-
-/* =========================================================
-   VIDEO
-   ========================================================= */
 
 .vkPostVideo {
-  width: 100%;
-
-  background: #000;
-
-  border-top: 1px solid rgba(255, 255, 255, 0.04);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-
-  overflow: hidden;
-}
-
-.vkPostVideo video,
-.vkPostVideo iframe {
-  display: block;
-
-  width: 100%;
-  min-height: 420px;
-
-  border: 0;
-
-  background: #000;
+  margin: 0 -20px;
 }
 
 .vkVideoLink {
-  min-height: 170px;
-
-  padding: 30px;
+  min-height: 220px;
 
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  gap: 10px;
+  background: #0c0c0c;
 
-  background:
-    radial-gradient(
-      circle at center,
-      rgba(255, 204, 0, 0.08),
-      transparent 50%
-    ),
-    #080808;
-
-  color: var(--white);
-
-  text-align: center;
-}
-
-.vkVideoLink strong {
   color: var(--yellow);
 
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .14em;
 }
-
-.vkVideoLink span {
-  color: var(--text-muted);
-
-  font-size: 12px;
-}
-
-/* =========================================================
-   POST ACTIONS
-   ========================================================= */
 
 .vkPostActions {
-  min-height: 58px;
-
-  padding: 8px 12px;
-
   display: grid;
 
-  /*
-     ЧЕТЫРЕ РАВНЫЕ КОЛОНКИ.
-     Это обеспечивает идеально равномерное
-     расположение всех кнопок.
-  */
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
 
-  gap: 6px;
+  margin-top: 22px;
 
-  border-top: 1px solid rgba(255, 255, 255, 0.055);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 .vkAction {
-  width: 100%;
-  min-width: 0;
-  min-height: 40px;
+  min-height: 46px;
 
-  padding: 0 8px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
+  border: 0;
+  border-right: 1px solid var(--border);
 
   background: transparent;
-  color: var(--text-muted);
 
-  border: 1px solid transparent;
-  border-radius: 8px;
+  color: #777;
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .06em;
 
   cursor: pointer;
 
-  font-size: 11px;
-  font-weight: 800;
-
-  white-space: nowrap;
-
   transition:
-    background var(--transition),
-    color var(--transition),
-    border-color var(--transition),
-    transform var(--transition);
+    color .2s ease,
+    background .2s ease;
+}
+
+.vkAction:last-child {
+  border-right: 0;
 }
 
 .vkAction:hover {
-  background: rgba(255, 255, 255, 0.045);
-
+  background: rgba(255,255,255,.03);
   color: var(--white);
-
-  border-color: rgba(255, 255, 255, 0.07);
 }
 
-.vkAction:active {
-  transform: scale(0.97);
-}
-
-.vkAction.isActive {
+.vkAction.active {
   color: var(--yellow);
 }
 
-.vkAction svg,
-.vkAction i,
-.vkAction .icon {
-  width: 16px;
-  height: 16px;
-
-  flex: 0 0 16px;
-}
-
-/* =========================================================
-   POST BOTTOM
-   ========================================================= */
-
 .vkPostBottom {
-  min-height: 42px;
-
-  padding: 0 18px;
+  padding: 14px 20px 18px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 15px;
+  gap: 20px;
 
-  color: var(--text-muted);
+  color: var(--gray-2);
 
-  font-size: 11px;
-
-  border-top: 1px solid rgba(255, 255, 255, 0.035);
+  font-size: 10px;
 }
 
 .vkOpenPost {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-
   color: var(--yellow);
 
-  font-weight: 700;
-
-  transition: opacity var(--transition);
+  font-weight: 800;
+  letter-spacing: .08em;
 }
-
-.vkOpenPost:hover {
-  opacity: 0.72;
-}
-
-/* =========================================================
-   COMMENTS
-   ========================================================= */
 
 .vkComments {
-  margin: 0 18px 18px;
+  margin-top: 18px;
 
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 10px;
+  padding: 18px;
 
-  overflow: hidden;
+  background: #090909;
 
-  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--border);
 }
 
 .vkCommentsHeader {
-  min-height: 46px;
+  margin-bottom: 14px;
 
-  padding: 0 14px;
+  color: var(--yellow);
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.vkCommentsHeader strong {
-  color: var(--white);
-
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.vkCommentsHeader span {
-  color: var(--text-muted);
-
-  font-size: 11px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .14em;
+  text-transform: uppercase;
 }
 
 .vkComment {
-  padding: 12px 14px;
+  padding: 10px 0;
 
-  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+  border-bottom: 1px solid var(--border);
+
+  color: #bcbcbc;
+
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .vkComment:last-child {
   border-bottom: 0;
 }
 
-.vkCommentAuthor {
-  color: var(--yellow);
+.vkCommentsEmpty {
+  color: #666;
 
   font-size: 11px;
-  font-weight: 800;
+  line-height: 1.5;
 }
 
-.vkCommentText {
-  margin-top: 4px;
 
-  color: var(--text-soft);
-
-  font-size: 12px;
-  line-height: 1.55;
-}
-
-.vkCommentsEmpty {
-  padding: 18px;
-
-  color: var(--text-muted);
-
-  font-size: 12px;
-  text-align: center;
-}
-
-/* =========================================================
-   POPUP MENU
-   ========================================================= */
-
-.postPopupMenu {
-  position: absolute;
-  z-index: 100;
-
-  min-width: 180px;
-
-  padding: 6px;
-
-  background: #171717;
-
-  border: 1px solid var(--border);
-  border-radius: 10px;
-
-  box-shadow: var(--shadow);
-}
-
-.postPopupMenu button {
-  width: 100%;
-
-  padding: 10px 12px;
-
-  display: flex;
-  align-items: center;
-
-  background: transparent;
-  color: var(--text-soft);
-
-  border-radius: 7px;
-
-  cursor: pointer;
-
-  font-size: 12px;
-
-  text-align: left;
-}
-
-.postPopupMenu button:hover {
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--white);
-}
-
-/* =========================================================
+/* =========================
    LOAD MORE
-   ========================================================= */
+========================= */
 
 .loadMoreWrap {
-  padding-top: 30px;
-
   display: flex;
   justify-content: center;
+
+  padding-top: 46px;
 }
 
 .loadMore {
-  min-width: 210px;
-  height: 46px;
-
-  padding: 0 22px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  background: transparent;
-  color: var(--yellow);
+  padding: 15px 28px;
 
   border: 1px solid var(--yellow);
-  border-radius: 8px;
+  background: transparent;
+
+  color: var(--yellow);
+
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .16em;
 
   cursor: pointer;
 
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-
   transition:
-    background var(--transition),
-    color var(--transition),
-    transform var(--transition);
+    background .2s ease,
+    color .2s ease;
 }
 
 .loadMore:hover {
   background: var(--yellow);
-  color: #000;
-
-  transform: translateY(-2px);
+  color: #050505;
 }
 
-.loadMore:active {
-  transform: translateY(0);
-}
 
-/* =========================================================
+/* =========================
    ABOUT
-   ========================================================= */
+========================= */
 
 .ngAbout {
-  position: relative;
+  padding: 110px 0;
 
-  padding: 100px 0;
+  background: #090909;
 
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-
-  background:
-    radial-gradient(
-      circle at 20% 50%,
-      rgba(255, 204, 0, 0.055),
-      transparent 30%
-    ),
-    var(--black-2);
 }
 
 .ngAboutGrid {
   display: grid;
 
-  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  grid-template-columns:
+    minmax(280px, .8fr)
+    minmax(300px, 1.2fr);
 
-  gap: 70px;
-
-  align-items: center;
+  gap: 100px;
 }
 
 .ngAbout h2 {
-  margin-bottom: 20px;
+  margin: 0;
 
-  color: var(--white);
+  font-family: "Oswald", sans-serif;
 
-  font-size: clamp(32px, 5vw, 58px);
-  font-weight: 900;
-
-  line-height: 0.95;
-  letter-spacing: -0.05em;
-
-  text-transform: uppercase;
+  font-size: clamp(44px, 6vw, 76px);
+  line-height: .95;
 }
 
-.ngAbout h2 span {
-  color: var(--yellow);
-}
-
-.ngAbout p {
+.ngAboutText {
   max-width: 650px;
+}
 
-  color: var(--text-soft);
+.ngAboutText p {
+  margin: 0 0 22px;
 
-  font-size: 15px;
+  color: #aaa;
+
+  font-size: 16px;
   line-height: 1.8;
 }
 
-.ngAboutCard {
-  padding: 28px;
+.ngAboutLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
 
-  background: var(--black-3);
+  margin-top: 16px;
 
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-}
-
-.ngAboutCardLabel {
   color: var(--yellow);
 
   font-size: 10px;
   font-weight: 900;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: .15em;
 }
 
-.ngAboutCard strong {
-  display: block;
-
-  margin-top: 10px;
-
-  color: var(--white);
-
-  font-size: 30px;
-  font-weight: 900;
+.ngAboutLink span {
+  font-size: 17px;
 }
 
-/* =========================================================
+
+/* =========================
    FOOTER
-   ========================================================= */
+========================= */
 
 .ngFooter {
-  padding: 40px 0 100px;
+  padding: 34px 0 90px;
 
-  background: #030303;
+  background: var(--black);
 }
 
 .ngFooterInner {
-  width: min(var(--container), calc(100% - 40px));
+  width: min(var(--max-width), calc(100% - 48px));
 
   margin: 0 auto;
 
@@ -1431,418 +934,261 @@ ol {
   align-items: center;
   justify-content: space-between;
 
-  gap: 25px;
-
-  color: var(--text-muted);
-
-  font-size: 11px;
+  gap: 30px;
 }
 
 .ngFooterBrand {
-  color: var(--white);
-
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-}
-
-.ngFooterBrand span {
-  color: var(--yellow);
-}
-
-.ngFooterLinks {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 8px;
+
+  font-family: "Oswald", sans-serif;
+
+  font-size: 14px;
+  letter-spacing: .08em;
 }
 
-.ngFooterLinks a {
-  transition: color var(--transition);
-}
-
-.ngFooterLinks a:hover {
+.ngFooterBrand strong {
   color: var(--yellow);
 }
 
-/* =========================================================
-   BACK TO TOP
-   ========================================================= */
+.ngFooterCopy {
+  color: #555;
 
-.ngTop {
-  position: fixed;
-
-  right: 22px;
-  bottom: 22px;
-
-  z-index: 900;
-
-  width: 44px;
-  height: 44px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: rgba(17, 17, 17, 0.94);
-  color: var(--yellow);
-
-  border: 1px solid rgba(255, 204, 0, 0.35);
-  border-radius: 50%;
-
-  cursor: pointer;
-
-  font-size: 17px;
-
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-
-  opacity: 0;
-  visibility: hidden;
-
-  transform: translateY(10px);
-
-  transition:
-    opacity var(--transition),
-    visibility var(--transition),
-    transform var(--transition),
-    background var(--transition);
+  font-size: 10px;
 }
 
-.ngTop.visible {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
 
-.ngTop:hover {
-  background: var(--yellow);
-  color: #000;
-}
-
-/* =========================================================
-   MOBILE NAVIGATION
-   ========================================================= */
+/* =========================
+   MOBILE NAV
+========================= */
 
 .ngMobileNav {
   display: none;
 }
 
-/* =========================================================
-   FOCUS
-   ========================================================= */
 
-button:focus-visible,
-a:focus-visible,
-input:focus-visible {
-  outline: 2px solid var(--yellow);
-  outline-offset: 3px;
+/* =========================
+   TOP
+========================= */
+
+.ngTop {
+  position: fixed;
+
+  right: 24px;
+  bottom: 24px;
+
+  z-index: 800;
+
+  width: 44px;
+  height: 44px;
+
+  border: 1px solid var(--border);
+
+  background: rgba(5,5,5,.9);
+
+  color: var(--yellow);
+
+  cursor: pointer;
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition:
+    opacity .2s ease,
+    visibility .2s ease;
 }
 
-/* =========================================================
-   TABLET
-   ========================================================= */
+.ngTop.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+.ngToast {
+  position: fixed;
+
+  left: 50%;
+  bottom: 28px;
+
+  z-index: 2000;
+
+  transform: translate(-50%, 20px);
+
+  padding: 12px 18px;
+
+  background: var(--yellow);
+  color: #050505;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition:
+    opacity .2s ease,
+    transform .2s ease;
+}
+
+.ngToast.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+
+/* =========================
+   POPUP
+========================= */
+
+.postPopupMenu {
+  position: fixed;
+
+  z-index: 3000;
+
+  min-width: 180px;
+
+  padding: 6px;
+
+  background: #111;
+
+  border: 1px solid var(--border);
+
+  box-shadow: var(--shadow);
+}
+
+.postPopupMenu button {
+  display: block;
+
+  width: 100%;
+
+  padding: 12px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #ccc;
+
+  text-align: left;
+
+  font-size: 11px;
+
+  cursor: pointer;
+}
+
+.postPopupMenu button:hover {
+  background: #191919;
+  color: var(--yellow);
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
 
 @media (max-width: 900px) {
-
-  .ngHeaderInner,
-  .ngContainer,
-  .ngHeroContent,
-  .ngCommunityBar,
-  .ngFooterInner {
-    width: min(var(--container), calc(100% - 32px));
-  }
-
-  .ngNav {
-    gap: 18px;
-  }
-
-  .ngHero {
-    min-height: 470px;
-  }
-
-  .ngAboutGrid {
-    grid-template-columns: 1fr;
-
-    gap: 35px;
-  }
-
-  .vkPostActions {
-    gap: 4px;
-  }
-
-  .vkAction {
-    padding: 0 5px;
-
-    font-size: 10px;
-  }
-}
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
-@media (max-width: 700px) {
-
-  body {
-    padding-bottom: 70px;
-  }
-
-  .ngHeader {
-    position: sticky;
-  }
-
-  .ngHeaderInner {
-    min-height: 64px;
-  }
 
   .ngNav {
     display: none;
   }
 
   .ngMenu {
-    width: 40px;
-    height: 40px;
-
     display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: transparent;
-    color: var(--white);
-
-    border: 1px solid var(--border);
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    font-size: 18px;
   }
-
-  .ngBrandMark {
-    width: 30px;
-    height: 30px;
-  }
-
-  .ngBrandText strong {
-    font-size: 13px;
-  }
-
-  .ngBrandText span {
-    font-size: 7px;
-  }
-
-  /* HERO */
 
   .ngHero {
-    min-height: 430px;
+    min-height: 610px;
   }
 
-  .ngHeroContent {
-    padding: 70px 0 55px;
-  }
-
-  .ngHero h1 {
-    font-size: clamp(42px, 14vw, 68px);
-  }
-
-  .ngHeroDescription {
-    margin-top: 22px;
-
-    font-size: 14px;
-  }
-
-  /* COMMUNITY */
-
-  .ngCommunityBar {
-    margin-top: -24px;
-
-    padding: 16px;
-
-    align-items: stretch;
-
-    flex-direction: column;
-  }
-
-  .ngCommunityIdentity {
-    width: 100%;
-  }
-
-  .ngVkButton {
-    width: 100%;
-  }
-
-  /* FEED */
-
-  .ngFeedSection {
-    padding: 65px 0 80px;
-  }
-
-  .ngSectionHeading {
-    display: block;
-
-    margin-bottom: 24px;
-  }
-
-  .ngSectionTitle {
-    font-size: 34px;
-  }
-
-  .ngSectionSubtitle {
-    margin-top: 12px;
-
-    font-size: 12px;
-  }
-
-  .ngSearchRow {
+  .ngPosts {
     grid-template-columns: 1fr;
   }
 
-  .ngRefresh {
-    width: 100%;
+  .ngAboutGrid {
+    gap: 50px;
   }
 
-  .ngFilters {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
 
-    gap: 8px;
+
+@media (max-width: 700px) {
+
+  .ngContainer,
+  .ngHeaderInner,
+  .ngHeroContent,
+  .ngCommunityBar,
+  .ngFooterInner {
+    width: min(100% - 32px, var(--max-width));
   }
 
-  .categoryBtn {
-    min-height: 42px;
-
-    padding: 0 8px;
-
-    font-size: 9px;
+  .ngHeaderInner {
+    height: 68px;
   }
 
-  /* POST */
-
-  .ngPosts {
-    gap: 16px;
+  .ngMobileMenu {
+    inset: 68px 0 auto 0;
   }
 
-  .vkPost {
-    border-radius: 12px;
+  .ngBrandText {
+    font-size: 16px;
   }
 
-  .vkPostHeader {
-    min-height: 68px;
-
-    padding: 13px 14px;
+  .ngHero {
+    min-height: 600px;
   }
 
-  .vkCommunityAvatar {
-    width: 40px;
-    height: 40px;
-
-    flex-basis: 40px;
+  .ngHero h1 {
+    font-size: clamp(54px, 16vw, 90px);
   }
 
-  .vkPostAuthor strong {
-    font-size: 13px;
-  }
-
-  .vkPostText {
-    padding: 17px 15px;
-
+  .ngHero p {
     font-size: 14px;
-    line-height: 1.65;
   }
 
-  /* ACTIONS */
-
-  .vkPostActions {
-    min-height: 54px;
-
-    padding: 7px 8px;
-
-    /*
-       На мобильном также четыре одинаковые колонки.
-       Никаких прыжков и разной ширины кнопок.
-    */
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-
-    gap: 3px;
+  .ngCommunityBar {
+    min-height: 88px;
   }
 
-  .vkAction {
-    min-height: 40px;
-
-    padding: 0 3px;
-
-    gap: 4px;
-
-    font-size: 9px;
-
-    letter-spacing: -0.01em;
-  }
-
-  .vkAction svg,
-  .vkAction i,
-  .vkAction .icon {
-    width: 14px;
-    height: 14px;
-
-    flex-basis: 14px;
-  }
-
-  .vkPostBottom {
-    padding: 0 14px;
-
-    font-size: 10px;
-  }
-
-  .vkPostVideo video,
-  .vkPostVideo iframe {
-    min-height: 230px;
-  }
-
-  .vkComments {
-    margin: 0 14px 14px;
-  }
-
-  /* ABOUT */
-
+  .ngFeedSection,
   .ngAbout {
-    padding: 70px 0;
+    padding: 78px 0;
   }
 
-  .ngAbout h2 {
-    font-size: 38px;
+  .ngSectionHeading h2 {
+    font-size: 43px;
   }
 
-  .ngAbout p {
-    font-size: 14px;
+  .ngSectionNumber {
+    display: none;
   }
 
-  /* FOOTER */
+  .ngAboutGrid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
 
   .ngFooter {
-    padding: 35px 0 90px;
+    padding-bottom: 90px;
   }
 
   .ngFooterInner {
-    flex-direction: column;
-
     align-items: flex-start;
+    flex-direction: column;
   }
-
-  .ngFooterLinks {
-    flex-wrap: wrap;
-
-    gap: 12px 18px;
-  }
-
-  /* BACK TOP */
 
   .ngTop {
-    right: 14px;
-    bottom: 84px;
-
-    width: 40px;
-    height: 40px;
+    right: 16px;
+    bottom: 76px;
   }
 
-  /* MOBILE NAV */
+  .ngToast {
+    bottom: 76px;
+  }
 
   .ngMobileNav {
     position: fixed;
@@ -1851,131 +1197,97 @@ input:focus-visible {
     right: 0;
     bottom: 0;
 
-    z-index: 1100;
+    z-index: 1000;
 
-    height: 68px;
-
-    padding:
-      6px
-      max(8px, env(safe-area-inset-right))
-      max(6px, env(safe-area-inset-bottom))
-      max(8px, env(safe-area-inset-left));
+    height: 64px;
 
     display: grid;
+    grid-template-columns: repeat(3, 1fr);
 
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-
-    gap: 5px;
-
-    background: rgba(8, 8, 8, 0.96);
+    background: rgba(5,5,5,.96);
 
     border-top: 1px solid var(--border);
 
     backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
   }
 
   .ngMobileNav a {
-    min-width: 0;
-
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    gap: 3px;
+    flex-direction: column;
 
-    color: var(--text-muted);
+    gap: 4px;
 
-    border-radius: 8px;
-
-    font-size: 9px;
-    font-weight: 800;
-
-    text-transform: uppercase;
-
-    transition:
-      color var(--transition),
-      background var(--transition);
+    color: #777;
   }
 
-  .ngMobileNav a:hover,
-  .ngMobileNav a.active {
-    background: rgba(255, 204, 0, 0.08);
+  .ngMobileNav a:hover {
     color: var(--yellow);
   }
 
-  .ngMobileNav a span:first-child {
+  .ngMobileNav span {
     font-size: 17px;
-    line-height: 1;
   }
+
+  .ngMobileNav small {
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
 }
 
-/* =========================================================
-   VERY SMALL PHONES
-   ========================================================= */
 
 @media (max-width: 390px) {
 
-  .ngHeaderInner,
   .ngContainer,
+  .ngHeaderInner,
   .ngHeroContent,
   .ngCommunityBar,
   .ngFooterInner {
     width: calc(100% - 24px);
   }
 
-  .ngBrandText span {
-    display: none;
+  .ngBrandBox {
+    height: 25px;
+
+    font-size: 11px;
+  }
+
+  .ngBrandText {
+    font-size: 14px;
   }
 
   .ngHero h1 {
-    font-size: 40px;
+    font-size: 51px;
   }
 
-  .ngFilters {
-    gap: 6px;
+  .ngHeroMeta {
+    font-size: 9px;
   }
 
-  .categoryBtn {
-    font-size: 8px;
+  .ngCommunityTitle {
+    font-size: 12px;
   }
 
-  .vkPostActions {
-    padding-left: 5px;
-    padding-right: 5px;
+  .ngVkButton {
+    padding: 9px 11px;
   }
 
-  .vkAction {
-    gap: 2px;
-
-    font-size: 8px;
+  .vkPostContent {
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
-  .vkAction svg,
-  .vkAction i,
-  .vkAction .icon {
-    width: 12px;
-    height: 12px;
-
-    flex-basis: 12px;
+  .vkPostImage,
+  .vkPostPlaceholder,
+  .vkPostVideo {
+    margin-left: -15px;
+    margin-right: -15px;
+    width: calc(100% + 30px);
   }
-}
 
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-
-    transition-duration: 0.01ms !important;
-  }
 }
