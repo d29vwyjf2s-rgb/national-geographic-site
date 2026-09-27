@@ -3201,3 +3201,230 @@ footer a:hover {
   }
 
 }
+/* =========================================================
+   v5.2 — VK FEED POLISH
+========================================================= */
+
+.vkPost {
+  animation: vkPostAppear .35s ease both;
+}
+
+@keyframes vkPostAppear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.showMoreText {
+  display: block;
+
+  margin-top: 5px;
+  padding: 0;
+
+  border: 0;
+  background: transparent;
+
+  color: #447bba;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.showMoreText:hover {
+  text-decoration: underline;
+}
+
+/* SKELETON */
+
+.vkSkeleton {
+  overflow: hidden;
+
+  padding: 18px;
+
+  background: #ffffff;
+
+  border: 1px solid #dce1e6;
+  border-radius: 12px;
+}
+
+.vkSkeletonHeader {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.skeletonAvatar {
+  width: 46px;
+  height: 46px;
+
+  flex: 0 0 46px;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #edf0f2,
+      #f8f9fa,
+      #edf0f2
+    );
+
+  background-size: 200% 100%;
+
+  animation:
+    skeletonMove 1.2s infinite;
+}
+
+.skeletonLines {
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+
+  width: 180px;
+}
+
+.skeletonLines span,
+.skeletonText span,
+.skeletonImage {
+  display: block;
+
+  background:
+    linear-gradient(
+      90deg,
+      #edf0f2,
+      #f8f9fa,
+      #edf0f2
+    );
+
+  background-size: 200% 100%;
+
+  animation:
+    skeletonMove 1.2s infinite;
+}
+
+.skeletonLines span:first-child {
+  width: 140px;
+  height: 12px;
+  border-radius: 5px;
+}
+
+.skeletonLines span:last-child {
+  width: 90px;
+  height: 9px;
+  border-radius: 5px;
+}
+
+.skeletonText {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  margin-top: 20px;
+}
+
+.skeletonText span {
+  width: 90%;
+  height: 11px;
+  border-radius: 5px;
+}
+
+.skeletonText span:last-child {
+  width: 55%;
+}
+
+.skeletonImage {
+  height: 300px;
+
+  margin-top: 18px;
+
+  border-radius: 8px;
+}
+
+@keyframes skeletonMove {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* REFRESH */
+
+#refreshButton.loading {
+  pointer-events: none;
+  opacity: .65;
+}
+
+#refreshButton.loading::before {
+  content: "";
+
+  width: 13px;
+  height: 13px;
+
+  margin-right: 7px;
+
+  display: inline-block;
+
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+
+  border-radius: 50%;
+
+  animation:
+    refreshSpin .7s linear infinite;
+}
+
+@keyframes refreshSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 760px) {
+
+  .vkSkeleton {
+    padding: 13px;
+    border-radius: 9px;
+  }
+
+  .skeletonImage {
+    height: 220px;
+  }
+
+  .showMoreText {
+    font-size: 13px;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .vkPostHeader {
+    padding: 11px;
+  }
+
+  .vkPostContent {
+    padding-left: 11px;
+    padding-right: 11px;
+  }
+
+  .vkPostActions {
+    min-height: 48px;
+  }
+
+}
