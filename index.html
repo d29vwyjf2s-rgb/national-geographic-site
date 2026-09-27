@@ -8,68 +8,34 @@
     content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
 
-  <meta
-    name="theme-color"
-    content="#050505"
-  >
+  <meta name="theme-color" content="#050505">
 
   <meta
     name="description"
     content="National Geographic — природа, путешествия, животные и удивительные места планеты."
   >
 
-  <meta
-    name="mobile-web-app-capable"
-    content="yes"
-  >
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="National Geographic">
 
-  <meta
-    name="apple-mobile-web-app-capable"
-    content="yes"
-  >
-
-  <meta
-    name="apple-mobile-web-app-status-bar-style"
-    content="black-translucent"
-  >
-
-  <meta
-    name="apple-mobile-web-app-title"
-    content="National Geographic"
-  >
-
-  <link
-    rel="manifest"
-    href="manifest.json"
-  >
-
-  <link
-    rel="icon"
-    href="icon-192.png"
-  >
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
 
   <title>National Geographic</title>
 
-  <link
-    rel="stylesheet"
-    href="style.css"
-  >
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
-<!-- =====================================================
-     HEADER
-===================================================== -->
 
 <header class="header">
 
   <div class="nav">
 
-    <a
-      class="logo"
-      href="#home"
-    >
+    <a class="logo" href="#home">
+
       <i></i>
 
       <span>
@@ -77,12 +43,10 @@
         <br>
         <b>GEOGRAPHIC</b>
       </span>
+
     </a>
 
-    <button
-      id="menu"
-      aria-label="Меню"
-    >
+    <button id="menu" aria-label="Меню">
       ☰
     </button>
 
@@ -100,10 +64,6 @@
         Фото
       </a>
 
-      <a href="#geography">
-        Карта
-      </a>
-
       <a href="#about">
         О сообществе
       </a>
@@ -116,10 +76,6 @@
 
 
 <main id="home">
-
-<!-- =====================================================
-     VK COMMUNITY COVER
-===================================================== -->
 
 <section class="community">
 
@@ -162,6 +118,7 @@
           </div>
 
         </div>
+
 
         <a
           class="communityButton"
@@ -207,19 +164,12 @@
 
   <div class="communityTabs">
 
-    <a
-      class="active"
-      href="#latest"
-    >
+    <a class="active" href="#latest">
       Публикации
     </a>
 
     <a href="#photos">
       Фотографии
-    </a>
-
-    <a href="#geography">
-      География
     </a>
 
     <a href="#about">
@@ -231,65 +181,9 @@
 </section>
 
 
-<!-- =====================================================
-     QUICK CATEGORIES
-===================================================== -->
-
-<section class="quickCategories">
-
-  <a
-    href="#latest"
-    data-jump-category="Природа"
-  >
-    <span>🏔️</span>
-    <b>Природа</b>
-  </a>
-
-  <a
-    href="#latest"
-    data-jump-category="Путешествия"
-  >
-    <span>✈️</span>
-    <b>Путешествия</b>
-  </a>
-
-  <a
-    href="#latest"
-    data-jump-category="Россия"
-  >
-    <span>🇷🇺</span>
-    <b>Россия</b>
-  </a>
-
-  <a
-    href="#latest"
-    data-jump-category="Животные"
-  >
-    <span>🐾</span>
-    <b>Животные</b>
-  </a>
-
-  <a
-    href="#latest"
-    data-jump-category="Мир"
-  >
-    <span>🌍</span>
-    <b>Мир</b>
-  </a>
-
-</section>
-
-
-<!-- =====================================================
-     MAIN CONTENT
-===================================================== -->
 
 <div class="vkLayout">
 
-
-  <!-- ===================================================
-       LEFT SIDEBAR
-  =================================================== -->
 
   <aside class="vkSidebar">
 
@@ -327,29 +221,12 @@
         📰 Все публикации
       </a>
 
-      <a
-        href="#latest"
-        data-jump-category="Природа"
-      >
-        🏔️ Природа
-      </a>
-
-      <a
-        href="#latest"
-        data-jump-category="Путешествия"
-      >
-        ✈️ Путешествия
-      </a>
-
-      <a
-        href="#latest"
-        data-jump-category="Животные"
-      >
-        🐾 Животные
-      </a>
-
       <a href="#photos">
         📷 Фотографии
+      </a>
+
+      <a href="#about">
+        ℹ️ О сообществе
       </a>
 
     </div>
@@ -374,6 +251,10 @@
       </span>
 
       <span>
+        Животные
+      </span>
+
+      <span>
         Открытия
       </span>
 
@@ -382,47 +263,9 @@
   </aside>
 
 
-  <!-- ===================================================
-       FEED
-  =================================================== -->
 
   <section class="vkFeed">
 
-
-    <!-- FEATURED -->
-
-    <div class="feedBlock featuredBlock">
-
-      <div class="feedBlockHeader">
-
-        <div>
-          <small>
-            ГЛАВНОЕ
-          </small>
-
-          <h2>
-            Свежий материал
-          </h2>
-        </div>
-
-        <div class="live">
-          <i></i>
-          LIVE
-        </div>
-
-      </div>
-
-
-      <div id="featuredPost">
-
-        <div class="featuredLoading skeleton"></div>
-
-      </div>
-
-    </div>
-
-
-    <!-- POSTS -->
 
     <section
       class="feedBlock"
@@ -432,6 +275,7 @@
       <div class="feedBlockHeader">
 
         <div>
+
           <small>
             ЛЕНТА СООБЩЕСТВА
           </small>
@@ -439,17 +283,22 @@
           <h2>
             Публикации
           </h2>
+
         </div>
 
+
         <div class="resultCounter">
-          <span id="resultCount">0</span>
+
+          <span id="resultCount">
+            0
+          </span>
+
           материалов
+
         </div>
 
       </div>
 
-
-      <!-- SEARCH -->
 
       <div class="vkTools">
 
@@ -472,8 +321,7 @@
         <div class="refreshPanel">
 
           <button id="refreshButton">
-            ↻
-            ОБНОВИТЬ
+            ↻ ОБНОВИТЬ
           </button>
 
           <span id="refreshTime">
@@ -485,50 +333,13 @@
       </div>
 
 
-      <!-- CATEGORIES -->
-
       <div class="categoryButtons">
 
         <button
           class="categoryBtn active"
           data-category="Все"
         >
-          Все
-        </button>
-
-        <button
-          class="categoryBtn"
-          data-category="Природа"
-        >
-          🏔️ Природа
-        </button>
-
-        <button
-          class="categoryBtn"
-          data-category="Путешествия"
-        >
-          ✈️ Путешествия
-        </button>
-
-        <button
-          class="categoryBtn"
-          data-category="Россия"
-        >
-          🇷🇺 Россия
-        </button>
-
-        <button
-          class="categoryBtn"
-          data-category="Мир"
-        >
-          🌍 Мир
-        </button>
-
-        <button
-          class="categoryBtn"
-          data-category="Животные"
-        >
-          🐾 Животные
+          Все публикации
         </button>
 
         <button
@@ -540,8 +351,6 @@
 
       </div>
 
-
-      <!-- POSTS -->
 
       <div
         class="grid"
@@ -561,112 +370,6 @@
     </section>
 
 
-    <!-- =================================================
-         GEOGRAPHY
-    ================================================= -->
-
-    <section
-      class="feedBlock"
-      id="geography"
-    >
-
-      <div class="feedBlockHeader">
-
-        <div>
-          <small>
-            ГЕОГРАФИЯ
-          </small>
-
-          <h2>
-            Мир на одной карте
-          </h2>
-        </div>
-
-      </div>
-
-
-      <div class="geoPanel">
-
-        <div class="geoContent">
-
-          <span class="geoIcon">
-            🌍
-          </span>
-
-          <h3>
-            Исследуй планету
-          </h3>
-
-          <p>
-            Открывай места, о которых
-            рассказывают публикации
-            National Geographic.
-          </p>
-
-          <div class="geoStats">
-
-            <div>
-              <strong>🌲</strong>
-              <span>ПРИРОДА</span>
-            </div>
-
-            <div>
-              <strong>🏔️</strong>
-              <span>ГОРЫ</span>
-            </div>
-
-            <div>
-              <strong>🌊</strong>
-              <span>ОКЕАН</span>
-            </div>
-
-            <div>
-              <strong>🐾</strong>
-              <span>ЖИВОТНЫЕ</span>
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div
-          class="geoMap"
-          id="geoMap"
-        >
-
-          <div class="mapGrid"></div>
-
-          <div class="mapPoint point1">
-            <span></span>
-          </div>
-
-          <div class="mapPoint point2">
-            <span></span>
-          </div>
-
-          <div class="mapPoint point3">
-            <span></span>
-          </div>
-
-          <div class="mapPoint point4">
-            <span></span>
-          </div>
-
-          <div class="mapLabel">
-            EARTH
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =================================================
-         PHOTOS
-    ================================================= -->
 
     <section
       class="feedBlock"
@@ -676,6 +379,7 @@
       <div class="feedBlockHeader">
 
         <div>
+
           <small>
             ФОТОГРАФИИ
           </small>
@@ -683,11 +387,18 @@
           <h2>
             Галерея сообщества
           </h2>
+
         </div>
 
+
         <div class="photoCount">
-          <span id="photosCount">0</span>
+
+          <span id="galleryPhotosCount">
+            0
+          </span>
+
           фото
+
         </div>
 
       </div>
@@ -707,9 +418,6 @@
     </section>
 
 
-    <!-- =================================================
-         ABOUT
-    ================================================= -->
 
     <section
       class="feedBlock aboutBlock"
@@ -717,6 +425,7 @@
     >
 
       <div class="aboutLogo">
+
         <i></i>
 
         <span>
@@ -724,6 +433,7 @@
           <br>
           <b>GEOGRAPHIC</b>
         </span>
+
       </div>
 
 
@@ -731,11 +441,13 @@
         National Geographic
       </h2>
 
+
       <p>
         Место для тех, кто любит природу,
         путешествия, фотографию и удивительные
         уголки нашей планеты.
       </p>
+
 
       <p>
         Новые публикации автоматически
@@ -761,9 +473,6 @@
 </main>
 
 
-<!-- =====================================================
-     FOOTER
-===================================================== -->
 
 <footer>
 
@@ -779,10 +488,12 @@
 
   </div>
 
+
   <span>
     © <span id="year"></span>
     National Geographic
   </span>
+
 
   <a
     href="https://vk.ru/national.geograph1c"
@@ -795,9 +506,6 @@
 </footer>
 
 
-<!-- =====================================================
-     MOBILE NAV
-===================================================== -->
 
 <nav
   class="mobileNav"
@@ -813,6 +521,7 @@
     <small>Главная</small>
   </a>
 
+
   <a
     href="#latest"
     class="mobileNavItem"
@@ -822,14 +531,6 @@
     <small>Посты</small>
   </a>
 
-  <a
-    href="#geography"
-    class="mobileNavItem"
-    data-mobile-target="geography"
-  >
-    <span>◎</span>
-    <small>Карта</small>
-  </a>
 
   <a
     href="#photos"
@@ -839,6 +540,7 @@
     <span>▧</span>
     <small>Фото</small>
   </a>
+
 
   <a
     href="#about"
@@ -852,6 +554,7 @@
 </nav>
 
 
+
 <button
   id="backToTop"
   aria-label="Наверх"
@@ -860,7 +563,31 @@
 </button>
 
 
+
 <script src="script.js"></script>
+
+
+<script>
+
+if ("serviceWorker" in navigator) {
+
+  window.addEventListener("load", () => {
+
+    navigator.serviceWorker
+      .register("./sw.js")
+      .then(() => {
+        console.log("National Geographic PWA активирован");
+      })
+      .catch(error => {
+        console.error("PWA error:", error);
+      });
+
+  });
+
+}
+
+</script>
+
 
 </body>
 </html>
