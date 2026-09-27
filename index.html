@@ -3,23 +3,17 @@
 <head>
   <meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  >
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <meta name="theme-color" content="#050505">
 
   <meta
     name="description"
-    content="National Geographic — природа, путешествия, животные и самые удивительные места нашей планеты."
+    content="Природа, путешествия и красивые места мира."
   >
 
-  <meta name="theme-color" content="#17241d">
-
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="NatGeo">
-
-  <title>National Geographic — Мир, который стоит увидеть</title>
+  <title>National Geographic — Природа, путешествия и красивые места мира</title>
 
   <link rel="manifest" href="./manifest.json">
 
@@ -27,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Oswald:wght@300;400;500;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Oswald:wght@400;500;600&display=swap"
     rel="stylesheet"
   >
 
@@ -36,806 +30,253 @@
 
 <body>
 
-  <!-- =========================
-       HEADER
-  ========================== -->
+<header class="siteHeader">
 
-  <header class="siteHeader">
+  <div class="headerInner">
 
-    <div class="headerInner">
+    <a href="#home" class="brand">
 
-      <a href="#home" class="brand" aria-label="National Geographic">
+      <span class="brandMark"></span>
 
-        <span class="brandMark">
-          <span></span>
-        </span>
+      <span class="brandText">
+        <strong>NATIONAL</strong>
+        <small>GEOGRAPHIC</small>
+      </span>
 
-        <span class="brandText">
-          <strong>NATIONAL</strong>
-          <small>GEOGRAPHIC</small>
-        </span>
+    </a>
 
+    <nav class="desktopNav">
+
+      <a href="#home">Главная</a>
+      <a href="#journal">Лента</a>
+
+      <a
+        href="https://vk.ru/national.geograph1c"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        VK
       </a>
 
+    </nav>
 
-      <nav class="desktopNav" aria-label="Основная навигация">
-
-        <a href="#home" class="navLink active">
-          Главная
-        </a>
-
-        <a href="#explore" class="navLink">
-          Исследовать
-        </a>
-
-        <a href="#journal" class="navLink">
-          Журнал
-        </a>
-
-        <a href="#about" class="navLink">
-          О проекте
-        </a>
-
-      </nav>
-
-
-      <button
-        class="menuButton"
-        id="menuButton"
-        type="button"
-        aria-label="Открыть меню"
-        aria-expanded="false"
-      >
-        <span></span>
-        <span></span>
-      </button>
-
-    </div>
-
-  </header>
-
-
-  <!-- =========================
-       MOBILE MENU
-  ========================== -->
-
-  <div class="mobileMenu" id="mobileMenu">
-
-    <div class="mobileMenuInner">
-
-      <div class="mobileMenuTop">
-        <span>EXPLORE THE WORLD</span>
-      </div>
-
-      <nav>
-
-        <a href="#home">
-          <span>01</span>
-          Главная
-        </a>
-
-        <a href="#explore">
-          <span>02</span>
-          Исследовать
-        </a>
-
-        <a href="#journal">
-          <span>03</span>
-          Журнал
-        </a>
-
-        <a href="#about">
-          <span>04</span>
-          О проекте
-        </a>
-
-      </nav>
-
-      <div class="mobileMenuBottom">
-        NATIONAL GEOGRAPHIC
-      </div>
-
-    </div>
+    <button
+      class="menuButton"
+      id="menuButton"
+      type="button"
+      aria-label="Меню"
+    >
+      <span></span>
+      <span></span>
+    </button>
 
   </div>
 
-
-  <!-- =========================
-       MAIN
-  ========================== -->
-
-  <main id="main">
+</header>
 
 
-    <!-- =========================
-         HERO
-    ========================== -->
+<div class="mobileMenu" id="mobileMenu">
 
-    <section class="hero" id="home">
+  <nav>
 
-      <div class="heroBackground">
+    <a href="#home">Главная</a>
 
-        <div class="heroSun"></div>
+    <a href="#journal">Лента</a>
 
-        <div class="heroMountain heroMountainOne"></div>
-        <div class="heroMountain heroMountainTwo"></div>
-        <div class="heroMountain heroMountainThree"></div>
+    <a
+      href="https://vk.ru/national.geograph1c"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Открыть VK
+    </a>
 
-        <div class="heroGrid"></div>
+  </nav>
 
-      </div>
-
-
-      <div class="heroContent">
-
-        <div class="heroTopLine">
-
-          <span>
-            DIGITAL EDITION
-          </span>
-
-          <span>
-            2026
-          </span>
-
-        </div>
+</div>
 
 
-        <div class="heroMain">
+<main id="home">
 
-          <div class="heroNumber">
-            01
-          </div>
+  <section class="hero">
 
+    <div class="heroInner">
 
-          <div class="heroText">
+      <div class="heroLogo">
 
-            <div class="heroLabel">
-              NATIONAL GEOGRAPHIC
-            </div>
+        <span class="heroLogoBox"></span>
 
-            <h1>
-              МИР
-              <br>
-              НАЧИНАЕТСЯ
-              <br>
-              ЗА ГОРИЗОНТОМ
-            </h1>
-
-            <p>
-              Природа. Путешествия. Животные.
-              Места, которые заставляют остановиться
-              и посмотреть вокруг.
-            </p>
-
-            <a href="#explore" class="heroLink">
-              Исследовать мир
-              <span>↘</span>
-            </a>
-
-          </div>
-
-        </div>
-
-
-        <div class="heroBottom">
-
-          <span>
-            51° N / 12° E
-          </span>
-
-          <span>
-            PLANET EARTH
-          </span>
-
+        <div>
+          <strong>NATIONAL</strong>
+          <span>GEOGRAPHIC</span>
         </div>
 
       </div>
 
-    </section>
+      <div class="heroLine"></div>
+
+      <h1>
+        National Geographic
+      </h1>
+
+      <p>
+        Природа, путешествия и красивые места мира.
+      </p>
+
+      <a href="#journal" class="heroButton">
+        Смотреть публикации
+        <span>↓</span>
+      </a>
+
+    </div>
+
+  </section>
 
 
-    <!-- =========================
-         INTRO
-    ========================== -->
+  <section class="profileSection">
 
-    <section class="introSection">
+    <div class="container">
 
-      <div class="pageContainer">
+      <div class="profile">
 
-        <div class="introGrid">
-
-          <div class="introSmall">
-
-            <span class="sectionIndex">
-              01 / 06
-            </span>
-
-            <span class="sectionKicker">
-              THE WORLD AROUND US
-            </span>
-
-          </div>
-
-
-          <div class="introLarge">
-
-            <h2>
-              Планета гораздо
-              <em>больше</em>,
-              чем кажется.
-            </h2>
-
-            <p>
-              Здесь собраны истории о местах,
-              куда хочется отправиться, животных,
-              которыми невозможно не восхищаться,
-              и природных явлениях, которые
-              напоминают, насколько удивителен
-              наш мир.
-            </p>
-
-          </div>
-
+        <div class="profileAvatar">
+          <span></span>
         </div>
 
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         EXPLORE
-    ========================== -->
-
-    <section class="exploreSection" id="explore">
-
-      <div class="pageContainer">
-
-        <div class="sectionHeader">
-
-          <div>
-            <span class="sectionKicker">
-              EXPLORE
-            </span>
-
-            <h2>
-              Выбери направление
-            </h2>
-          </div>
-
-          <span class="sectionIndex">
-            02 / 06
-          </span>
-
-        </div>
-
-
-        <div class="exploreGrid">
-
-
-          <!-- NATURE -->
-
-          <article class="exploreCard exploreCardLarge">
-
-            <div class="exploreImage exploreNature">
-
-              <div class="fakeSun"></div>
-
-              <div class="mountainA"></div>
-              <div class="mountainB"></div>
-              <div class="mountainC"></div>
-
-            </div>
-
-
-            <div class="exploreOverlay"></div>
-
-
-            <div class="exploreContent">
-
-              <span class="exploreNumber">
-                01
-              </span>
-
-              <h3>
-                Природа
-              </h3>
-
-              <p>
-                Горы, леса, пустыни
-                и места, где человек
-                остаётся гостем.
-              </p>
-
-            </div>
-
-          </article>
-
-
-          <!-- OCEAN -->
-
-          <article class="exploreCard">
-
-            <div class="exploreImage exploreOcean">
-
-              <div class="oceanSun"></div>
-
-              <div class="oceanWave waveOne"></div>
-              <div class="oceanWave waveTwo"></div>
-              <div class="oceanWave waveThree"></div>
-
-            </div>
-
-
-            <div class="exploreOverlay"></div>
-
-
-            <div class="exploreContent">
-
-              <span class="exploreNumber">
-                02
-              </span>
-
-              <h3>
-                Океан
-              </h3>
-
-              <p>
-                Глубины планеты
-                и жизнь под водой.
-              </p>
-
-            </div>
-
-          </article>
-
-
-          <!-- TRAVEL -->
-
-          <article class="exploreCard">
-
-            <div class="exploreImage exploreTravel">
-
-              <div class="travelMountain"></div>
-              <div class="travelRoad"></div>
-
-            </div>
-
-
-            <div class="exploreOverlay"></div>
-
-
-            <div class="exploreContent">
-
-              <span class="exploreNumber">
-                03
-              </span>
-
-              <h3>
-                Путешествия
-              </h3>
-
-              <p>
-                Маршруты, города
-                и места, которые
-                хочется увидеть.
-              </p>
-
-            </div>
-
-          </article>
-
-
-          <!-- WILDLIFE -->
-
-          <article class="exploreCard exploreCardWide">
-
-            <div class="exploreImage exploreWildlife">
-
-              <div class="animalShape">
-
-                <div class="animalEye"></div>
-
-              </div>
-
-            </div>
-
-
-            <div class="exploreOverlay"></div>
-
-
-            <div class="exploreContent">
-
-              <span class="exploreNumber">
-                04
-              </span>
-
-              <h3>
-                Дикая природа
-              </h3>
-
-              <p>
-                Животные планеты,
-                редкие виды и жизнь
-                вдали от цивилизации.
-              </p>
-
-            </div>
-
-          </article>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         FIELD NOTE
-    ========================== -->
-
-    <section class="fieldSection">
-
-      <div class="pageContainer">
-
-        <div class="fieldCard">
-
-          <div class="fieldImage">
-
-            <div class="fieldCompass">
-              N
-            </div>
-
-            <div class="fieldCoordinates">
-              44° 29' 32" N<br>
-              34° 09' 47" E
-            </div>
-
-            <div class="fieldLandscape">
-
-              <div></div>
-              <div></div>
-              <div></div>
-
-            </div>
-
-          </div>
-
-
-          <div class="fieldContent">
-
-            <span class="fieldLabel">
-              FIELD NOTE / 001
-            </span>
-
-            <h2>
-              Иногда лучший
-              маршрут —
-              тот, которого
-              нет на карте.
-            </h2>
-
-            <p>
-              Отправляйся дальше привычных
-              маршрутов. Именно там начинаются
-              самые интересные истории.
-            </p>
-
-            <a href="#journal" class="darkButton">
-              Читать журнал
-              <span>→</span>
-            </a>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         JOURNAL / VK FEED
-    ========================== -->
-
-    <section class="journalSection" id="journal">
-
-      <div class="pageContainer">
-
-        <div class="journalHeader">
-
-          <div>
-
-            <span class="sectionKicker">
-              JOURNAL
-            </span>
-
-            <h2>
-              Последние истории
-            </h2>
-
-          </div>
-
-
-          <div class="journalInfo">
-
-            <span class="sectionIndex">
-              03 / 06
-            </span>
-
-            <p>
-              Свежие публикации
-              сообщества National Geographic.
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <!-- API STATUS -->
-
-        <div id="feedStatus" class="feedStatus">
-          Загружаем истории…
-        </div>
-
-
-        <!-- POSTS -->
-
-        <div id="posts" class="postsGrid">
-        </div>
-
-
-        <!-- LOAD MORE -->
-
-        <div id="loadMoreWrap" class="loadMoreWrap">
-
-          <button
-            id="loadMore"
-            class="darkButton"
-            type="button"
-          >
-            Показать ещё
-            <span>↓</span>
-          </button>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         COMMUNITY
-    ========================== -->
-
-    <section class="communitySection">
-
-      <div class="pageContainer">
-
-        <div class="communityCard">
-
-          <div class="communityLogo">
-
-            <span></span>
-
-          </div>
-
-
-          <div class="communityText">
-
-            <span class="sectionKicker">
-              FOLLOW THE JOURNEY
-            </span>
-
-            <h2>
-              National Geographic
-              ВКонтакте
-            </h2>
-
-            <p>
-              Природа, путешествия,
-              животные и удивительные
-              места планеты каждый день.
-            </p>
-
-          </div>
-
+        <div class="profileInfo">
+
+          <h2>
+            National Geographic
+          </h2>
+
+          <p>
+            Природа, путешествия и красивые места мира.
+          </p>
 
           <a
             href="https://vk.ru/national.geograph1c"
             target="_blank"
             rel="noopener noreferrer"
-            class="darkButton communityButton"
+            class="vkButton"
           >
-            Открыть сообщество
-            <span>↗</span>
+            Открыть сообщество VK
           </a>
 
         </div>
 
       </div>
 
-    </section>
+    </div>
+
+  </section>
 
 
-    <!-- =========================
-         ABOUT
-    ========================== -->
+  <section class="feedSection" id="journal">
 
-    <section class="aboutSection" id="about">
+    <div class="container">
 
-      <div class="pageContainer">
+      <div class="feedHeader">
 
-        <div class="aboutGrid">
-
-
-          <div class="aboutTitle">
-
-            <span class="sectionKicker">
-              ABOUT
-            </span>
-
-            <span class="sectionIndex">
-              04 / 06
-            </span>
-
-            <h2>
-              Смотреть.
-              Исследовать.
-              Запоминать.
-            </h2>
-
-          </div>
-
-
-          <div class="aboutText">
-
-            <p class="aboutLead">
-              National Geographic —
-              цифровое пространство
-              о нашей планете.
-            </p>
-
-            <p>
-              Мы собираем здесь красивые
-              места, природные явления,
-              путешествия, фотографии
-              и истории, которые хочется
-              сохранить.
-            </p>
-
-            <p>
-              Наша задача проста:
-              показывать мир таким,
-              чтобы после каждого материала
-              хотелось открыть карту
-              и отправиться дальше.
-            </p>
-
-          </div>
-
+        <div>
+          <span>PUBLICATIONS</span>
+          <h2>Лента</h2>
         </div>
+
+        <span class="feedCount">
+          NATIONAL GEOGRAPHIC
+        </span>
 
       </div>
 
-    </section>
-
-  </main>
-
-
-  <!-- =========================
-       FOOTER
-  ========================== -->
-
-  <footer class="siteFooter">
-
-    <div class="pageContainer">
-
-      <div class="footerTop">
-
-        <div class="footerLogo">
-
-          <span class="brandMark">
-            <span></span>
-          </span>
-
-          <div>
-            <strong>NATIONAL</strong>
-            <small>GEOGRAPHIC</small>
-          </div>
-
-        </div>
-
-
-        <div class="footerPhrase">
-          THE WORLD IS WAITING.
-        </div>
-
+      <div id="feedStatus" class="feedStatus">
+        Загружаем публикации…
       </div>
 
+      <div id="posts" class="postsGrid"></div>
 
-      <div class="footerBottom">
+      <div id="loadMoreWrap" class="loadMoreWrap">
 
-        <span>
-          © 2026 National Geographic
-        </span>
-
-        <span>
-          DIGITAL EDITION
-        </span>
-
-        <a href="#home">
-          НАВЕРХ ↑
-        </a>
+        <button
+          id="loadMore"
+          class="loadMore"
+          type="button"
+        >
+          Показать ещё
+        </button>
 
       </div>
 
     </div>
 
-  </footer>
+  </section>
+
+</main>
 
 
-  <!-- =========================
-       MOBILE BOTTOM NAV
-  ========================== -->
+<footer class="siteFooter">
 
-  <nav class="mobileBottomNav">
+  <div class="container">
 
-    <a href="#home">
-      <span>01</span>
-      Главная
-    </a>
+    <div class="footerLogo">
+      NATIONAL GEOGRAPHIC
+    </div>
 
-    <a href="#explore">
-      <span>02</span>
-      Мир
-    </a>
+    <p>
+      Природа, путешествия и красивые места мира.
+    </p>
 
-    <a href="#journal">
-      <span>03</span>
-      Журнал
-    </a>
+    <div class="footerBottom">
+      © 2026 National Geographic
+    </div>
 
-    <a href="#about">
-      <span>04</span>
-      О нас
-    </a>
+  </div>
 
-  </nav>
+</footer>
 
 
-  <!-- =========================
-       BACK TO TOP
-  ========================== -->
+<nav class="mobileBottomNav">
 
-  <button
-    id="backToTop"
-    class="backToTop"
-    type="button"
-    aria-label="Наверх"
+  <a href="#home">
+    <span>⌂</span>
+    Главная
+  </a>
+
+  <a href="#journal">
+    <span>▤</span>
+    Лента
+  </a>
+
+  <a
+    href="https://vk.ru/national.geograph1c"
+    target="_blank"
+    rel="noopener noreferrer"
   >
-    ↑
-  </button>
+    <span>VK</span>
+    Сообщество
+  </a>
+
+</nav>
 
 
-  <!-- =========================
-       TOAST
-  ========================== -->
-
-  <div
-    id="toast"
-    class="toast"
-    role="status"
-    aria-live="polite"
-  ></div>
+<button
+  id="backToTop"
+  class="backToTop"
+  type="button"
+  aria-label="Наверх"
+>
+  ↑
+</button>
 
 
-  <script src="./script.js"></script>
+<div
+  id="toast"
+  class="toast"
+  role="status"
+  aria-live="polite"
+></div>
+
+
+<script src="./script.js"></script>
 
 </body>
 </html>
