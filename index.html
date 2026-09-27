@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ru">
 <head>
+
   <meta charset="utf-8">
 
   <meta
@@ -8,7 +9,10 @@
     content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
 
-  <meta name="theme-color" content="#050505">
+  <meta
+    name="theme-color"
+    content="#050505"
+  >
 
   <meta
     name="description"
@@ -26,154 +30,349 @@
   <title>National Geographic</title>
 
   <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
-<header class="header">
 
-  <div class="nav">
+<!-- =====================================================
+     TOP
+===================================================== -->
 
-    <a class="logo" href="#home">
+<header class="ngHeader">
 
-      <i></i>
+  <div class="ngHeaderInner">
 
-      <span>
-        NATIONAL
-        <br>
-        <b>GEOGRAPHIC</b>
+    <a
+      href="#home"
+      class="ngBrand"
+    >
+
+      <span class="ngBrandBox"></span>
+
+      <span class="ngBrandText">
+
+        <small>NATIONAL</small>
+
+        <strong>GEOGRAPHIC</strong>
+
       </span>
 
     </a>
 
-    <button id="menu" aria-label="Меню">
-      ☰
-    </button>
 
-    <nav id="links">
+    <nav class="ngNav">
 
       <a href="#home">
         Главная
       </a>
 
       <a href="#latest">
-        Посты
-      </a>
-
-      <a href="#photos">
-        Фото
+        Лента
       </a>
 
       <a href="#about">
-        О сообществе
+        О проекте
       </a>
 
     </nav>
+
+
+    <button
+      id="menu"
+      class="ngMenu"
+      aria-label="Меню"
+    >
+      ☰
+    </button>
 
   </div>
 
 </header>
 
 
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
 <main id="home">
 
-<section class="community">
 
-  <div class="communityCover">
+<section class="ngHero">
 
-    <div class="coverPattern"></div>
+  <div class="ngHeroNoise"></div>
 
-    <div class="coverText">
-      <span>NATIONAL</span>
-      <strong>GEOGRAPHIC</strong>
-    </div>
+  <div class="ngHeroContent">
 
-  </div>
-
-
-  <div class="communityInfo">
-
-    <div class="communityAvatar">
-
-      <div class="avatarFrame">
-        NG
-      </div>
-
+    <div class="ngEdition">
+      DIGITAL EDITION · 2026
     </div>
 
 
-    <div class="communityMain">
+    <h1>
 
-      <div class="communityTitleRow">
+      NATIONAL
 
-        <div>
+      <span>
+        GEOGRAPHIC
+      </span>
 
-          <h1>
-            National Geographic
-            <span class="verified">✓</span>
-          </h1>
-
-          <div class="communityStatus">
-            Онлайн
-          </div>
-
-        </div>
+    </h1>
 
 
-        <a
-          class="communityButton"
-          href="https://vk.ru/national.geograph1c"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          ВКонтакте ↗
-        </a>
-
-      </div>
+    <p>
+      Планета глазами тех,
+      кто умеет её видеть.
+    </p>
 
 
-      <p class="communityDescription">
-        Природа, путешествия, животные
-        и самые невероятные места нашей планеты.
-      </p>
+    <div class="ngHeroLine"></div>
 
 
-      <div class="communityStats">
+    <div class="ngHeroMeta">
 
-        <span>
-          <b id="postsCount">0</b>
-          публикаций
-        </span>
+      <span>
+        ПРИРОДА
+      </span>
 
-        <span>
-          <b id="photosCount">0</b>
-          фотографий
-        </span>
+      <span>
+        ПУТЕШЕСТВИЯ
+      </span>
 
-        <span>
-          <b>24/7</b>
-          обновление
-        </span>
+      <span>
+        ЖИВОТНЫЕ
+      </span>
 
-      </div>
+      <span>
+        ОТКРЫТИЯ
+      </span>
 
     </div>
 
   </div>
 
+</section>
 
-  <div class="communityTabs">
 
-    <a class="active" href="#latest">
-      Публикации
-    </a>
 
-    <a href="#photos">
-      Фотографии
-    </a>
+<!-- =====================================================
+     COMMUNITY BAR
+===================================================== -->
 
-    <a href="#about">
-      Информация
+<section class="ngCommunityBar">
+
+  <div class="ngCommunityIdentity">
+
+    <div class="ngAvatar">
+      NG
+    </div>
+
+
+    <div>
+
+      <h2>
+        National Geographic
+        <span class="ngVerified">✓</span>
+      </h2>
+
+      <span>
+        официальная лента сообщества
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <a
+    href="https://vk.ru/national.geograph1c"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="ngVkButton"
+  >
+    VK ↗
+  </a>
+
+</section>
+
+
+
+<!-- =====================================================
+     LATEST
+===================================================== -->
+
+<section
+  class="ngFeedSection"
+  id="latest"
+>
+
+
+  <div class="ngSectionHeading">
+
+    <div>
+
+      <span>
+        LATEST STORIES
+      </span>
+
+      <h2>
+        Последние публикации
+      </h2>
+
+    </div>
+
+
+    <div class="ngLive">
+
+      <i></i>
+
+      LIVE
+
+    </div>
+
+  </div>
+
+
+
+  <!-- SEARCH -->
+
+  <div class="ngSearchRow">
+
+    <div class="ngSearch">
+
+      <span>
+        ⌕
+      </span>
+
+      <input
+        id="postSearch"
+        type="search"
+        placeholder="Найти историю..."
+        autocomplete="off"
+      >
+
+    </div>
+
+
+    <button
+      id="refreshButton"
+      class="ngRefresh"
+    >
+      ↻
+    </button>
+
+
+    <span
+      id="refreshTime"
+      class="ngRefreshTime"
+    >
+      Загрузка...
+    </span>
+
+  </div>
+
+
+
+  <!-- FILTER -->
+
+  <div class="ngFilters">
+
+    <button
+      class="categoryBtn active"
+      data-category="Все"
+    >
+      ВСЕ
+    </button>
+
+
+    <button
+      class="categoryBtn"
+      data-category="Избранное"
+    >
+      ★ ИЗБРАННОЕ
+    </button>
+
+  </div>
+
+
+
+  <!-- POSTS -->
+
+  <div
+    id="posts"
+    class="ngPosts"
+  >
+
+    <div class="ngLoading">
+
+      <div></div>
+      <div></div>
+      <div></div>
+
+    </div>
+
+  </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     ABOUT
+===================================================== -->
+
+<section
+  id="about"
+  class="ngAbout"
+>
+
+  <div class="ngAboutMark">
+
+    <span></span>
+
+    NATIONAL<br>
+    GEOGRAPHIC
+
+  </div>
+
+
+  <div class="ngAboutContent">
+
+    <span>
+      ABOUT
+    </span>
+
+
+    <h2>
+      Исследуем планету
+      вместе.
+    </h2>
+
+
+    <p>
+      Природа. Путешествия. Животные.
+      Люди и места, которые заставляют
+      остановиться и посмотреть вокруг.
+    </p>
+
+
+    <p>
+      Публикации автоматически поступают
+      из сообщества National Geographic
+      во ВКонтакте.
+    </p>
+
+
+    <a
+      href="https://vk.ru/national.geograph1c"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="ngAboutButton"
+    >
+      ОТКРЫТЬ VK ↗
     </a>
 
   </div>
@@ -182,317 +381,32 @@
 
 
 
-<div class="vkLayout">
-
-
-  <aside class="vkSidebar">
-
-    <div class="sideCard">
-
-      <div class="sideTitle">
-        National Geographic
-      </div>
-
-      <p>
-        Исследуем планету вместе.
-        Каждый день — новые места,
-        истории и фотографии.
-      </p>
-
-      <a
-        class="sideVK"
-        href="https://vk.ru/national.geograph1c"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Открыть сообщество VK ↗
-      </a>
-
-    </div>
-
-
-    <div class="sideCard">
-
-      <div class="sideHeading">
-        Разделы
-      </div>
-
-      <a href="#latest">
-        📰 Все публикации
-      </a>
-
-      <a href="#photos">
-        📷 Фотографии
-      </a>
-
-      <a href="#about">
-        ℹ️ О сообществе
-      </a>
-
-    </div>
-
-
-    <div class="sideCard sideInfo">
-
-      <div class="sideHeading">
-        National Geographic
-      </div>
-
-      <span>
-        Природа
-      </span>
-
-      <span>
-        Путешествия
-      </span>
-
-      <span>
-        Фотография
-      </span>
-
-      <span>
-        Животные
-      </span>
-
-      <span>
-        Открытия
-      </span>
-
-    </div>
-
-  </aside>
-
-
-
-  <section class="vkFeed">
-
-
-    <section
-      class="feedBlock"
-      id="latest"
-    >
-
-      <div class="feedBlockHeader">
-
-        <div>
-
-          <small>
-            ЛЕНТА СООБЩЕСТВА
-          </small>
-
-          <h2>
-            Публикации
-          </h2>
-
-        </div>
-
-
-        <div class="resultCounter">
-
-          <span id="resultCount">
-            0
-          </span>
-
-          материалов
-
-        </div>
-
-      </div>
-
-
-      <div class="vkTools">
-
-        <div class="searchBox">
-
-          <input
-            id="postSearch"
-            type="search"
-            placeholder="Поиск по публикациям..."
-            autocomplete="off"
-          >
-
-          <span>
-            ⌕
-          </span>
-
-        </div>
-
-
-        <div class="refreshPanel">
-
-          <button id="refreshButton">
-            ↻ ОБНОВИТЬ
-          </button>
-
-          <span id="refreshTime">
-            Загрузка...
-          </span>
-
-        </div>
-
-      </div>
-
-
-      <div class="categoryButtons">
-
-        <button
-          class="categoryBtn active"
-          data-category="Все"
-        >
-          Все публикации
-        </button>
-
-        <button
-          class="categoryBtn"
-          data-category="Избранное"
-        >
-          ★ Избранное
-        </button>
-
-      </div>
-
-
-      <div
-        class="grid"
-        id="posts"
-      >
-
-        <div class="loadingGrid">
-
-          <div class="skeleton skeletonCard"></div>
-          <div class="skeleton skeletonCard"></div>
-          <div class="skeleton skeletonCard"></div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <section
-      class="feedBlock"
-      id="photos"
-    >
-
-      <div class="feedBlockHeader">
-
-        <div>
-
-          <small>
-            ФОТОГРАФИИ
-          </small>
-
-          <h2>
-            Галерея сообщества
-          </h2>
-
-        </div>
-
-
-        <div class="photoCount">
-
-          <span id="galleryPhotosCount">
-            0
-          </span>
-
-          фото
-
-        </div>
-
-      </div>
-
-
-      <div
-        class="photos"
-        id="photoGallery"
-      >
-
-        <div class="galleryLoading">
-          ЗАГРУЖАЕМ ФОТОГРАФИИ...
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <section
-      class="feedBlock aboutBlock"
-      id="about"
-    >
-
-      <div class="aboutLogo">
-
-        <i></i>
-
-        <span>
-          NATIONAL
-          <br>
-          <b>GEOGRAPHIC</b>
-        </span>
-
-      </div>
-
-
-      <h2>
-        National Geographic
-      </h2>
-
-
-      <p>
-        Место для тех, кто любит природу,
-        путешествия, фотографию и удивительные
-        уголки нашей планеты.
-      </p>
-
-
-      <p>
-        Новые публикации автоматически
-        загружаются из сообщества ВКонтакте.
-      </p>
-
-
-      <a
-        class="communityButton"
-        href="https://vk.ru/national.geograph1c"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Перейти в сообщество VK ↗
-      </a>
-
-    </section>
-
-  </section>
-
-</div>
-
 </main>
 
 
 
-<footer>
+<!-- =====================================================
+     FOOTER
+===================================================== -->
 
-  <div class="logo">
+<footer class="ngFooter">
 
-    <i></i>
+  <div class="ngFooterBrand">
 
-    <span>
-      NATIONAL
-      <br>
+    <span></span>
+
+    <div>
+      NATIONAL<br>
       <b>GEOGRAPHIC</b>
-    </span>
+    </div>
 
   </div>
 
 
-  <span>
+  <div>
     © <span id="year"></span>
     National Geographic
-  </span>
+  </div>
 
 
   <a
@@ -500,55 +414,47 @@
     target="_blank"
     rel="noopener noreferrer"
   >
-    ВКонтакте ↗
+    VK ↗
   </a>
 
 </footer>
 
 
 
-<nav
-  class="mobileNav"
-  id="mobileNav"
->
+<!-- =====================================================
+     MOBILE
+===================================================== -->
+
+<nav class="ngMobileNav">
 
   <a
     href="#home"
-    class="mobileNavItem active"
-    data-mobile-target="home"
+    class="active"
   >
     <span>⌂</span>
     <small>Главная</small>
   </a>
 
 
-  <a
-    href="#latest"
-    class="mobileNavItem"
-    data-mobile-target="latest"
-  >
+  <a href="#latest">
+
     <span>▤</span>
-    <small>Посты</small>
+
+    <small>
+      Лента
+    </small>
+
   </a>
 
 
-  <a
-    href="#photos"
-    class="mobileNavItem"
-    data-mobile-target="photos"
-  >
-    <span>▧</span>
-    <small>Фото</small>
-  </a>
+  <a href="#about">
 
+    <span>◎</span>
 
-  <a
-    href="#about"
-    class="mobileNavItem"
-    data-mobile-target="about"
-  >
-    <span>•••</span>
-    <small>Ещё</small>
+    <small>
+      О проекте
+    </small>
+
   </a>
 
 </nav>
@@ -557,7 +463,7 @@
 
 <button
   id="backToTop"
-  aria-label="Наверх"
+  class="ngTop"
 >
   ↑
 </button>
@@ -575,11 +481,8 @@ if ("serviceWorker" in navigator) {
 
     navigator.serviceWorker
       .register("./sw.js")
-      .then(() => {
-        console.log("National Geographic PWA активирован");
-      })
       .catch(error => {
-        console.error("PWA error:", error);
+        console.error(error);
       });
 
   });
