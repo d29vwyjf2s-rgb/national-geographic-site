@@ -4,58 +4,76 @@ const API_URL =
 const VK_GROUP_URL =
   "https://vk.ru/national.geograph1c";
 
-const POSTS_PER_PAGE = 12;
+const POSTS_PER_LOAD = 20;
 
 let allPosts = [];
-let visibleCount = POSTS_PER_PAGE;
+let visiblePosts = POSTS_PER_LOAD;
 
-const likedPosts = JSON.parse(
-  localStorage.getItem(
-    "national_geographic_likes"
-  ) || "{}"
-);
+const likedPosts =
+  JSON.parse(
+    localStorage.getItem("ng_liked_posts") || "[]"
+  );
 
 document.addEventListener(
   "DOMContentLoaded",
   () => {
-    initMenu();
-    initBackToTop();
-    initLoadMore();
-    initImageViewer();
-    loadPosts();
-
-    setInterval(
-      loadPosts,
-      5 * 60 * 1000
-    );
+    init();
   }
 );
 
+
 /* =========================================================
-   ЗАГРУЗКА
+   INIT
+========================================================= */
+
+async function init() {
+
+  setupMenu();
+  setupBackToTop();
+  setupLoadMore();
+  setupToast();
+
+  await loadPosts();
+
+  registerServiceWorker();
+
+  setInterval(
+    loadPosts,
+    5 * 60 * 1000
+  );
+}
+
+
+/* =========================================================
+   LOAD POSTS
 ========================================================= */
 
 async function loadPosts() {
+
+  const postsContainer =
+    document.getElementById("posts");
+
   const status =
     document.getElementById("feedStatus");
 
-  const container =
-    document.getElementById("posts");
+  if (!postsContainer) {
+    return;
+  }
 
-  if (!container) return;
-
-  if (!allPosts.length && status) {
+  if (status) {
     status.textContent =
-      "Загружаем публикации…";
+      "Загрузка публикаций...";
   }
 
   try {
-    const response = await fetch(
-      API_URL + "?limit=100&offset=0",
-      {
-        cache: "no-store"
-      }
-    );
+
+    const response =
+      await fetch(
+        `${API_URL}?limit=100&offset=0`,
+        {
+          cache: "no-store"
+        }
+      );
 
     if (!response.ok) {
       throw new Error(
@@ -68,460 +86,177 @@ async function loadPosts() {
 
     if (
       !data ||
-      !Array.isArray(data.posts)
+      !data.success
     ) {
       throw new Error(
-        "API вернул неверный формат данных"
+        data?.error ||
+        "API error"
       );
     }
 
-    allPosts = data.posts;
+    allPosts =
+      Array.isArray(data.posts)
+        ? data.posts
+        : [];
 
-    visibleCount = Math.min(
-      POSTS_PER_PAGE,
-      allPosts.length
-    );
+    visiblePosts =
+      POSTS_PER_LOAD;
 
     renderPosts();
 
     if (status) {
       status.textContent =
-        allPosts.length
-          ? ""
-          : "Публикаций пока нет.";
+        `${allPosts.length} публикаций`;
     }
 
   } catch (error) {
+
     console.error(
-      "National Geographic API:",
+      "Ошибка загрузки:",
       error
     );
 
-    if (!allPosts.length && status) {
-      status.innerHTML = `
-        <div class="emptyState">
-          <strong>
-            Не удалось загрузить публикации
-          </strong>
-          <span>
-            Проверьте соединение и обновите страницу.
-          </span>
-        </div>
-      `;
+    if (status) {
+      status.textContent =
+        "Не удалось загрузить публикации";
     }
+
+    postsContainer.innerHTML = `
+      <div class="feedError">
+        <div class="feedErrorTitle">
+          Не удалось загрузить публикации
+        </div>
+
+        <div class="feedErrorText">
+          Проверьте соединение с сервером.
+        </div>
+
+        <button
+          class="retryButton"
+          onclick="loadPosts()"
+        >
+          Повторить
+        </button>
+      </div>
+    `;
   }
 }
 
+
 /* =========================================================
-   ОТРИСОВКА
+   RENDER POSTS
 ========================================================= */
 
 function renderPosts() {
+
   const container =
     document.getElementById("posts");
 
-  if (!container) return;
+  if (!container) {
+    return;
+  }
 
   const posts =
     allPosts.slice(
       0,
-      visibleCount
+      visiblePosts
     );
+
+  if (!posts.length) {
+
+    container.innerHTML = `
+      <div class="feedEmpty">
+        Пока нет публикаций
+      </div>
+    `;
+
+    updateLoadMore();
+    return;
+  }
 
   container.innerHTML =
     posts
-      .map((post, index) =>
-        renderPost(
-          post,
-          index
-        )
+      .map(
+        (post, index) =>
+          renderPost(
+            post,
+            index
+          )
       )
       .join("");
 
   updateLoadMore();
-  bindPostEvents();
+
+  setupGalleryEvents();
+  setupLikeButtons();
 }
+
 
 /* =========================================================
-   ПОСТ
-========================================================= */
-
-function renderPost(
-  post,
-  index
-) {
-  const text =
-    post.text || "";
-
-  const date =
-    formatDate(
-      post.post_date
-    );
-
-  const images =
-    getImages(post);
-
-  const video =
-    getVideo(post);
-
-  const postId =
-    String(
-      post.vk_id ||
-      post.id ||
-      index
-    );
-
-  const liked =
-    !!likedPosts[postId];
-
-  return `
-    <article
-      class="vkPost"
-      data-post-id="${escapeAttribute(postId)}"
-    >
-
-      <header class="vkPostHeader">
-
-        <div class="vkPostAvatar">
-          <span></span>
-        </div>
-
-        <div class="vkPostMeta">
-
-          <div class="vkPostAuthor">
-            National Geographic
-          </div>
-
-          <div class="vkPostDate">
-            ${escapeHtml(date)}
-          </div>
-
-        </div>
-
-      </header>
-
-      ${
-        text
-          ? `
-            <div class="vkPostText">
-              ${linkify(text)}
-            </div>
-          `
-          : ""
-      }
-
-      ${
-        images.length
-          ? renderGallery(
-              images,
-              postId
-            )
-          : ""
-      }
-
-      ${
-        video
-          ? renderVideo(
-              video,
-              postId
-            )
-          : ""
-      }
-
-      <div class="vkPostActions">
-
-        <button
-          class="postAction likeButton ${
-            liked ? "liked" : ""
-          }"
-          data-action="like"
-          data-post-id="${escapeAttribute(postId)}"
-          type="button"
-        >
-          <span class="likeIcon">
-            ${liked ? "♥" : "♡"}
-          </span>
-
-          <span>Нравится</span>
-        </button>
-
-        <button
-          class="postAction"
-          data-action="share"
-          data-post-id="${escapeAttribute(postId)}"
-          type="button"
-        >
-          ↗ Поделиться
-        </button>
-
-        <a
-          class="postAction"
-          href="${escapeAttribute(
-            getVkUrl(post)
-          )}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          VK ↗
-        </a>
-
-      </div>
-
-      <div class="vkPostSource">
-        NATIONAL GEOGRAPHIC
-      </div>
-
-    </article>
-  `;
-}
-
-/* =========================================================
-   ВИДЕО
-========================================================= */
-
-function getVideo(post) {
-  const hasVideo =
-    post.video_type === "video" ||
-    post.video_type === "clip" ||
-    !!post.video_url ||
-    !!post.video_player ||
-    !!post.video_vk_url ||
-    !!post.video_id;
-
-  if (!hasVideo) {
-    return null;
-  }
-
-  let vkUrl =
-    post.video_vk_url ||
-    null;
-
-  /*
-   * Если Worker не передал video_vk_url,
-   * собираем ссылку из ID.
-   */
-  if (
-    !vkUrl &&
-    post.video_owner_id != null &&
-    post.video_id != null
-  ) {
-    vkUrl =
-      "https://vk.ru/video" +
-      post.video_owner_id +
-      "_" +
-      post.video_id;
-
-    if (post.video_access_key) {
-      vkUrl +=
-        "?access_key=" +
-        encodeURIComponent(
-          post.video_access_key
-        );
-    }
-  }
-
-  return {
-    url:
-      post.video_url ||
-      null,
-
-    player:
-      post.video_player ||
-      null,
-
-    vkUrl,
-
-    title:
-      post.video_title ||
-      "Видео",
-
-    accessKey:
-      post.video_access_key ||
-      null,
-
-    ownerId:
-      post.video_owner_id ??
-      null,
-
-    videoId:
-      post.video_id ??
-      null
-  };
-}
-
-function renderVideo(
-  video,
-  postId
-) {
-  /*
-   * ПРЯМОЙ MP4
-   */
-  if (video.url) {
-    return `
-      <div class="vkPostMedia vkPostVideo">
-
-        <video
-          controls
-          playsinline
-          preload="metadata"
-          class="vkVideoElement"
-          src="${escapeAttribute(video.url)}"
-        ></video>
-
-        <div class="videoTitle">
-          ${escapeHtml(video.title)}
-        </div>
-
-      </div>
-    `;
-  }
-
-  /*
-   * PLAYER
-   */
-  if (video.player) {
-    return `
-      <div class="vkPostMedia vkPostVideo">
-
-        <div class="vkVideoFrame">
-          <iframe
-            src="${escapeAttribute(video.player)}"
-            loading="lazy"
-            allow="
-              autoplay;
-              encrypted-media;
-              fullscreen;
-              picture-in-picture
-            "
-            allowfullscreen
-            frameborder="0"
-          ></iframe>
-        </div>
-
-        <div class="videoTitle">
-          ${escapeHtml(video.title)}
-        </div>
-
-      </div>
-    `;
-  }
-
-  /*
-   * ЕСТЬ ССЫЛКА VK
-   *
-   * Это как раз твой текущий случай:
-   *
-   * video_vk_url:
-   * https://vk.ru/video-222376958_456247546?access_key=...
-   */
-  if (video.vkUrl) {
-    return `
-      <div
-        class="vkPostMedia vkPostVideo"
-        data-video-card="${escapeAttribute(postId)}"
-      >
-
-        <div
-          class="videoFallbackInner"
-          role="button"
-          tabindex="0"
-          data-video-open="${escapeAttribute(
-            video.vkUrl
-          )}"
-        >
-
-          <div class="videoPlayCircle">
-            <span>▶</span>
-          </div>
-
-          <div class="videoFallbackTitle">
-            ${escapeHtml(video.title)}
-          </div>
-
-          <div class="videoFallbackText">
-            Видео из VK
-          </div>
-
-          <a
-            class="videoOpenButton"
-            href="${escapeAttribute(
-              video.vkUrl
-            )}"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Смотреть видео
-          </a>
-
-        </div>
-
-      </div>
-    `;
-  }
-
-  /*
-   * ВИДЕО ОБНАРУЖЕНО,
-   * НО VK ПОКА НЕ ДАЛ ССЫЛКУ.
-   */
-  return `
-    <div
-      class="vkPostMedia vkPostVideo"
-      data-video-card="${escapeAttribute(postId)}"
-    >
-
-      <div class="videoFallbackInner">
-
-        <div class="videoPlayCircle">
-          <span>▶</span>
-        </div>
-
-        <div class="videoFallbackTitle">
-          ${escapeHtml(video.title)}
-        </div>
-
-        <div class="videoFallbackText">
-          Видео обрабатывается VK
-        </div>
-
-      </div>
-
-    </div>
-  `;
-}
-
-/* =========================================================
-   ФОТО
+   GET IMAGES
 ========================================================= */
 
 function getImages(post) {
+
   let images = [];
 
-  if (Array.isArray(post.images)) {
+  /*
+    Основной вариант:
+    API уже возвращает массив images.
+  */
+
+  if (
+    Array.isArray(post.images)
+  ) {
     images =
-      post.images.filter(Boolean);
+      post.images.filter(
+        url =>
+          typeof url === "string" &&
+          url.trim()
+      );
   }
+
+  /*
+    Если images нет —
+    пробуем images_json.
+  */
 
   if (
     !images.length &&
     post.images_json
   ) {
+
     try {
+
       const parsed =
         JSON.parse(
           post.images_json
         );
 
-      if (Array.isArray(parsed)) {
+      if (
+        Array.isArray(parsed)
+      ) {
         images =
-          parsed.filter(Boolean);
+          parsed.filter(
+            url =>
+              typeof url === "string" &&
+              url.trim()
+          );
       }
+
     } catch (error) {
+
       console.warn(
         "Ошибка images_json:",
         error
       );
     }
   }
+
+  /*
+    Последний резерв —
+    image_url.
+  */
 
   if (
     !images.length &&
@@ -532,82 +267,268 @@ function getImages(post) {
     ];
   }
 
+  /*
+    Убираем дубли.
+  */
+
   return [
     ...new Set(images)
   ];
 }
 
+
+/* =========================================================
+   RENDER POST
+========================================================= */
+
+function renderPost(
+  post,
+  index
+) {
+
+  const images =
+    getImages(post);
+
+  const hasImages =
+    images.length > 0;
+
+  const hasVideo =
+    Boolean(
+      post.video_type ||
+      post.video_url ||
+      post.video_player ||
+      post.video_vk_url
+    );
+
+  const date =
+    formatDate(
+      post.post_date
+    );
+
+  const text =
+    formatPostText(
+      post.text || ""
+    );
+
+  const liked =
+    likedPosts.includes(
+      String(post.vk_id)
+    );
+
+  const postId =
+    escapeHtml(
+      String(post.vk_id || post.id)
+    );
+
+  let media = "";
+
+  /*
+    Сначала фотографии.
+  */
+
+  if (hasImages) {
+
+    media =
+      renderGallery(
+        images,
+        post
+      );
+  }
+
+  /*
+    Если фотографий нет,
+    показываем видео.
+  */
+
+  else if (hasVideo) {
+
+    media =
+      renderVideo(
+        post
+      );
+  }
+
+  /*
+    Если медиа нет.
+  */
+
+  else {
+
+    media = `
+      <div class="postNoMedia">
+        <div class="postNoMediaText">
+          NATIONAL GEOGRAPHIC
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <article
+      class="postCard"
+      data-post-id="${postId}"
+    >
+
+      ${media}
+
+      <div class="postContent">
+
+        ${
+          date
+            ? `
+              <div class="postDate">
+                ${escapeHtml(date)}
+              </div>
+            `
+            : ""
+        }
+
+        ${
+          text
+            ? `
+              <div class="postText">
+                ${text}
+              </div>
+            `
+            : ""
+        }
+
+        <div class="postActions">
+
+          <button
+            class="postAction likeButton ${
+              liked ? "liked" : ""
+            }"
+            data-post-id="${postId}"
+            aria-label="Нравится"
+            type="button"
+          >
+            <span class="heart">
+              ${liked ? "♥" : "♡"}
+            </span>
+
+            <span>
+              Нравится
+            </span>
+          </button>
+
+          <button
+            class="postAction shareButton"
+            type="button"
+            onclick="sharePost(${index})"
+          >
+            <span>↗</span>
+            <span>Поделиться</span>
+          </button>
+
+          <a
+            class="postAction vkButton"
+            href="${getVkPostUrl(post)}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            VK
+          </a>
+
+        </div>
+
+      </div>
+
+    </article>
+  `;
+}
+
+
+/* =========================================================
+   GALLERY
+========================================================= */
+
 function renderGallery(
   images,
-  postId
+  post
 ) {
+
   if (!images.length) {
     return "";
   }
 
   /*
-   * ОДНА ФОТОГРАФИЯ
-   */
-  if (images.length === 1) {
-    return `
-      <div class="vkPostMedia">
+    Одна фотография.
+  */
 
-        <button
-          class="vkPostImageButton"
-          type="button"
-          data-gallery-id="${escapeAttribute(postId)}"
-          data-index="0"
+  if (images.length === 1) {
+
+    return `
+      <div
+        class="vkGallery single"
+        data-gallery="${escapeAttribute(
+          JSON.stringify(images)
+        )}"
+      >
+
+        <img
+          class="vkGalleryImage"
+          src="${escapeAttribute(images[0])}"
+          alt="${escapeAttribute(
+            post.text || "National Geographic"
+          )}"
+          loading="lazy"
+          decoding="async"
         >
-          <img
-            class="vkPostImage"
-            src="${escapeAttribute(images[0])}"
-            alt=""
-            loading="lazy"
-          >
-        </button>
+
+        <div class="galleryZoom">
+          ⛶
+        </div>
 
       </div>
     `;
   }
 
   /*
-   * ГАЛЕРЕЯ
-   */
+    Несколько фотографий.
+  */
+
+  const visible =
+    images.slice(0, 4);
+
   return `
     <div
-      class="vkPostMedia vkPostGallery"
-      data-gallery="${escapeAttribute(postId)}"
+      class="vkGallery multi count-${Math.min(
+        images.length,
+        4
+      )}"
+      data-gallery="${escapeAttribute(
+        JSON.stringify(images)
+      )}"
     >
 
-      ${images
-        .slice(0, 4)
+      ${visible
         .map(
           (image, index) => `
-            <button
+            <div
               class="vkGalleryItem"
-              type="button"
-              data-gallery-id="${escapeAttribute(postId)}"
-              data-index="${index}"
             >
 
               <img
+                class="vkGalleryImage"
                 src="${escapeAttribute(image)}"
-                alt=""
+                alt="Фото ${index + 1}"
                 loading="lazy"
-              />
+                decoding="async"
+              >
 
               ${
                 index === 3 &&
                 images.length > 4
                   ? `
-                    <span class="galleryMore">
+                    <div class="galleryMore">
                       +${images.length - 4}
-                    </span>
+                    </div>
                   `
                   : ""
               }
 
-            </button>
+            </div>
           `
         )
         .join("")}
@@ -616,20 +537,499 @@ function renderGallery(
   `;
 }
 
+
 /* =========================================================
-   СОБЫТИЯ
+   VIDEO
 ========================================================= */
 
-function bindPostEvents() {
+function renderVideo(post) {
+
+  const title =
+    post.video_title ||
+    "Видео";
+
+  const vkUrl =
+    getVideoUrl(post);
 
   /*
-   * LIKE
-   */
-  document
-    .querySelectorAll(
-      "[data-action='like']"
-    )
-    .forEach(button => {
+    Если есть прямой MP4.
+  */
+
+  if (post.video_url) {
+
+    return `
+      <div class="vkPostVideo">
+
+        <video
+          class="vkVideoElement"
+          controls
+          preload="metadata"
+          playsinline
+          poster=""
+        >
+
+          <source
+            src="${escapeAttribute(
+              post.video_url
+            )}"
+            type="video/mp4"
+          >
+
+        </video>
+
+        <div class="videoTitle">
+          ${escapeHtml(title)}
+        </div>
+
+      </div>
+    `;
+  }
+
+  /*
+    VK player.
+  */
+
+  if (post.video_player) {
+
+    return `
+      <div class="vkPostVideo">
+
+        <div class="vkVideoFrame">
+
+          <iframe
+            src="${escapeAttribute(
+              post.video_player
+            )}"
+            frameborder="0"
+            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+          ></iframe>
+
+        </div>
+
+        <div class="videoTitle">
+          ${escapeHtml(title)}
+        </div>
+
+      </div>
+    `;
+  }
+
+  /*
+    Нет player —
+    показываем красивую карточку VK.
+  */
+
+  if (vkUrl) {
+
+    return `
+      <div class="vkPostVideo">
+
+        <a
+          class="videoFallback"
+          href="${escapeAttribute(vkUrl)}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+
+          <div class="videoFallbackInner">
+
+            <div class="videoPlayCircle">
+              ▶
+            </div>
+
+            <div class="videoFallbackTitle">
+              ${escapeHtml(title)}
+            </div>
+
+            <div class="videoFallbackText">
+              Смотреть видео VK
+            </div>
+
+            <div class="videoOpenButton">
+              Открыть видео
+            </div>
+
+          </div>
+
+        </a>
+
+      </div>
+    `;
+  }
+
+  return `
+    <div class="vkPostVideo">
+
+      <div class="videoFallback">
+
+        <div class="videoFallbackInner">
+
+          <div class="videoPlayCircle">
+            ▶
+          </div>
+
+          <div class="videoFallbackTitle">
+            ${escapeHtml(title)}
+          </div>
+
+          <div class="videoFallbackText">
+            Видео обрабатывается VK
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   VK POST URL
+========================================================= */
+
+function getVkPostUrl(post) {
+
+  if (
+    post.vk_id
+  ) {
+
+    return (
+      "https://vk.ru/wall" +
+      post.vk_id
+    );
+  }
+
+  return VK_GROUP_URL;
+}
+
+
+/* =========================================================
+   VIDEO URL
+========================================================= */
+
+function getVideoUrl(post) {
+
+  if (
+    post.video_vk_url
+  ) {
+    return post.video_vk_url;
+  }
+
+  if (
+    post.video_owner_id !== null &&
+    post.video_owner_id !== undefined &&
+    post.video_id
+  ) {
+
+    let url =
+      `https://vk.com/video${post.video_owner_id}_${post.video_id}`;
+
+    if (
+      post.video_access_key
+    ) {
+      url +=
+        `_${post.video_access_key}`;
+    }
+
+    return url;
+  }
+
+  return null;
+}
+
+
+/* =========================================================
+   GALLERY EVENTS
+========================================================= */
+
+function setupGalleryEvents() {
+
+  const galleries =
+    document.querySelectorAll(
+      "[data-gallery]"
+    );
+
+  galleries.forEach(
+    gallery => {
+
+      gallery.addEventListener(
+        "click",
+        () => {
+
+          try {
+
+            const images =
+              JSON.parse(
+                gallery.dataset.gallery
+              );
+
+            if (
+              Array.isArray(images) &&
+              images.length
+            ) {
+
+              openViewer(
+                images,
+                0
+              );
+            }
+
+          } catch (error) {
+
+            console.error(
+              "Gallery error:",
+              error
+            );
+          }
+        }
+      );
+    }
+  );
+}
+
+
+/* =========================================================
+   IMAGE VIEWER
+========================================================= */
+
+function openViewer(
+  images,
+  startIndex = 0
+) {
+
+  let current =
+    Math.max(
+      0,
+      Math.min(
+        startIndex,
+        images.length - 1
+      )
+    );
+
+  let viewer =
+    document.getElementById(
+      "ngImageViewer"
+    );
+
+  if (!viewer) {
+
+    viewer =
+      document.createElement(
+        "div"
+      );
+
+    viewer.id =
+      "ngImageViewer";
+
+    viewer.innerHTML = `
+      <div class="viewerBackdrop"></div>
+
+      <button
+        class="viewerClose"
+        type="button"
+        aria-label="Закрыть"
+      >
+        ×
+      </button>
+
+      <button
+        class="viewerPrev"
+        type="button"
+        aria-label="Предыдущее"
+      >
+        ‹
+      </button>
+
+      <div class="viewerContent">
+
+        <img
+          class="viewerImage"
+          alt=""
+        >
+
+        <div class="viewerCounter"></div>
+
+      </div>
+
+      <button
+        class="viewerNext"
+        type="button"
+        aria-label="Следующее"
+      >
+        ›
+      </button>
+    `;
+
+    document.body.appendChild(
+      viewer
+    );
+
+    viewer
+      .querySelector(
+        ".viewerBackdrop"
+      )
+      .addEventListener(
+        "click",
+        closeViewer
+      );
+
+    viewer
+      .querySelector(
+        ".viewerClose"
+      )
+      .addEventListener(
+        "click",
+        closeViewer
+      );
+
+    viewer
+      .querySelector(
+        ".viewerPrev"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          current =
+            (
+              current -
+              1 +
+              images.length
+            ) %
+            images.length;
+
+          updateViewer();
+        }
+      );
+
+    viewer
+      .querySelector(
+        ".viewerNext"
+      )
+      .addEventListener(
+        "click",
+        () => {
+
+          current =
+            (
+              current +
+              1
+            ) %
+            images.length;
+
+          updateViewer();
+        }
+      );
+  }
+
+  function updateViewer() {
+
+    const image =
+      viewer.querySelector(
+        ".viewerImage"
+      );
+
+    const counter =
+      viewer.querySelector(
+        ".viewerCounter"
+      );
+
+    image.src =
+      images[current];
+
+    counter.textContent =
+      `${current + 1} / ${images.length}`;
+  }
+
+  updateViewer();
+
+  viewer.classList.add(
+    "active"
+  );
+
+  document.body.classList.add(
+    "viewerOpen"
+  );
+
+  document.onkeydown =
+    event => {
+
+      if (
+        event.key === "Escape"
+      ) {
+        closeViewer();
+      }
+
+      if (
+        event.key === "ArrowLeft"
+      ) {
+
+        current =
+          (
+            current -
+            1 +
+            images.length
+          ) %
+          images.length;
+
+        updateViewer();
+      }
+
+      if (
+        event.key === "ArrowRight"
+      ) {
+
+        current =
+          (
+            current +
+            1
+          ) %
+          images.length;
+
+        updateViewer();
+      }
+    };
+}
+
+
+function closeViewer() {
+
+  const viewer =
+    document.getElementById(
+      "ngImageViewer"
+    );
+
+  if (viewer) {
+    viewer.classList.remove(
+      "active"
+    );
+  }
+
+  document.body.classList.remove(
+    "viewerOpen"
+  );
+
+  document.onkeydown = null;
+}
+
+
+/* =========================================================
+   LIKES
+========================================================= */
+
+function setupLikeButtons() {
+
+  const buttons =
+    document.querySelectorAll(
+      ".likeButton"
+    );
+
+  buttons.forEach(
+    button => {
 
       button.addEventListener(
         "click",
@@ -638,281 +1038,218 @@ function bindPostEvents() {
           const id =
             button.dataset.postId;
 
-          if (likedPosts[id]) {
-            delete likedPosts[id];
-          } else {
-            likedPosts[id] = true;
-          }
-
-          localStorage.setItem(
-            "national_geographic_likes",
-            JSON.stringify(
-              likedPosts
-            )
-          );
-
-          button.classList.toggle(
-            "liked",
-            !!likedPosts[id]
-          );
-
-          const icon =
-            button.querySelector(
-              ".likeIcon"
-            );
-
-          if (icon) {
-            icon.textContent =
-              likedPosts[id]
-                ? "♥"
-                : "♡";
-          }
-        }
-      );
-    });
-
-  /*
-   * SHARE
-   */
-  document
-    .querySelectorAll(
-      "[data-action='share']"
-    )
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        async () => {
-
-          const post =
-            findPost(
-              button.dataset.postId
-            );
-
-          if (!post) return;
-
-          const url =
-            getVkUrl(post);
-
-          if (
-            navigator.share
-          ) {
-
-            try {
-
-              await navigator.share({
-                title:
-                  "National Geographic",
-                text:
-                  post.text ||
-                  "National Geographic",
-                url
-              });
-
-              return;
-
-            } catch {
-              // отмена
-            }
-          }
-
-          try {
-
-            await navigator.clipboard.writeText(
-              url
-            );
-
-            showToast(
-              "Ссылка скопирована"
-            );
-
-          } catch {
-
-            window.open(
-              url,
-              "_blank"
-            );
-          }
-        }
-      );
-    });
-
-  /*
-   * ФОТО
-   */
-  document
-    .querySelectorAll(
-      "[data-gallery-id]"
-    )
-    .forEach(button => {
-
-      button.addEventListener(
-        "click",
-        () => {
-
-          const id =
-            button.dataset
-              .galleryId;
-
-          const index =
-            Number(
-              button.dataset.index
-            ) || 0;
-
-          const post =
-            findPost(id);
-
-          if (!post) return;
-
-          const images =
-            getImages(post);
-
-          openImageViewer(
-            images,
-            index
+          toggleLike(
+            id,
+            button
           );
         }
       );
-    });
-
-  /*
-   * ВИДЕО-КАРТОЧКА
-   */
-  document
-    .querySelectorAll(
-      "[data-video-open]"
-    )
-    .forEach(element => {
-
-      element.addEventListener(
-        "click",
-        event => {
-
-          /*
-           * Если нажали именно
-           * на кнопку "Смотреть видео",
-           * обычная ссылка работает сама.
-           */
-          if (
-            event.target.closest(
-              "a"
-            )
-          ) {
-            return;
-          }
-
-          const url =
-            element.dataset
-              .videoOpen;
-
-          if (url) {
-            window.open(
-              url,
-              "_blank",
-              "noopener,noreferrer"
-            );
-          }
-        }
-      );
-
-      element.addEventListener(
-        "keydown",
-        event => {
-
-          if (
-            event.key === "Enter" ||
-            event.key === " "
-          ) {
-
-            event.preventDefault();
-
-            const url =
-              element.dataset
-                .videoOpen;
-
-            if (url) {
-              window.open(
-                url,
-                "_blank",
-                "noopener,noreferrer"
-              );
-            }
-          }
-        }
-      );
-    });
+    }
+  );
 }
+
+
+function toggleLike(
+  id,
+  button
+) {
+
+  const index =
+    likedPosts.indexOf(id);
+
+  if (index >= 0) {
+
+    likedPosts.splice(
+      index,
+      1
+    );
+
+    button.classList.remove(
+      "liked"
+    );
+
+    const heart =
+      button.querySelector(
+        ".heart"
+      );
+
+    if (heart) {
+      heart.textContent =
+        "♡";
+    }
+
+  } else {
+
+    likedPosts.push(id);
+
+    button.classList.add(
+      "liked"
+    );
+
+    const heart =
+      button.querySelector(
+        ".heart"
+      );
+
+    if (heart) {
+      heart.textContent =
+        "♥";
+    }
+
+    showToast(
+      "Добавлено в понравившиеся ❤️"
+    );
+  }
+
+  localStorage.setItem(
+    "ng_liked_posts",
+    JSON.stringify(
+      likedPosts
+    )
+  );
+}
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+async function sharePost(index) {
+
+  const post =
+    allPosts[index];
+
+  if (!post) {
+    return;
+  }
+
+  const url =
+    getVkPostUrl(post);
+
+  const title =
+    "National Geographic";
+
+  try {
+
+    if (
+      navigator.share
+    ) {
+
+      await navigator.share({
+        title,
+        text:
+          post.text || title,
+        url
+      });
+
+      return;
+    }
+
+    await navigator.clipboard.writeText(
+      url
+    );
+
+    showToast(
+      "Ссылка скопирована"
+    );
+
+  } catch (error) {
+
+    console.log(
+      "Share cancelled"
+    );
+  }
+}
+
 
 /* =========================================================
    LOAD MORE
 ========================================================= */
 
-function initLoadMore() {
+function setupLoadMore() {
+
   const button =
     document.getElementById(
       "loadMore"
     );
 
-  if (!button) return;
+  if (!button) {
+    return;
+  }
 
   button.addEventListener(
     "click",
     () => {
 
-      const oldCount =
-        visibleCount;
-
-      visibleCount =
-        Math.min(
-          visibleCount +
-            POSTS_PER_PAGE,
-          allPosts.length
-        );
+      visiblePosts +=
+        POSTS_PER_LOAD;
 
       renderPosts();
 
-      setTimeout(() => {
+      setTimeout(
+        () => {
 
-        const posts =
-          document.querySelectorAll(
-            ".vkPost"
-          );
+          const journal =
+            document.getElementById(
+              "journal"
+            );
 
-        const target =
-          posts[oldCount];
+          if (journal) {
+            journal.scrollIntoView({
+              behavior: "smooth",
+              block: "start"
+            });
+          }
 
-        if (target) {
-          target.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          });
-        }
-
-      }, 50);
+        },
+        100
+      );
     }
   );
 }
 
+
 function updateLoadMore() {
+
   const wrap =
     document.getElementById(
       "loadMoreWrap"
     );
 
-  if (!wrap) return;
+  const button =
+    document.getElementById(
+      "loadMore"
+    );
 
-  wrap.style.display =
-    visibleCount <
+  if (!wrap || !button) {
+    return;
+  }
+
+  if (
+    visiblePosts >=
     allPosts.length
-      ? "flex"
-      : "none";
+  ) {
+
+    wrap.style.display =
+      "none";
+
+  } else {
+
+    wrap.style.display =
+      "";
+
+    button.textContent =
+      `Показать ещё`;
+  }
 }
 
+
 /* =========================================================
-   МЕНЮ
+   MENU
 ========================================================= */
 
-function initMenu() {
+function setupMenu() {
+
   const button =
     document.getElementById(
       "menuButton"
@@ -936,54 +1273,68 @@ function initMenu() {
       );
 
       button.classList.toggle(
-        "open"
+        "active"
       );
     }
   );
 
   menu
     .querySelectorAll("a")
-    .forEach(link => {
+    .forEach(
+      link => {
 
-      link.addEventListener(
-        "click",
-        () => {
+        link.addEventListener(
+          "click",
+          () => {
 
-          menu.classList.remove(
-            "open"
-          );
+            menu.classList.remove(
+              "open"
+            );
 
-          button.classList.remove(
-            "open"
-          );
-        }
-      );
-    });
+            button.classList.remove(
+              "active"
+            );
+          }
+        );
+      }
+    );
 }
 
+
 /* =========================================================
-   НАВЕРХ
+   BACK TO TOP
 ========================================================= */
 
-function initBackToTop() {
+function setupBackToTop() {
+
   const button =
     document.getElementById(
       "backToTop"
     );
 
-  if (!button) return;
+  if (!button) {
+    return;
+  }
 
   window.addEventListener(
     "scroll",
     () => {
 
-      button.classList.toggle(
-        "show",
-        window.scrollY > 500
-      );
-    },
-    {
-      passive: true
+      if (
+        window.scrollY >
+        500
+      ) {
+
+        button.classList.add(
+          "visible"
+        );
+
+      } else {
+
+        button.classList.remove(
+          "visible"
+        );
+      }
     }
   );
 
@@ -999,300 +1350,76 @@ function initBackToTop() {
   );
 }
 
+
 /* =========================================================
-   IMAGE VIEWER
+   TOAST
 ========================================================= */
 
-let viewer = null;
-let viewerImages = [];
-let viewerIndex = 0;
+function setupToast() {
 
-function initImageViewer() {
+  if (
+    !document.getElementById(
+      "toast"
+    )
+  ) {
 
-  viewer =
-    document.getElementById(
-      "imageViewer"
-    );
-
-  if (!viewer) {
-
-    viewer =
+    const toast =
       document.createElement(
         "div"
       );
 
-    viewer.id =
-      "imageViewer";
-
-    viewer.className =
-      "imageViewer";
-
-    viewer.innerHTML = `
-      <div class="imageViewerContent">
-
-        <button
-          class="imageViewerClose"
-          type="button"
-          aria-label="Закрыть"
-        >
-          ×
-        </button>
-
-        <button
-          class="imageViewerPrev"
-          type="button"
-          aria-label="Назад"
-        >
-          ‹
-        </button>
-
-        <img
-          class="imageViewerImage"
-          alt=""
-        >
-
-        <button
-          class="imageViewerNext"
-          type="button"
-          aria-label="Вперёд"
-        >
-          ›
-        </button>
-
-        <div class="imageViewerCounter"></div>
-
-      </div>
-    `;
+    toast.id =
+      "toast";
 
     document.body.appendChild(
-      viewer
+      toast
     );
   }
-
-  const close =
-    viewer.querySelector(
-      ".imageViewerClose"
-    );
-
-  const prev =
-    viewer.querySelector(
-      ".imageViewerPrev"
-    );
-
-  const next =
-    viewer.querySelector(
-      ".imageViewerNext"
-    );
-
-  close.addEventListener(
-    "click",
-    closeImageViewer
-  );
-
-  prev.addEventListener(
-    "click",
-    () =>
-      changeViewerImage(-1)
-  );
-
-  next.addEventListener(
-    "click",
-    () =>
-      changeViewerImage(1)
-  );
-
-  viewer.addEventListener(
-    "click",
-    event => {
-
-      if (
-        event.target === viewer
-      ) {
-        closeImageViewer();
-      }
-    }
-  );
-
-  document.addEventListener(
-    "keydown",
-    event => {
-
-      if (
-        !viewer.classList.contains(
-          "open"
-        )
-      ) {
-        return;
-      }
-
-      if (
-        event.key === "Escape"
-      ) {
-        closeImageViewer();
-      }
-
-      if (
-        event.key === "ArrowLeft"
-      ) {
-        changeViewerImage(-1);
-      }
-
-      if (
-        event.key === "ArrowRight"
-      ) {
-        changeViewerImage(1);
-      }
-    }
-  );
 }
 
-function openImageViewer(
-  images,
-  index
-) {
-  if (
-    !images ||
-    !images.length
-  ) {
+
+function showToast(message) {
+
+  const toast =
+    document.getElementById(
+      "toast"
+    );
+
+  if (!toast) {
     return;
   }
 
-  viewerImages =
-    images;
+  toast.textContent =
+    message;
 
-  viewerIndex =
-    Math.max(
-      0,
-      Math.min(
-        index,
-        images.length - 1
-      )
-    );
-
-  updateViewer();
-
-  viewer.classList.add(
-    "open"
+  toast.classList.add(
+    "show"
   );
 
-  document.body.style.overflow =
-    "hidden";
-}
-
-function updateViewer() {
-  const image =
-    viewer.querySelector(
-      ".imageViewerImage"
-    );
-
-  const counter =
-    viewer.querySelector(
-      ".imageViewerCounter"
-    );
-
-  const prev =
-    viewer.querySelector(
-      ".imageViewerPrev"
-    );
-
-  const next =
-    viewer.querySelector(
-      ".imageViewerNext"
-    );
-
-  image.src =
-    viewerImages[
-      viewerIndex
-    ];
-
-  counter.textContent =
-    `${viewerIndex + 1} / ${
-      viewerImages.length
-    }`;
-
-  prev.style.display =
-    viewerImages.length > 1
-      ? ""
-      : "none";
-
-  next.style.display =
-    viewerImages.length > 1
-      ? ""
-      : "none";
-}
-
-function changeViewerImage(
-  direction
-) {
-  if (
-    viewerImages.length <= 1
-  ) {
-    return;
-  }
-
-  viewerIndex +=
-    direction;
-
-  if (viewerIndex < 0) {
-    viewerIndex =
-      viewerImages.length - 1;
-  }
-
-  if (
-    viewerIndex >=
-    viewerImages.length
-  ) {
-    viewerIndex = 0;
-  }
-
-  updateViewer();
-}
-
-function closeImageViewer() {
-  if (!viewer) return;
-
-  viewer.classList.remove(
-    "open"
+  clearTimeout(
+    showToast.timer
   );
 
-  document.body.style.overflow =
-    "";
+  showToast.timer =
+    setTimeout(
+      () => {
+
+        toast.classList.remove(
+          "show"
+        );
+
+      },
+      2500
+    );
 }
+
 
 /* =========================================================
-   HELPERS
+   DATE
 ========================================================= */
 
-function findPost(id) {
-  return allPosts.find(
-    post =>
-      String(
-        post.vk_id ||
-        post.id
-      ) === String(id)
-  );
-}
-
-function getVkUrl(post) {
-  if (post.vk_id) {
-    return (
-      "https://vk.ru/wall" +
-      post.vk_id
-    );
-  }
-
-  if (post.id) {
-    return (
-      VK_GROUP_URL +
-      "?w=wall" +
-      post.id
-    );
-  }
-
-  return VK_GROUP_URL;
-}
-
 function formatDate(timestamp) {
+
   if (!timestamp) {
     return "";
   }
@@ -1313,41 +1440,67 @@ function formatDate(timestamp) {
   return date.toLocaleDateString(
     "ru-RU",
     {
-      day: "numeric",
+      day: "2-digit",
       month: "long",
       year: "numeric"
     }
   );
 }
 
-function linkify(text) {
-  const escaped =
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+function formatPostText(text) {
+
+  if (!text) {
+    return "";
+  }
+
+  let result =
     escapeHtml(text);
 
-  return escaped
-    .replace(
-      /(https?:\/\/[^\s<]+)/gi,
+  /*
+    Ссылки.
+  */
+
+  result =
+    result.replace(
+      /(https?:\/\/[^\s<]+)/g,
       url => `
         <a
-          class="postLink"
           href="${url}"
           target="_blank"
           rel="noopener noreferrer"
+          class="postLink"
         >
           ${url}
         </a>
       `
-    )
-    .replace(
+    );
+
+  /*
+    Переносы строк.
+  */
+
+  result =
+    result.replace(
       /\n/g,
       "<br>"
     );
+
+  return result;
 }
 
-function escapeHtml(value) {
-  return String(
-    value ?? ""
-  )
+
+/* =========================================================
+   ESCAPE
+========================================================= */
+
+function escapeHtml(value = "") {
+
+  return String(value)
     .replaceAll(
       "&",
       "&amp;"
@@ -1370,63 +1523,56 @@ function escapeHtml(value) {
     );
 }
 
-function escapeAttribute(value) {
-  return escapeHtml(value);
+
+function escapeAttribute(
+  value = ""
+) {
+
+  return escapeHtml(
+    value
+  );
 }
 
-function showToast(message) {
-  const toast =
-    document.getElementById(
-      "toast"
-    );
-
-  if (!toast) return;
-
-  toast.textContent =
-    message;
-
-  toast.classList.add(
-    "show"
-  );
-
-  clearTimeout(
-    showToast.timer
-  );
-
-  showToast.timer =
-    setTimeout(
-      () => {
-        toast.classList.remove(
-          "show"
-        );
-      },
-      2500
-    );
-}
 
 /* =========================================================
    SERVICE WORKER
 ========================================================= */
 
-if (
-  "serviceWorker" in navigator
-) {
+function registerServiceWorker() {
 
-  window.addEventListener(
-    "load",
-    () => {
+  if (
+    "serviceWorker" in navigator
+  ) {
 
-      navigator.serviceWorker
-        .register(
-          "./sw.js"
-        )
-        .catch(
-          error =>
-            console.warn(
-              "Service Worker:",
-              error
-            )
-        );
-    }
-  );
+    window.addEventListener(
+      "load",
+      () => {
+
+        navigator.serviceWorker
+          .register(
+            "./sw.js"
+          )
+          .then(
+            registration => {
+
+              console.log(
+                "Service Worker:",
+                registration.scope
+              );
+
+            }
+          )
+          .catch(
+            error => {
+
+              console.warn(
+                "Service Worker error:",
+                error
+              );
+
+            }
+          );
+      }
+    );
+  }
 }
