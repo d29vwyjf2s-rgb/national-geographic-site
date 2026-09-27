@@ -1,24 +1,113 @@
 /* =========================================
-   ГРУППИРОВКА ФОТОГРАФИЙ
+   NATIONAL GEOGRAPHIC — POST TEXT
+========================================= */
+
+.post-text {
+  color: #e8e8e8;
+  font-size: 16px;
+  line-height: 1.6;
+
+  margin: 14px 0;
+
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+.post-short-text,
+.post-full-text {
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================
+   КЛИКАБЕЛЬНЫЕ ССЫЛКИ
+========================================= */
+
+.post-link {
+  color: #ffcc00 !important;
+
+  text-decoration: none;
+
+  word-break: break-all;
+
+  transition:
+    opacity .2s ease,
+    text-decoration .2s ease;
+}
+
+.post-link:hover {
+  opacity: .8;
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   ПОКАЗАТЬ ПОЛНОСТЬЮ
+========================================= */
+
+.read-more-btn {
+  display: block;
+
+  margin-top: 10px;
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #ffcc00;
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    opacity .2s ease;
+}
+
+.read-more-btn:hover {
+  opacity: .75;
+  text-decoration: underline;
+}
+
+
+/* =========================================
+   ГАЛЕРЕЯ ФОТО
 ========================================= */
 
 .post-gallery {
   width: 100%;
+
   margin: 18px 0;
+
   overflow: hidden;
+
   border-radius: 16px;
+
   display: grid;
+
   gap: 3px;
+
   background: #050505;
 }
 
 .post-gallery img {
   width: 100%;
   height: 100%;
+
   display: block;
+
   object-fit: cover;
+
   cursor: pointer;
-  transition: transform .25s ease, filter .25s ease;
+
+  transition:
+    transform .25s ease,
+    filter .25s ease;
 }
 
 .post-gallery img:hover {
@@ -27,37 +116,51 @@
 }
 
 
-/* 1 фото */
+/* =========================================
+   1 ФОТО
+========================================= */
 
 .gallery-one {
   display: block;
+
   max-height: 650px;
 }
 
 .gallery-one img {
   max-height: 650px;
+
   object-fit: contain;
+
   background: #050505;
 }
 
 
-/* 2 фото */
+/* =========================================
+   2 ФОТО
+========================================= */
 
 .gallery-two {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns:
+    repeat(2, 1fr);
+
   aspect-ratio: 16 / 10;
 }
 
 .gallery-two .gallery-item {
   min-width: 0;
+
   overflow: hidden;
 }
 
 
-/* 3 фото */
+/* =========================================
+   3 ФОТО
+========================================= */
 
 .gallery-three {
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns:
+    2fr 1fr;
+
   aspect-ratio: 16 / 10;
 }
 
@@ -67,39 +170,55 @@
 
 .gallery-side {
   display: grid;
-  grid-template-rows: repeat(2, 1fr);
+
+  grid-template-rows:
+    repeat(2, 1fr);
+
   gap: 3px;
+
   overflow: hidden;
 }
 
 .gallery-side > div {
   min-height: 0;
+
   overflow: hidden;
 }
 
 
-/* 4+ фото */
+/* =========================================
+   4+ ФОТО
+========================================= */
 
 .gallery-grid {
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  grid-template-rows:
+    repeat(2, 1fr);
+
   aspect-ratio: 1.25 / 1;
 }
 
 .gallery-item {
   position: relative;
+
   min-width: 0;
   min-height: 0;
+
   overflow: hidden;
 }
 
 .gallery-item img {
   position: absolute;
+
   inset: 0;
 }
 
 
-/* +N фотографий */
+/* =========================================
+   +N ФОТО
+========================================= */
 
 .gallery-more {
   position: relative;
@@ -107,17 +226,21 @@
 
 .more-overlay {
   position: absolute;
+
   inset: 0;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
-  background: rgba(0, 0, 0, .58);
+  background:
+    rgba(0, 0, 0, .58);
 
   color: #fff;
 
   font-size: 32px;
+
   font-weight: 800;
 
   pointer-events: none;
@@ -125,11 +248,104 @@
 
 
 /* =========================================
-   ПОЛНОЭКРАННАЯ ГАЛЕРЕЯ
+   ВИДЕО
+========================================= */
+
+.post-video {
+  width: 100%;
+
+  margin: 18px 0;
+
+  overflow: hidden;
+
+  border-radius: 16px;
+
+  background: #050505;
+}
+
+.post-video video {
+  width: 100%;
+
+  max-height: 650px;
+
+  display: block;
+
+  background: #000;
+}
+
+.vk-video {
+  position: relative;
+}
+
+.vk-video a {
+  position: relative;
+
+  min-height: 220px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+
+  gap: 12px;
+
+  overflow: hidden;
+
+  color: #fff;
+
+  text-decoration: none;
+
+  background: #111;
+}
+
+.vk-video img {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  opacity: .65;
+}
+
+.vk-video .video-play,
+.vk-video span {
+  position: relative;
+
+  z-index: 2;
+}
+
+.video-play {
+  width: 62px;
+  height: 62px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #ffcc00;
+
+  color: #000;
+
+  font-size: 25px;
+}
+
+
+/* =========================================
+   ПОЛНОЭКРАННЫЙ ПРОСМОТР
 ========================================= */
 
 #imageViewer {
   position: fixed;
+
   inset: 0;
 
   z-index: 99999;
@@ -146,10 +362,14 @@
 
 .viewer-bg {
   position: absolute;
+
   inset: 0;
 
-  background: rgba(0, 0, 0, .96);
-  backdrop-filter: blur(10px);
+  background:
+    rgba(0, 0, 0, .96);
+
+  backdrop-filter:
+    blur(10px);
 }
 
 .viewer-content {
@@ -161,7 +381,9 @@
   max-height: 90vh;
 
   display: flex;
+
   flex-direction: column;
+
   align-items: center;
   justify-content: center;
 }
@@ -175,7 +397,8 @@
   border-radius: 8px;
 
   box-shadow:
-    0 20px 80px rgba(0, 0, 0, .8);
+    0 20px 80px
+    rgba(0, 0, 0, .8);
 }
 
 .viewer-counter {
@@ -184,13 +407,16 @@
   color: #fff;
 
   font-size: 14px;
+
   font-weight: 600;
 
   opacity: .8;
 }
 
 
-/* Кнопки */
+/* =========================================
+   КНОПКИ ГАЛЕРЕИ
+========================================= */
 
 .viewer-close,
 .viewer-prev,
@@ -201,13 +427,15 @@
 
   border: 0;
 
-  background: rgba(0, 0, 0, .55);
+  background:
+    rgba(0, 0, 0, .55);
 
   color: #fff;
 
   cursor: pointer;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -219,7 +447,8 @@
 .viewer-close:hover,
 .viewer-prev:hover,
 .viewer-next:hover {
-  background: rgba(255, 204, 0, .9);
+  background: #ffcc00;
+
   color: #000;
 }
 
@@ -264,8 +493,10 @@
 
 @media (max-width: 600px) {
 
-  .post-gallery {
-    border-radius: 12px;
+  .post-text {
+    font-size: 15px;
+
+    line-height: 1.55;
   }
 
   .gallery-one {
@@ -319,5 +550,9 @@
   #viewerImage {
     max-width: 96vw;
     max-height: 78vh;
+  }
+
+  .vk-video a {
+    min-height: 180px;
   }
 }
