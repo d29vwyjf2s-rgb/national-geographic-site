@@ -2,9 +2,10 @@
 
 :root {
   --bg: #050505;
-  --card: #111;
+  --card: #111111;
+  --card-hover: #171717;
   --text: #f5f5f5;
-  --muted: #999;
+  --muted: #999999;
   --yellow: #ffcc00;
   --line: #292929;
 }
@@ -30,15 +31,17 @@ a {
   text-decoration: none;
 }
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 
 header {
   position: sticky;
   top: 0;
-  z-index: 20;
-  background: #050505ef;
+  z-index: 100;
+  background: rgba(5, 5, 5, 0.94);
   border-bottom: 1px solid #222;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
 }
 
 .nav {
@@ -80,6 +83,10 @@ nav {
   color: #bbb;
 }
 
+nav a {
+  transition: color .2s ease;
+}
+
 nav a:hover {
   color: var(--yellow);
 }
@@ -90,17 +97,21 @@ nav a:hover {
   border: 0;
   color: white;
   font-size: 25px;
+  cursor: pointer;
 }
 
-/* HERO */
+/* =========================
+   HERO
+========================= */
 
 .hero {
   min-height: 650px;
   display: flex;
-  align-items: end;
+  align-items: flex-end;
+
   background:
-    linear-gradient(90deg, #000d, transparent),
-    linear-gradient(0deg, #050505, transparent 35%),
+    linear-gradient(90deg, rgba(0,0,0,.9), transparent 75%),
+    linear-gradient(0deg, #050505, transparent 45%),
     url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1800&q=85")
     center / cover;
 }
@@ -142,7 +153,9 @@ h1 em {
   margin-bottom: 28px;
 }
 
-/* BUTTONS */
+/* =========================
+   BUTTONS
+========================= */
 
 .btn {
   display: inline-block;
@@ -152,6 +165,7 @@ h1 em {
   font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
+  transition: .2s ease;
 }
 
 .yellow {
@@ -165,7 +179,9 @@ h1 em {
   color: #000;
 }
 
-/* CATEGORIES */
+/* =========================
+   CATEGORIES
+========================= */
 
 .cats {
   max-width: 1180px;
@@ -179,6 +195,7 @@ h1 em {
 .cats a {
   background: #0b0b0b;
   padding: 25px;
+  transition: .2s ease;
 }
 
 .cats a:hover {
@@ -200,7 +217,9 @@ h1 em {
   color: var(--muted);
 }
 
-/* SECTIONS */
+/* =========================
+   SECTIONS
+========================= */
 
 .section {
   max-width: 1180px;
@@ -220,7 +239,9 @@ h1 em {
   letter-spacing: -2px;
 }
 
-/* POSTS */
+/* =========================
+   POSTS
+========================= */
 
 .grid {
   display: grid;
@@ -231,6 +252,17 @@ h1 em {
 .post {
   background: var(--card);
   border: 1px solid #222;
+  overflow: hidden;
+  transition:
+    transform .25s ease,
+    border-color .25s ease,
+    background .25s ease;
+}
+
+.post:hover {
+  transform: translateY(-5px);
+  background: var(--card-hover);
+  border-color: #444;
 }
 
 .postImg {
@@ -238,10 +270,23 @@ h1 em {
   background-size: cover;
   background-position: center;
   position: relative;
+  overflow: hidden;
+}
+
+.postImg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 45%,
+    rgba(0,0,0,.45)
+  );
 }
 
 .tag {
   position: absolute;
+  z-index: 2;
   top: 14px;
   left: 14px;
   background: var(--yellow);
@@ -257,7 +302,7 @@ h1 em {
 
 .post h3 {
   font-size: 20px;
-  line-height: 1.15;
+  line-height: 1.2;
   margin: 0 0 10px;
 }
 
@@ -267,17 +312,105 @@ h1 em {
   margin: 0;
 }
 
-.post a,
-.yellowText {
+.postDate {
+  margin-top: 10px !important;
+  font-size: 11px !important;
+  color: #666 !important;
+}
+
+.post a {
   display: inline-block;
   margin-top: 17px;
   color: var(--yellow);
   font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
+  transition: color .2s ease;
 }
 
-/* NATURE */
+.post a:hover {
+  color: white;
+}
+
+/* =========================
+   EMPTY IMAGE
+========================= */
+
+.noImage {
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      #242424,
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      #161616,
+      #050505
+    ) !important;
+}
+
+.noImage::after {
+  content: "NATIONAL GEOGRAPHIC";
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  color: #333;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.loading {
+  grid-column: 1 / -1;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  color: #777;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid #222;
+  background: #0b0b0b;
+}
+
+/* =========================
+   LOAD MORE
+========================= */
+
+.loadMoreWrap {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+#loadMore {
+  border: 1px solid var(--yellow);
+  background: var(--yellow);
+  color: #000;
+  padding: 14px 25px;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+#loadMore:hover {
+  background: #fff;
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+
+/* =========================
+   NATURE BANNER
+========================= */
 
 .banner {
   min-height: 500px;
@@ -286,7 +419,7 @@ h1 em {
   padding: 70px max(20px, calc((100% - 1140px) / 2));
 
   background:
-    linear-gradient(90deg, #000d, transparent),
+    linear-gradient(90deg, rgba(0,0,0,.85), transparent),
     url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=85")
     center / cover;
 }
@@ -303,7 +436,9 @@ h1 em {
   color: #ccc;
 }
 
-/* TRAVEL */
+/* =========================
+   TRAVEL
+========================= */
 
 .travel {
   display: grid;
@@ -316,6 +451,12 @@ h1 em {
   border: 1px solid #222;
   padding: 25px;
   min-height: 200px;
+  transition: .25s ease;
+}
+
+.travel article:hover {
+  transform: translateY(-4px);
+  border-color: #444;
 }
 
 .travel article > b {
@@ -333,7 +474,9 @@ h1 em {
   color: var(--muted);
 }
 
-/* PLACE */
+/* =========================
+   PLACE
+========================= */
 
 .place {
   padding: 55px;
@@ -362,7 +505,18 @@ h1 em {
   white-space: nowrap;
 }
 
-/* PHOTOS */
+.yellowText {
+  display: inline-block;
+  margin-top: 17px;
+  color: var(--yellow);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+/* =========================
+   PHOTOS
+========================= */
 
 .photos {
   display: grid;
@@ -375,16 +529,20 @@ h1 em {
   background-size: cover;
   background-position: center;
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   padding: 20px;
   position: relative;
+  overflow: hidden;
 }
 
 .photo:after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(transparent 45%, #000b);
+  background: linear-gradient(
+    transparent 45%,
+    rgba(0,0,0,.75)
+  );
 }
 
 .photo b {
@@ -409,7 +567,9 @@ h1 em {
     url("https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=900&q=80");
 }
 
-/* ABOUT */
+/* =========================
+   ABOUT
+========================= */
 
 .about {
   border-block: 1px solid #222;
@@ -425,7 +585,9 @@ h1 em {
   max-width: 500px;
 }
 
-/* FOOTER */
+/* =========================
+   FOOTER
+========================= */
 
 footer {
   max-width: 1180px;
@@ -442,7 +604,9 @@ footer a {
   color: var(--yellow);
 }
 
-/* MOBILE */
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 800px) {
 
@@ -456,6 +620,7 @@ footer a {
     padding: 20px;
     flex-direction: column;
     gap: 18px;
+    border-bottom: 1px solid #222;
   }
 
   nav.open {
@@ -516,6 +681,10 @@ footer a {
   }
 }
 
+/* =========================
+   SMALL PHONES
+========================= */
+
 @media (max-width: 520px) {
 
   .cats,
@@ -538,5 +707,26 @@ footer a {
 
   .heading h2 {
     font-size: 32px;
+  }
+
+  .banner h2 {
+    letter-spacing: -2px;
+  }
+
+  .place h2 {
+    font-size: 34px;
+  }
+
+  .post h3 {
+    font-size: 18px;
+  }
+
+  .loadMoreWrap {
+    padding-top: 15px;
+  }
+
+  #loadMore {
+    width: 100%;
+    max-width: 280px;
   }
 }
