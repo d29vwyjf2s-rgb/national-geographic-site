@@ -1,22 +1,19 @@
 /* =========================================================
-   NATIONAL GEOGRAPHIC — SITE v4.0
-   API + PWA INSTALL + STANDALONE MODE
+   NATIONAL GEOGRAPHIC — VK FEED v5.1
+   Cloudflare Worker API
 ========================================================= */
 
 const API_URL =
   "https://national-geographic-backend.9dnwrczbz7.workers.dev/api/posts";
 
 const FAVORITES_KEY = "ng_favorites";
+const LIKES_KEY = "ng_likes";
 
 let allPosts = [];
-let visiblePosts = 6;
+let visiblePosts = 8;
 let activeCategory = "Все";
 let searchText = "";
 let isLoading = false;
-
-/* =========================================================
-   ELEMENTS
-========================================================= */
 
 const postsContainer = document.getElementById("posts");
 const featuredContainer = document.getElementById("featuredPost");
@@ -34,276 +31,73 @@ const menu = document.getElementById("menu");
 const links = document.getElementById("links");
 const mobileNav = document.getElementById("mobileNav");
 
-if (year) {
-  year.textContent = new Date().getFullYear();
-}
+if (year) year.textContent = new Date().getFullYear();
 
 /* =========================================================
-   PWA
-========================================================= */
-
-let deferredInstallPrompt = null;
-
-/*
-   Проверяем, установлено ли приложение
-*/
-function isStandaloneMode() {
-  return (
-    window.matchMedia("(display-mode: standalone)").matches ||
-    window.navigator.standalone === true ||
-    document.referrer.startsWith("android-app://")
-  );
-}
-
-/*
-   Создаём кнопку установки автоматически.
-   Никаких изменений HTML вручную не требуется.
-*/
-function createInstallUI() {
-  if (document.getElementById("pwaInstallBox")) return;
-
-  const box = document.createElement("div");
-  box.id = "pwaInstallBox";
-
-  box.innerHTML = `
-    <div class="pwaInstallInner">
-      <div class="pwaInstallIcon">NG</div>
-
-      <div class="pwaInstallText">
-        <strong>National Geographic</strong>
-        <span>Установите приложение на устройство</span>
-      </div>
-
-      <button id="pwaInstallButton">
-        УСТАНОВИТЬ
-      </button>
-
-      <button id="pwaInstallClose" aria-label="Закрыть">
-        ×
-      </button>
-    </div>
-  `;
-
-  document.body.appendChild(box);
-
-  const installButton = document.getElementById("pwaInstallButton");
-  const closeButton = document.getElementById("pwaInstallClose");
-
-  if (installButton) {
-    installButton.addEventListener("click", installPWA);
-  }
-
-  if (closeButton) {
-    closeButton.addEventListener("click", () => {
-      box.classList.remove("show");
-
-      localStorage.setItem(
-        "ng_pwa_install_hidden",
-        Date.now().toString()
-      );
-    });
-  }
-}
-
-/*
-   Показываем кнопку установки
-*/
-function showInstallPrompt() {
-  if (isStandaloneMode()) return;
-
-  const box = document.getElementById("pwaInstallBox");
-
-  if (!box) return;
-
-  const hiddenAt = Number(
-    localStorage.getItem("ng_pwa_install_hidden") || 0
-  );
-
-  /*
-     Если пользователь закрыл предложение,
-     не показываем его снова 24 часа.
-  */
-  if (hiddenAt && Date.now() - hiddenAt < 86400000) {
-    return;
-  }
-
-  box.classList.add("show");
-}
-
-/*
-   Запуск установки
-*/
-async function installPWA() {
-  if (!deferredInstallPrompt) {
-    showManualInstallInfo();
-    return;
-  }
-
-  deferredInstallPrompt.prompt();
-
-  const result = await deferredInstallPrompt.userChoice;
-
-  if (result.outcome === "accepted") {
-    console.log("National Geographic: установка принята");
-  } else {
-    console.log("National Geographic: установка отменена");
-  }
-
-  deferredInstallPrompt = null;
-
-  const box = document.getElementById("pwaInstallBox");
-
-  if (box) {
-    box.classList.remove("show");
-  }
-}
-
-/*
-   Если браузер не дал автоматическое окно,
-   показываем подсказку.
-*/
-function showManualInstallInfo() {
-  const message = `
-Чтобы установить National Geographic:
-
-Android:
-Chrome → меню ⋮ → Добавить на главный экран
-или
-Chrome → Установить приложение
-
-После установки сайт будет работать как отдельное приложение.
-  `.trim();
-
-  alert(message);
-}
-
-/*
-   Слушаем событие браузера PWA
-*/
-window.addEventListener("beforeinstallprompt", event => {
-  event.preventDefault();
-
-  deferredInstallPrompt = event;
-
-  createInstallUI();
-
-  setTimeout(() => {
-    showInstallPrompt();
-  }, 1800);
-});
-
-/*
-   После успешной установки
-*/
-window.addEventListener("appinstalled", () => {
-  deferredInstallPrompt = null;
-
-  const box = document.getElementById("pwaInstallBox");
-
-  if (box) {
-    box.classList.remove("show");
-  }
-
-  localStorage.setItem(
-    "ng_pwa_installed",
-    "true"
-  );
-
-  console.log("National Geographic установлен");
-});
-
-/*
-   Показываем статус установленного приложения
-*/
-function setupStandaloneMode() {
-  if (!isStandaloneMode()) return;
-
-  document.body.classList.add("pwaStandalone");
-
-  createStandaloneBadge();
-}
-
-/*
-   Индикатор установленного приложения
-*/
-function createStandaloneBadge() {
-  if (document.getElementById("pwaStandaloneBadge")) return;
-
-  const badge = document.createElement("div");
-
-  badge.id = "pwaStandaloneBadge";
-
-  badge.innerHTML = `
-    <span></span>
-    ПРИЛОЖЕНИЕ АКТИВНО
-  `;
-
-  document.body.appendChild(badge);
-
-  setTimeout(() => {
-    badge.classList.add("visible");
-  }, 800);
-
-  setTimeout(() => {
-    badge.classList.remove("visible");
-  }, 4500);
-}
-
-/*
-   Если приложение уже установлено,
-   не показываем предложение установки.
-*/
-function hideInstallIfStandalone() {
-  if (!isStandaloneMode()) return;
-
-  const box = document.getElementById("pwaInstallBox");
-
-  if (box) {
-    box.remove();
-  }
-}
-
-/* =========================================================
-   FAVORITES
+   LOCAL DATA
 ========================================================= */
 
 function getFavorites() {
   try {
-    return JSON.parse(
-      localStorage.getItem(FAVORITES_KEY) || "[]"
-    );
+    return JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]");
   } catch {
     return [];
   }
 }
 
 function saveFavorites(list) {
-  localStorage.setItem(
-    FAVORITES_KEY,
-    JSON.stringify(list)
-  );
+  localStorage.setItem(FAVORITES_KEY, JSON.stringify(list));
 }
 
 function isFavorite(id) {
   return getFavorites().includes(String(id));
 }
 
+function getLikes() {
+  try {
+    return JSON.parse(localStorage.getItem(LIKES_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveLikes(list) {
+  localStorage.setItem(LIKES_KEY, JSON.stringify(list));
+}
+
+function isLiked(id) {
+  return getLikes().includes(String(id));
+}
+
 function toggleFavorite(id) {
   const favorites = getFavorites();
-  const stringId = String(id);
-
-  const index = favorites.indexOf(stringId);
+  const value = String(id);
+  const index = favorites.indexOf(value);
 
   if (index >= 0) {
     favorites.splice(index, 1);
   } else {
-    favorites.push(stringId);
+    favorites.push(value);
   }
 
   saveFavorites(favorites);
-
   renderPosts();
   renderFeaturedPost();
+}
+
+function toggleLike(id) {
+  const likes = getLikes();
+  const value = String(id);
+  const index = likes.indexOf(value);
+
+  if (index >= 0) {
+    likes.splice(index, 1);
+  } else {
+    likes.push(value);
+  }
+
+  saveLikes(likes);
+  renderPosts();
 }
 
 /* =========================================================
@@ -351,18 +145,30 @@ function formatDate(timestamp) {
     return "";
   }
 
-  return date.toLocaleDateString(
-    "ru-RU",
-    {
-      day: "2-digit",
-      month: "long",
-      year: "numeric"
-    }
-  );
+  return date.toLocaleDateString("ru-RU", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+  });
+}
+
+function formatTime(timestamp) {
+  if (!timestamp) return "";
+
+  const date = new Date(Number(timestamp) * 1000);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return date.toLocaleTimeString("ru-RU", {
+    hour: "2-digit",
+    minute: "2-digit"
+  });
 }
 
 /* =========================================================
-   VK
+   VK LINK
 ========================================================= */
 
 function getPostLink(post) {
@@ -377,12 +183,7 @@ function getPostLink(post) {
     const postId = parts[1];
 
     if (ownerId && postId) {
-      return (
-        "https://vk.com/wall" +
-        ownerId +
-        "_" +
-        postId
-      );
+      return "https://vk.com/wall" + ownerId + "_" + postId;
     }
   }
 
@@ -505,9 +306,7 @@ function detectCategory(post) {
   let bestCategory = "Мир";
   let bestScore = 0;
 
-  for (const [category, words] of Object.entries(
-    categoryKeywords
-  )) {
+  for (const [category, words] of Object.entries(categoryKeywords)) {
     let score = 0;
 
     words.forEach(word => {
@@ -547,8 +346,7 @@ function getFilteredPosts() {
   return allPosts.filter(post => {
     const category = detectCategory(post);
 
-    const text = cleanText(post.text)
-      .toLowerCase();
+    const text = cleanText(post.text).toLowerCase();
 
     const searchMatch =
       !searchText ||
@@ -561,8 +359,9 @@ function getFilteredPosts() {
 
     if (activeCategory !== "Все") {
       if (activeCategory === "Избранное") {
-        categoryMatch =
-          favorites.includes(String(post.id));
+        categoryMatch = favorites.includes(
+          String(post.id)
+        );
       } else {
         categoryMatch =
           category === activeCategory;
@@ -574,6 +373,188 @@ function getFilteredPosts() {
 }
 
 /* =========================================================
+   VK POST HEADER
+========================================================= */
+
+function postHeader(post) {
+  const date = formatDate(post.post_date);
+  const time = formatTime(post.post_date);
+
+  return `
+    <div class="vkPostHeader">
+
+      <div class="vkPostIdentity">
+
+        <div class="vkCommunityAvatar">
+          <span>NG</span>
+        </div>
+
+        <div class="vkPostAuthor">
+
+          <div class="vkAuthorLine">
+            <strong>National Geographic</strong>
+            <span class="verifiedBadge">✓</span>
+          </div>
+
+          <div class="vkPostDate">
+            ${escapeHtml(date)}
+            ${time ? " · " + escapeHtml(time) : ""}
+          </div>
+
+        </div>
+
+      </div>
+
+      <button
+        class="vkPostMenu"
+        type="button"
+        onclick="showPostMenu(${Number(post.id)})"
+        aria-label="Меню"
+      >
+        •••
+      </button>
+
+    </div>
+  `;
+}
+
+/* =========================================================
+   VK POST
+========================================================= */
+
+function createPost(post) {
+  const text = cleanText(post.text);
+  const image = getImage(post);
+  const category = detectCategory(post);
+  const favorite = isFavorite(post.id);
+  const liked = isLiked(post.id);
+  const link = getPostLink(post);
+
+  const likeIcon = liked ? "♥" : "♡";
+
+  return `
+    <article
+      class="vkPost"
+      data-post-id="${Number(post.id)}"
+    >
+
+      ${postHeader(post)}
+
+      <div class="vkPostContent">
+
+        ${
+          text
+            ? `
+              <div class="vkPostText">
+                ${escapeHtml(text).replace(/\n/g, "<br>")}
+              </div>
+            `
+            : `
+              <div class="vkPostText emptyPostText">
+                Новый материал National Geographic
+              </div>
+            `
+        }
+
+        <div class="vkPostCategory">
+          <span>
+            ${categoryIcon(category)}
+            ${escapeHtml(category)}
+          </span>
+        </div>
+
+        ${
+          image
+            ? `
+              <div
+                class="vkPostImage"
+                onclick="openPost(${Number(post.id)})"
+              >
+                <img
+                  src="${escapeHtml(image)}"
+                  alt="${escapeHtml(
+                    truncateText(
+                      text || category,
+                      100
+                    )
+                  )}"
+                  loading="lazy"
+                  onerror="
+                    this.parentElement.classList.add('imageError');
+                    this.remove();
+                  "
+                />
+              </div>
+            `
+            : `
+              <div
+                class="vkPostNoImage"
+                onclick="openPost(${Number(post.id)})"
+              >
+                <div class="vkPostNoImageLogo">
+                  <span>NATIONAL</span>
+                  <strong>GEOGRAPHIC</strong>
+                </div>
+
+                <div class="vkPostNoImageIcon">
+                  ${categoryIcon(category)}
+                </div>
+              </div>
+            `
+        }
+
+      </div>
+
+      <div class="vkPostActions">
+
+        <button
+          class="vkAction ${liked ? "liked" : ""}"
+          onclick="toggleLike(${Number(post.id)})"
+          type="button"
+        >
+          <span class="vkActionIcon">${likeIcon}</span>
+          <span>Нравится</span>
+        </button>
+
+        <button
+          class="vkAction"
+          onclick="sharePost(${Number(post.id)})"
+          type="button"
+        >
+          <span class="vkActionIcon">↗</span>
+          <span>Поделиться</span>
+        </button>
+
+        <button
+          class="vkAction ${favorite ? "favoriteActive" : ""}"
+          onclick="toggleFavorite(${Number(post.id)})"
+          type="button"
+        >
+          <span class="vkActionIcon">
+            ${favorite ? "★" : "☆"}
+          </span>
+          <span>
+            ${favorite ? "Сохранено" : "Сохранить"}
+          </span>
+        </button>
+
+        <a
+          class="vkAction vkOpenAction"
+          href="${escapeHtml(link)}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="vkActionIcon">VK</span>
+          <span>Открыть</span>
+        </a>
+
+      </div>
+
+    </article>
+  `;
+}
+
+/* =========================================================
    FEATURED
 ========================================================= */
 
@@ -581,8 +562,11 @@ function renderFeaturedPost() {
   if (!featuredContainer) return;
 
   if (!allPosts.length) {
-    featuredContainer.innerHTML =
-      `<div class="emptyState">Пока нет публикаций</div>`;
+    featuredContainer.innerHTML = `
+      <div class="emptyState">
+        Пока нет публикаций
+      </div>
+    `;
 
     return;
   }
@@ -592,33 +576,32 @@ function renderFeaturedPost() {
   const text = cleanText(post.text);
   const image = getImage(post);
   const category = detectCategory(post);
-  const favorite = isFavorite(post.id);
   const link = getPostLink(post);
 
   featuredContainer.innerHTML = `
     <article class="featuredCard">
 
-      <div class="featuredImage">
-
-        ${
-          image
-            ? `
+      ${
+        image
+          ? `
+            <div
+              class="featuredImage"
+              onclick="openPost(${Number(post.id)})"
+            >
               <img
                 src="${escapeHtml(image)}"
                 alt="${escapeHtml(
-                  truncateText(text, 80)
+                  truncateText(text, 100)
                 )}"
-                loading="eager"
-              >
-            `
-            : `
-              <div class="featuredPlaceholder">
-                <span>${categoryIcon(category)}</span>
-              </div>
-            `
-        }
-
-      </div>
+              />
+            </div>
+          `
+          : `
+            <div class="featuredImage featuredPlaceholder">
+              <span>${categoryIcon(category)}</span>
+            </div>
+          `
+      }
 
       <div class="featuredContent">
 
@@ -629,7 +612,9 @@ function renderFeaturedPost() {
           </span>
 
           <span>
-            ${formatDate(post.post_date)}
+            ${escapeHtml(
+              formatDate(post.post_date)
+            )}
           </span>
         </div>
 
@@ -637,7 +622,7 @@ function renderFeaturedPost() {
           ${escapeHtml(
             truncateText(
               text || "Новый материал",
-              140
+              150
             )
           )}
         </h3>
@@ -646,7 +631,7 @@ function renderFeaturedPost() {
           ${escapeHtml(
             truncateText(
               text ||
-              "Откройте публикацию, чтобы узнать больше.",
+                "Откройте публикацию, чтобы узнать больше.",
               260
             )
           )}
@@ -661,140 +646,11 @@ function renderFeaturedPost() {
             ЧИТАТЬ →
           </button>
 
-          <button
-            class="favoriteButton ${
-              favorite ? "active" : ""
-            }"
-            onclick="toggleFavorite(${Number(post.id)})"
-          >
-            ${favorite ? "★" : "☆"}
-          </button>
-
           <a
             class="vkButton"
             href="${escapeHtml(link)}"
             target="_blank"
             rel="noopener noreferrer"
-          >
-            VK ↗
-          </a>
-
-        </div>
-
-      </div>
-
-    </article>
-  `;
-}
-
-/* =========================================================
-   CARD
-========================================================= */
-
-function createPost(post) {
-  const text = cleanText(post.text);
-  const image = getImage(post);
-  const category = detectCategory(post);
-  const favorite = isFavorite(post.id);
-  const link = getPostLink(post);
-
-  return `
-    <article
-      class="card"
-      data-post-id="${Number(post.id)}"
-    >
-
-      <div
-        class="cardImage"
-        onclick="openPost(${Number(post.id)})"
-      >
-
-        ${
-          image
-            ? `
-              <img
-                src="${escapeHtml(image)}"
-                alt="${escapeHtml(
-                  truncateText(text, 80)
-                )}"
-                loading="lazy"
-                onerror="
-                  this.parentElement.classList.add('imageError');
-                  this.remove();
-                "
-              >
-            `
-            : `
-              <div class="cardPlaceholder">
-                <span>
-                  ${categoryIcon(category)}
-                </span>
-
-                <small>
-                  NATIONAL GEOGRAPHIC
-                </small>
-              </div>
-            `
-        }
-
-        <div class="cardCategory">
-          ${categoryIcon(category)}
-          ${escapeHtml(category)}
-        </div>
-
-        <button
-          class="cardFavorite ${
-            favorite ? "active" : ""
-          }"
-          onclick="
-            event.stopPropagation();
-            toggleFavorite(${Number(post.id)});
-          "
-        >
-          ${favorite ? "★" : "☆"}
-        </button>
-
-      </div>
-
-      <div class="cardBody">
-
-        <div class="cardDate">
-          ${formatDate(post.post_date)}
-        </div>
-
-        <h3 onclick="openPost(${Number(post.id)})">
-          ${escapeHtml(
-            truncateText(
-              text || "Без названия",
-              120
-            )
-          )}
-        </h3>
-
-        <p>
-          ${escapeHtml(
-            truncateText(
-              text ||
-              "Откройте материал, чтобы узнать подробности.",
-              190
-            )
-          )}
-        </p>
-
-        <div class="cardFooter">
-
-          <button
-            class="moreButton"
-            onclick="openPost(${Number(post.id)})"
-          >
-            СМОТРЕТЬ →
-          </button>
-
-          <a
-            href="${escapeHtml(link)}"
-            target="_blank"
-            rel="noopener noreferrer"
-            onclick="event.stopPropagation();"
           >
             VK ↗
           </a>
@@ -817,21 +673,15 @@ function renderPosts() {
   const filtered = getFilteredPosts();
 
   if (resultCount) {
-    resultCount.textContent =
-      filtered.length;
+    resultCount.textContent = filtered.length;
   }
 
   if (!filtered.length) {
     postsContainer.innerHTML = `
       <div class="emptyState">
+        <div class="emptyIcon">🔎</div>
 
-        <div class="emptyIcon">
-          🔎
-        </div>
-
-        <h3>
-          Ничего не найдено
-        </h3>
+        <h3>Ничего не найдено</h3>
 
         <p>
           Попробуйте изменить поиск
@@ -841,15 +691,16 @@ function renderPosts() {
         <button onclick="resetFilters()">
           СБРОСИТЬ ФИЛЬТРЫ
         </button>
-
       </div>
     `;
 
     return;
   }
 
-  const posts =
-    filtered.slice(0, visiblePosts);
+  const posts = filtered.slice(
+    0,
+    visiblePosts
+  );
 
   postsContainer.innerHTML =
     posts.map(createPost).join("");
@@ -862,7 +713,7 @@ function renderPosts() {
           class="loadMore"
           onclick="loadMorePosts()"
         >
-          ЗАГРУЗИТЬ ЕЩЁ
+          ПОКАЗАТЬ ЕЩЁ
         </button>
 
         <span>
@@ -876,14 +727,14 @@ function renderPosts() {
 }
 
 function loadMorePosts() {
-  visiblePosts += 6;
+  visiblePosts += 8;
   renderPosts();
 }
 
 function resetFilters() {
   activeCategory = "Все";
   searchText = "";
-  visiblePosts = 6;
+  visiblePosts = 8;
 
   if (postSearch) {
     postSearch.value = "";
@@ -902,6 +753,84 @@ function resetFilters() {
 }
 
 /* =========================================================
+   POST MENU
+========================================================= */
+
+function showPostMenu(id) {
+  const post = allPosts.find(
+    item => Number(item.id) === Number(id)
+  );
+
+  if (!post) return;
+
+  const existing =
+    document.querySelector(".vkPostMenuPopup");
+
+  if (existing) {
+    existing.remove();
+  }
+
+  const popup = document.createElement("div");
+
+  popup.className = "vkPostMenuPopup";
+
+  popup.innerHTML = `
+    <button
+      onclick="sharePost(${Number(post.id)}); closePostMenu();"
+    >
+      ↗ Поделиться
+    </button>
+
+    <button
+      onclick="copyPostLink(${Number(post.id)}); closePostMenu();"
+    >
+      ⧉ Скопировать ссылку
+    </button>
+
+    <button
+      onclick="toggleFavorite(${Number(post.id)}); closePostMenu();"
+    >
+      ☆ Сохранить
+    </button>
+  `;
+
+  document.body.appendChild(popup);
+
+  requestAnimationFrame(() => {
+    popup.classList.add("show");
+  });
+
+  setTimeout(() => {
+    document.addEventListener(
+      "click",
+      closeMenuOnOutside,
+      { once: true }
+    );
+  }, 50);
+}
+
+function closeMenuOnOutside(event) {
+  const popup =
+    document.querySelector(".vkPostMenuPopup");
+
+  if (
+    popup &&
+    !popup.contains(event.target)
+  ) {
+    closePostMenu();
+  }
+}
+
+function closePostMenu() {
+  const popup =
+    document.querySelector(".vkPostMenuPopup");
+
+  if (!popup) return;
+
+  popup.remove();
+}
+
+/* =========================================================
    MODAL
 ========================================================= */
 
@@ -916,6 +845,7 @@ function openPost(id) {
   const image = getImage(post);
   const category = detectCategory(post);
   const favorite = isFavorite(post.id);
+  const liked = isLiked(post.id);
   const link = getPostLink(post);
 
   const modal =
@@ -930,7 +860,7 @@ function openPost(id) {
     ></div>
 
     <div
-      class="modalWindow"
+      class="modalWindow vkModalWindow"
       role="dialog"
       aria-modal="true"
     >
@@ -938,9 +868,34 @@ function openPost(id) {
       <button
         class="modalClose"
         onclick="closePostModal()"
+        aria-label="Закрыть"
       >
         ×
       </button>
+
+      <div class="vkModalHeader">
+
+        <div class="vkCommunityAvatar">
+          <span>NG</span>
+        </div>
+
+        <div>
+          <strong>
+            National Geographic
+          </strong>
+
+          <span class="verifiedBadge">
+            ✓
+          </span>
+
+          <small>
+            ${escapeHtml(
+              formatDate(post.post_date)
+            )}
+          </small>
+        </div>
+
+      </div>
 
       ${
         image
@@ -951,7 +906,7 @@ function openPost(id) {
                 alt="${escapeHtml(
                   truncateText(text, 100)
                 )}"
-              >
+              />
             </div>
           `
           : `
@@ -975,28 +930,47 @@ function openPost(id) {
           </span>
 
           <span>
-            ${formatDate(post.post_date)}
+            ${escapeHtml(
+              formatTime(post.post_date)
+            )}
           </span>
 
         </div>
 
-        <h2>
-          ${escapeHtml(
-            truncateText(
-              text || "National Geographic",
-              180
-            )
-          )}
-        </h2>
-
         <div class="modalText">
           ${escapeHtml(
             text ||
-            "Подробная информация о публикации."
-          )}
+              "Подробная информация о публикации."
+          ).replace(/\n/g, "<br>")}
         </div>
 
         <div class="modalActions">
+
+          <button
+            class="favoriteLarge ${
+              liked ? "active" : ""
+            }"
+            onclick="
+              toggleLike(${Number(post.id)});
+              refreshOpenModal(${Number(post.id)});
+            "
+          >
+            ${liked ? "♥ Нравится" : "♡ Нравится"}
+          </button>
+
+          <button
+            class="shareButton"
+            onclick="sharePost(${Number(post.id)})"
+          >
+            ↗ Поделиться
+          </button>
+
+          <button
+            class="copyButton"
+            onclick="copyPostLink(${Number(post.id)})"
+          >
+            ⧉ Скопировать
+          </button>
 
           <button
             class="favoriteLarge ${
@@ -1007,29 +981,7 @@ function openPost(id) {
               refreshOpenModal(${Number(post.id)});
             "
           >
-            ${
-              favorite
-                ? "★ В избранном"
-                : "☆ В избранное"
-            }
-          </button>
-
-          <button
-            class="shareButton"
-            onclick="
-              sharePost(${Number(post.id)})
-            "
-          >
-            ↗ Поделиться
-          </button>
-
-          <button
-            class="copyButton"
-            onclick="
-              copyPostLink(${Number(post.id)})
-            "
-          >
-            ⧉ Скопировать
+            ${favorite ? "★ Сохранено" : "☆ Сохранить"}
           </button>
 
           <a
@@ -1085,7 +1037,6 @@ function closePostModal() {
 
   setTimeout(() => {
     modal.remove();
-
     document.body.classList.remove(
       "modalOpen"
     );
@@ -1118,16 +1069,18 @@ async function sharePost(id) {
 
   const link = getPostLink(post);
 
-  const title = truncateText(
-    cleanText(post.text) ||
-    "National Geographic",
-    100
-  );
+  const title =
+    truncateText(
+      cleanText(post.text) ||
+        "National Geographic",
+      100
+    );
 
   if (navigator.share) {
     try {
       await navigator.share({
-        title: "National Geographic",
+        title:
+          "National Geographic",
         text: title,
         url: link
       });
@@ -1150,9 +1103,9 @@ async function copyPostLink(id) {
 
   if (!post) return;
 
-  const link = getPostLink(post);
-
-  await copyText(link);
+  await copyText(
+    getPostLink(post)
+  );
 
   showViewerStatus(
     "Ссылка скопирована"
@@ -1168,10 +1121,11 @@ async function copyText(text) {
     return true;
   } catch {
     const textarea =
-      document.createElement("textarea");
+      document.createElement(
+        "textarea"
+      );
 
     textarea.value = text;
-
     textarea.style.position = "fixed";
     textarea.style.opacity = "0";
 
@@ -1183,7 +1137,6 @@ async function copyText(text) {
 
     try {
       document.execCommand("copy");
-
       textarea.remove();
 
       return true;
@@ -1204,7 +1157,6 @@ function showViewerStatus(message) {
   if (!status) return;
 
   status.textContent = message;
-
   status.classList.add("show");
 
   setTimeout(() => {
@@ -1224,22 +1176,22 @@ function renderGallery() {
       Boolean(getImage(post))
     );
 
-  if (photosCount) {
-    photosCount.textContent =
-      photoPosts.length;
-  }
+  document
+    .querySelectorAll("[data-photo-count]")
+    .forEach(element => {
+      element.textContent =
+        photoPosts.length;
+    });
 
   if (!photoPosts.length) {
     photoGallery.innerHTML = `
       <div class="galleryEmpty">
-
         <span>📷</span>
 
         <p>
           Фотографии появятся вместе
           с новыми публикациями.
         </p>
-
       </div>
     `;
 
@@ -1250,43 +1202,53 @@ function renderGallery() {
     photoPosts.slice(0, 12);
 
   photoGallery.innerHTML =
-    gallery.map((post, index) => {
-      const image = getImage(post);
-      const category =
-        detectCategory(post);
+    gallery
+      .map((post, index) => {
+        const image =
+          getImage(post);
 
-      return `
-        <button
-          class="photoItem photoItem${index + 1}"
-          onclick="openPost(${Number(post.id)})"
-        >
+        const category =
+          detectCategory(post);
 
-          <img
-            src="${escapeHtml(image)}"
-            alt="${escapeHtml(
-              truncateText(
-                post.text || category,
-                80
-              )
-            )}"
-            loading="lazy"
+        return `
+          <button
+            class="photoItem photoItem${
+              index + 1
+            }"
+            onclick="
+              openPost(${Number(post.id)})
+            "
+            aria-label="Открыть фотографию"
           >
 
-          <span class="photoOverlay">
+            <img
+              src="${escapeHtml(image)}"
+              alt="${escapeHtml(
+                truncateText(
+                  post.text ||
+                    category,
+                  80
+                )
+              )}"
+              loading="lazy"
+            />
 
-            <strong>
-              ${categoryIcon(category)}
-            </strong>
+            <span class="photoOverlay">
 
-            <small>
-              ${escapeHtml(category)}
-            </small>
+              <strong>
+                ${categoryIcon(category)}
+              </strong>
 
-          </span>
+              <small>
+                ${escapeHtml(category)}
+              </small>
 
-        </button>
-      `;
-    }).join("");
+            </span>
+
+          </button>
+        `;
+      })
+      .join("");
 }
 
 /* =========================================================
@@ -1301,7 +1263,9 @@ function updateStats() {
 
   if (categoriesCount) {
     categoriesCount.textContent =
-      Object.keys(categoryKeywords).length;
+      Object.keys(
+        categoryKeywords
+      ).length;
   }
 
   const photoCount =
@@ -1309,11 +1273,22 @@ function updateStats() {
       Boolean(getImage(post))
     ).length;
 
+  document
+    .querySelectorAll("[data-photo-count]")
+    .forEach(element => {
+      element.textContent =
+        photoCount;
+    });
+
   if (photosCount) {
     photosCount.textContent =
       photoCount;
   }
 }
+
+/* =========================================================
+   REFRESH
+========================================================= */
 
 function updateRefreshTime() {
   if (!refreshTime) return;
@@ -1342,23 +1317,27 @@ async function loadPosts() {
 
   if (refreshButton) {
     refreshButton.disabled = true;
-    refreshButton.classList.add("loading");
+    refreshButton.classList.add(
+      "loading"
+    );
   }
 
   try {
-    const response = await fetch(
-      API_URL +
-      "?t=" +
-      Date.now(),
-      {
-        method: "GET",
-        cache: "no-store"
-      }
-    );
+    const response =
+      await fetch(
+        API_URL +
+          "?t=" +
+          Date.now(),
+        {
+          method: "GET",
+          cache: "no-store"
+        }
+      );
 
     if (!response.ok) {
       throw new Error(
-        "HTTP " + response.status
+        "HTTP " +
+          response.status
       );
     }
 
@@ -1367,7 +1346,9 @@ async function loadPosts() {
 
     if (
       !data ||
-      !Array.isArray(data.posts)
+      !Array.isArray(
+        data.posts
+      )
     ) {
       throw new Error(
         "Неверный формат API"
@@ -1379,11 +1360,15 @@ async function loadPosts() {
         .filter(Boolean)
         .sort(
           (a, b) =>
-            Number(b.post_date || 0) -
-            Number(a.post_date || 0)
+            Number(
+              b.post_date || 0
+            ) -
+            Number(
+              a.post_date || 0
+            )
         );
 
-    visiblePosts = 6;
+    visiblePosts = 8;
 
     updateStats();
     renderFeaturedPost();
@@ -1417,9 +1402,7 @@ async function loadPosts() {
             и попробуйте обновить страницу.
           </p>
 
-          <button
-            onclick="loadPosts()"
-          >
+          <button onclick="loadPosts()">
             ПОВТОРИТЬ
           </button>
 
@@ -1461,7 +1444,7 @@ function setupCategoryButtons() {
             button.dataset.category ||
             "Все";
 
-          visiblePosts = 6;
+          visiblePosts = 8;
 
           document
             .querySelectorAll(
@@ -1495,7 +1478,7 @@ function setupSearch() {
       searchText =
         event.target.value.trim();
 
-      visiblePosts = 6;
+      visiblePosts = 8;
 
       renderPosts();
     }
@@ -1520,10 +1503,13 @@ function setupCategoryCards() {
           event.preventDefault();
 
           const category =
-            card.dataset.jumpCategory;
+            card.dataset
+              .jumpCategory;
 
-          activeCategory = category;
-          visiblePosts = 6;
+          activeCategory =
+            category;
+
+          visiblePosts = 8;
 
           document
             .querySelectorAll(
@@ -1532,8 +1518,9 @@ function setupCategoryCards() {
             .forEach(button => {
               button.classList.toggle(
                 "active",
-                button.dataset.category ===
-                category
+                button.dataset
+                  .category ===
+                  category
               );
             });
 
@@ -1567,12 +1554,13 @@ function setupMobileMenu() {
     "click",
     () => {
 
-      links.classList.toggle("open");
+      links.classList.toggle(
+        "open"
+      );
 
       menu.classList.toggle(
         "active"
       );
-
     }
   );
 
@@ -1591,7 +1579,6 @@ function setupMobileMenu() {
           menu.classList.remove(
             "active"
           );
-
         }
       );
 
@@ -1599,7 +1586,7 @@ function setupMobileMenu() {
 }
 
 /* =========================================================
-   MOBILE NAV
+   MOBILE NAVIGATION
 ========================================================= */
 
 function setupMobileNavigation() {
@@ -1619,7 +1606,8 @@ function setupMobileNavigation() {
         event.preventDefault();
 
         const targetId =
-          item.dataset.mobileTarget;
+          item.dataset
+            .mobileTarget;
 
         const target =
           document.getElementById(
@@ -1628,13 +1616,16 @@ function setupMobileNavigation() {
 
         if (!target) return;
 
-        items.forEach(navItem => {
-          navItem.classList.remove(
-            "active"
-          );
-        });
+        items.forEach(
+          navItem =>
+            navItem.classList.remove(
+              "active"
+            )
+        );
 
-        item.classList.add("active");
+        item.classList.add(
+          "active"
+        );
 
         target.scrollIntoView({
           behavior: "smooth",
@@ -1668,29 +1659,32 @@ function updateMobileNavigation() {
 
   const scrollPosition =
     window.scrollY +
-    window.innerHeight * 0.35;
+    window.innerHeight *
+      0.35;
 
   sections.forEach(id => {
 
     const section =
-      document.getElementById(id);
+      document.getElementById(
+        id
+      );
 
     if (
       section &&
       section.offsetTop <=
-      scrollPosition
+        scrollPosition
     ) {
       current = id;
     }
-
   });
 
   items.forEach(item => {
 
     item.classList.toggle(
       "active",
-      item.dataset.mobileTarget ===
-      current
+      item.dataset
+        .mobileTarget ===
+        current
     );
 
   });
@@ -1713,7 +1707,9 @@ function setupBackToTop() {
       );
 
     },
-    { passive: true }
+    {
+      passive: true
+    }
   );
 
   backToTop.addEventListener(
@@ -1777,12 +1773,17 @@ function setupGeographyMap() {
   points.forEach(point => {
 
     const key =
-      Array.from(point.classList)
-        .find(className =>
-          className.startsWith("point")
-        );
+      Array.from(
+        point.classList
+      ).find(
+        className =>
+          className.startsWith(
+            "point"
+          )
+      );
 
-    const data = places[key];
+    const data =
+      places[key];
 
     if (!data) return;
 
@@ -1840,7 +1841,9 @@ function showMapTooltip(
   removeMapTooltip(map);
 
   const tooltip =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   tooltip.className =
     "geoTooltip";
@@ -1863,12 +1866,12 @@ function showMapTooltip(
   const mapRect =
     map.getBoundingClientRect();
 
-  let left =
+  const left =
     pointRect.left -
     mapRect.left +
     pointRect.width / 2;
 
-  let top =
+  const top =
     pointRect.top -
     mapRect.top -
     12;
@@ -1941,7 +1944,6 @@ function setupSmoothLinks() {
             behavior: "smooth",
             block: "start"
           });
-
         }
       );
 
@@ -1949,15 +1951,11 @@ function setupSmoothLinks() {
 }
 
 /* =========================================================
-   SERVICE WORKER
+   PWA
 ========================================================= */
 
-function registerServiceWorker() {
+function registerPWA() {
   if (!("serviceWorker" in navigator)) {
-    console.log(
-      "Service Worker не поддерживается"
-    );
-
     return;
   }
 
@@ -1967,21 +1965,16 @@ function registerServiceWorker() {
 
       navigator.serviceWorker
         .register("./sw.js")
-        .then(registration => {
-
+        .then(() => {
           console.log(
-            "National Geographic PWA активирован",
-            registration.scope
+            "National Geographic PWA активирован"
           );
-
         })
         .catch(error => {
-
           console.error(
-            "PWA error:",
+            "PWA:",
             error
           );
-
         });
 
     }
@@ -1989,7 +1982,7 @@ function registerServiceWorker() {
 }
 
 /* =========================================================
-   VISIBILITY / AUTO UPDATE
+   EVENTS
 ========================================================= */
 
 document.addEventListener(
@@ -2014,7 +2007,9 @@ setInterval(
 window.addEventListener(
   "scroll",
   updateMobileNavigation,
-  { passive: true }
+  {
+    passive: true
+  }
 );
 
 if (refreshButton) {
@@ -2040,11 +2035,7 @@ document.addEventListener(
     setupBackToTop();
     setupGeographyMap();
     setupSmoothLinks();
-
-    createInstallUI();
-    setupStandaloneMode();
-    hideInstallIfStandalone();
-    registerServiceWorker();
+    registerPWA();
 
     loadPosts();
 
@@ -2056,11 +2047,32 @@ document.addEventListener(
 ========================================================= */
 
 window.openPost = openPost;
-window.closePostModal = closePostModal;
-window.toggleFavorite = toggleFavorite;
-window.sharePost = sharePost;
-window.copyPostLink = copyPostLink;
-window.loadMorePosts = loadMorePosts;
-window.resetFilters = resetFilters;
-window.loadPosts = loadPosts;
-window.installPWA = installPWA;
+window.closePostModal =
+  closePostModal;
+
+window.toggleFavorite =
+  toggleFavorite;
+
+window.toggleLike =
+  toggleLike;
+
+window.sharePost =
+  sharePost;
+
+window.copyPostLink =
+  copyPostLink;
+
+window.loadMorePosts =
+  loadMorePosts;
+
+window.resetFilters =
+  resetFilters;
+
+window.loadPosts =
+  loadPosts;
+
+window.showPostMenu =
+  showPostMenu;
+
+window.closePostMenu =
+  closePostMenu;
