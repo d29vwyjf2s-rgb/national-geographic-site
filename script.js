@@ -1,10 +1,12 @@
+/* =========================================================
+   NATIONAL GEOGRAPHIC — SITE v3.0
+   API: Cloudflare Worker
+========================================================= */
+
 const API_URL =
   "https://national-geographic-backend.9dnwrczbz7.workers.dev/api/posts";
 
-
-/* =========================
-   STATE
-========================= */
+const FAVORITES_KEY = "ng_favorites";
 
 let allPosts = [];
 let visiblePosts = 6;
@@ -15,136 +17,179 @@ let searchText = "";
 let isLoading = false;
 
 
-/* =========================
-   CATEGORIES
-========================= */
-
-const categories = {
-
-  "Природа": [
-    "природ",
-    "гора",
-    "горы",
-    "лес",
-    "озеро",
-    "река",
-    "водопад",
-    "океан",
-    "море",
-    "пустын",
-    "вулкан",
-    "пейзаж",
-    "остров",
-    "ледник",
-    "парк"
-  ],
-
-  "Путешествия": [
-    "путешеств",
-    "туризм",
-    "маршрут",
-    "поездк",
-    "путешествен",
-    "дорог",
-    "отправ",
-    "курорт",
-    "турист"
-  ],
-
-  "Россия": [
-    "росси",
-    "москв",
-    "санкт-петербург",
-    "петербург",
-    "крым",
-    "алтай",
-    "сибир",
-    "кавказ",
-    "примор",
-    "курил",
-    "камчат",
-    "байкал"
-  ],
-
-  "Мир": [
-    "европ",
-    "ази",
-    "америк",
-    "африк",
-    "австрали",
-    "япони",
-    "китай",
-    "франци",
-    "итал",
-    "испан",
-    "инд"
-  ],
-
-  "Животные": [
-    "живот",
-    "медвед",
-    "тигр",
-    "лев",
-    "волк",
-    "слон",
-    "кит",
-    "дельфин",
-    "акул",
-    "птиц",
-    "орёл",
-    "орел",
-    "кот",
-    "собак",
-    "звер"
-  ]
-
-};
-
-
-/* =========================
+/* =========================================================
    DOM
-========================= */
+========================================================= */
 
 const postsContainer =
-  document.querySelector("#posts");
+  document.getElementById("posts");
 
 const featuredContainer =
-  document.querySelector("#featuredPost");
+  document.getElementById("featuredPost");
+
+const photoGallery =
+  document.getElementById("photoGallery");
+
+const postSearch =
+  document.getElementById("postSearch");
+
+const refreshButton =
+  document.getElementById("refreshButton");
+
+const refreshTime =
+  document.getElementById("refreshTime");
+
+const resultCount =
+  document.getElementById("resultCount");
+
+const postsCount =
+  document.getElementById("postsCount");
+
+const photosCount =
+  document.getElementById("photosCount");
+
+const categoriesCount =
+  document.getElementById("categoriesCount");
+
+const year =
+  document.getElementById("year");
+
+const backToTop =
+  document.getElementById("backToTop");
+
+const menu =
+  document.getElementById("menu");
+
+const links =
+  document.getElementById("links");
+
+const mobileNav =
+  document.getElementById("mobileNav");
 
 
-/* =========================
-   TEXT
-========================= */
+/* =========================================================
+   YEAR
+========================================================= */
+
+if (year) {
+  year.textContent = new Date().getFullYear();
+}
+
+
+/* =========================================================
+   FAVORITES
+========================================================= */
+
+function getFavorites() {
+
+  try {
+
+    return JSON.parse(
+      localStorage.getItem(FAVORITES_KEY) || "[]"
+    );
+
+  } catch {
+
+    return [];
+
+  }
+
+}
+
+
+function saveFavorites(list) {
+
+  localStorage.setItem(
+    FAVORITES_KEY,
+    JSON.stringify(list)
+  );
+
+}
+
+
+function isFavorite(id) {
+
+  return getFavorites().includes(String(id));
+
+}
+
+
+function toggleFavorite(id) {
+
+  const favorites = getFavorites();
+
+  const stringId = String(id);
+
+  const index =
+    favorites.indexOf(stringId);
+
+  if (index >= 0) {
+
+    favorites.splice(index, 1);
+
+  } else {
+
+    favorites.push(stringId);
+
+  }
+
+  saveFavorites(favorites);
+
+  renderPosts();
+
+}
+
+
+/* =========================================================
+   TEXT HELPERS
+========================================================= */
 
 function cleanText(text) {
 
   if (!text) {
-    return "Новая публикация National Geographic";
+    return "";
   }
 
   return String(text)
-    .replace(/\n+/g, " ")
-    .replace(/\s+/g, " ")
+    .replace(/\r/g, "")
+    .replace(/\n{3,}/g, "\n\n")
     .trim();
 
 }
 
 
-function escapeHtml(value) {
+function escapeHtml(text) {
 
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+  return String(text || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
 }
 
 
-/* =========================
+function truncateText(text, length = 220) {
+
+  const clean =
+    cleanText(text);
+
+  if (clean.length <= length) {
+    return clean;
+  }
+
+  return (
+    clean.substring(0, length).trim() +
+    "…"
+  );
+
+}
+
+
+/* =========================================================
    DATE
-========================= */
+========================================================= */
 
 function formatDate(timestamp) {
 
@@ -162,7 +207,7 @@ function formatDate(timestamp) {
   return date.toLocaleDateString(
     "ru-RU",
     {
-      day: "numeric",
+      day: "2-digit",
       month: "long",
       year: "numeric"
     }
@@ -171,22 +216,37 @@ function formatDate(timestamp) {
 }
 
 
-/* =========================
+/* =========================================================
    VK LINK
-========================= */
+========================================================= */
 
-function getPostLink(vkId) {
+function getPostLink(post) {
 
-  if (!vkId) {
-    return "https://vk.ru/national.geograph1c";
-  }
+  if (
+    post &&
+    post.vk_id &&
+    String(post.vk_id).includes("_")
+  ) {
 
-  const parts =
-    String(vkId).split("_");
+    const parts =
+      String(post.vk_id).split("_");
 
-  if (parts.length === 2) {
+    const ownerId =
+      parts[0];
 
-    return `https://vk.ru/wall${parts[0]}_${parts[1]}`;
+    const postId =
+      parts[1];
+
+    if (ownerId && postId) {
+
+      return (
+        "https://vk.com/wall" +
+        ownerId +
+        "_" +
+        postId
+      );
+
+    }
 
   }
 
@@ -195,210 +255,254 @@ function getPostLink(vkId) {
 }
 
 
-/* =========================
-   CATEGORY
-========================= */
-
-function detectCategory(text) {
-
-  const lower =
-    cleanText(text).toLowerCase();
-
-
-  for (const category in categories) {
-
-    for (const word of categories[category]) {
-
-      if (lower.includes(word)) {
-        return category;
-      }
-
-    }
-
-  }
-
-  return "Мир";
-
-}
-
-
-/* =========================
+/* =========================================================
    IMAGE
-========================= */
+========================================================= */
 
 function getImage(post) {
 
   if (!post) {
-    return null;
+    return "";
   }
 
   return (
     post.image_url ||
     post.image ||
     post.photo ||
-    post.photo_url ||
-    null
+    post.cover ||
+    ""
   );
 
 }
 
 
-/* =========================
-   FAVORITES
-========================= */
+/* =========================================================
+   CATEGORY DETECTION
+========================================================= */
 
-function getFavorites() {
+const categoryKeywords = {
 
-  try {
+  "Природа": [
+    "природ",
+    "гора",
+    "горы",
+    "лес",
+    "озер",
+    "озеро",
+    "река",
+    "водопад",
+    "вулкан",
+    "ледник",
+    "пустын",
+    "пейзаж",
+    "тайга",
+    "долин",
+    "скал",
+    "остров"
+  ],
 
-    const value =
-      localStorage.getItem(
-        "ng_favorites"
-      );
+  "Путешествия": [
+    "путешеств",
+    "туризм",
+    "маршрут",
+    "поездк",
+    "дорог",
+    "пут",
+    "отправ",
+    "тур",
+    "экспедиц",
+    "место",
+    "страна"
+  ],
 
-    if (!value) {
-      return [];
+  "Россия": [
+    "росси",
+    "алтай",
+    "байкал",
+    "крым",
+    "курил",
+    "примор",
+    "камчат",
+    "сибир",
+    "кавказ",
+    "якут",
+    "мурман",
+    "сахалин"
+  ],
+
+  "Мир": [
+    "мир",
+    "европ",
+    "ази",
+    "африк",
+    "америк",
+    "австрал",
+    "канад",
+    "америк",
+    "япон",
+    "норвег",
+    "исланд",
+    "франци",
+    "итал"
+  ],
+
+  "Животные": [
+    "животн",
+    "медвед",
+    "тигр",
+    "леопард",
+    "волк",
+    "лиса",
+    "олень",
+    "кит",
+    "дельфин",
+    "акул",
+    "птиц",
+    "орел",
+    "сокол",
+    "кот",
+    "собак",
+    "слон",
+    "жираф",
+    "панд"
+  ]
+
+};
+
+
+function detectCategory(post) {
+
+  const text = (
+    cleanText(post.text) +
+    " " +
+    cleanText(post.title)
+  ).toLowerCase();
+
+  let bestCategory = "Мир";
+  let bestScore = 0;
+
+  for (
+    const [category, words]
+    of Object.entries(categoryKeywords)
+  ) {
+
+    let score = 0;
+
+    words.forEach(word => {
+
+      if (text.includes(word)) {
+        score++;
+      }
+
+    });
+
+    if (score > bestScore) {
+
+      bestScore = score;
+      bestCategory = category;
+
     }
-
-    const parsed =
-      JSON.parse(value);
-
-    return Array.isArray(parsed)
-      ? parsed.map(String)
-      : [];
-
-  } catch {
-
-    return [];
 
   }
 
-}
-
-
-function saveFavorites(list) {
-
-  localStorage.setItem(
-    "ng_favorites",
-    JSON.stringify(list)
-  );
+  return bestCategory;
 
 }
 
 
-function isFavorite(id) {
+/* =========================================================
+   CATEGORY ICON
+========================================================= */
 
-  return getFavorites()
-    .includes(String(id));
+function categoryIcon(category) {
+
+  const icons = {
+
+    "Природа": "🏔️",
+    "Путешествия": "✈️",
+    "Россия": "🇷🇺",
+    "Мир": "🌍",
+    "Животные": "🐾"
+
+  };
+
+  return icons[category] || "🌍";
 
 }
 
 
-function toggleFavorite(id) {
+/* =========================================================
+   FILTER
+========================================================= */
+
+function getFilteredPosts() {
 
   const favorites =
     getFavorites();
 
-  const value =
-    String(id);
+  return allPosts.filter(post => {
 
-  const index =
-    favorites.indexOf(value);
+    const category =
+      detectCategory(post);
 
+    const text =
+      cleanText(post.text).toLowerCase();
 
-  if (index === -1) {
+    const searchMatch =
+      !searchText ||
+      text.includes(searchText.toLowerCase()) ||
+      category.toLowerCase().includes(
+        searchText.toLowerCase()
+      );
 
-    favorites.push(value);
+    let categoryMatch = true;
 
-  } else {
+    if (activeCategory !== "Все") {
 
-    favorites.splice(index, 1);
+      if (activeCategory === "Избранное") {
 
-  }
+        categoryMatch =
+          favorites.includes(
+            String(post.id)
+          );
 
+      } else {
 
-  saveFavorites(favorites);
+        categoryMatch =
+          category === activeCategory;
 
-  renderFeaturedPost();
-  renderPosts();
+      }
+
+    }
+
+    return (
+      searchMatch &&
+      categoryMatch
+    );
+
+  });
 
 }
 
 
-/* =========================
-   FILTER
-========================= */
-
-function getFilteredPosts() {
-
-  let posts =
-    [...allPosts];
-
-
-  if (
-    activeCategory ===
-    "Избранное"
-  ) {
-
-    posts =
-      posts.filter(
-        post =>
-          isFavorite(post.id)
-      );
-
-  }
-
-
-  else if (
-    activeCategory !==
-    "Все"
-  ) {
-
-    posts =
-      posts.filter(
-        post =>
-          detectCategory(
-            post.text
-          ) === activeCategory
-      );
-
-  }
-
-
-  if (searchText.trim()) {
-
-    const query =
-      searchText
-        .toLowerCase()
-        .trim();
-
-
-    posts =
-      posts.filter(
-        post =>
-          cleanText(post.text)
-            .toLowerCase()
-            .includes(query)
-      );
-
-  }
-
-
-  return posts;
-
-}
-
-
-/* =========================
-   FEATURED
-========================= */
+/* =========================================================
+   FEATURED POST
+========================================================= */
 
 function renderFeaturedPost() {
 
-  if (
-    !featuredContainer ||
-    !allPosts.length
-  ) {
+  if (!featuredContainer) {
+    return;
+  }
+
+  if (!allPosts.length) {
+
+    featuredContainer.innerHTML = `
+      <div class="emptyState">
+        Пока нет публикаций
+      </div>
+    `;
+
     return;
   }
 
@@ -412,38 +516,40 @@ function renderFeaturedPost() {
   const image =
     getImage(post);
 
-  const date =
-    formatDate(post.post_date);
-
   const category =
-    detectCategory(text);
+    detectCategory(post);
 
   const favorite =
     isFavorite(post.id);
 
+  const link =
+    getPostLink(post);
+
 
   featuredContainer.innerHTML = `
 
-    <article class="featuredPost">
+    <article class="featuredCard">
 
+      <div class="featuredImage">
 
-      <div
-        class="featuredImage ${image ? "" : "noImage"}"
         ${
           image
-            ? `style="background-image:url('${escapeHtml(image)}')"`
-            : ""
-        }
-      >
-
-        ${
-          !image
             ? `
-              <span>
-                NATIONAL GEOGRAPHIC
-              </span>
+              <img
+                src="${escapeHtml(image)}"
+                alt="${escapeHtml(
+                  truncateText(text, 80)
+                )}"
+                loading="eager"
+              >
             `
-            : ""
+            : `
+              <div class="featuredPlaceholder">
+                <span>
+                  ${categoryIcon(category)}
+                </span>
+              </div>
+            `
         }
 
       </div>
@@ -451,42 +557,74 @@ function renderFeaturedPost() {
 
       <div class="featuredContent">
 
-        <span class="featuredCategory">
-          ${escapeHtml(category)}
-        </span>
+        <div class="postMeta">
+
+          <span class="tag">
+            ${categoryIcon(category)}
+            ${escapeHtml(category)}
+          </span>
+
+          <span>
+            ${formatDate(post.post_date)}
+          </span>
+
+        </div>
 
 
         <h3>
-          ${escapeHtml(text)}
+
+          ${
+            escapeHtml(
+              truncateText(text || "Новый материал", 140)
+            )
+          }
+
         </h3>
 
 
-        <div class="featuredDate">
-          ${escapeHtml(date)}
-        </div>
+        <p>
+
+          ${
+            escapeHtml(
+              truncateText(
+                text || "Откройте публикацию, чтобы узнать больше.",
+                260
+              )
+            )
+          }
+
+        </p>
 
 
         <div class="featuredActions">
 
-
           <button
-            class="featuredButton"
-            id="openFeatured"
+            class="readButton"
+            onclick="openPost(${Number(post.id)})"
           >
-            ЧИТАТЬ МАТЕРИАЛ →
+            ЧИТАТЬ →
           </button>
 
 
           <button
-            class="favoriteButton featuredFavorite ${
+            class="favoriteButton ${
               favorite ? "active" : ""
             }"
-            id="featuredFavorite"
-            aria-label="Избранное"
+            onclick="toggleFavorite(${Number(post.id)})"
+            aria-label="Добавить в избранное"
           >
             ${favorite ? "★" : "☆"}
           </button>
 
+
+          <a
+            class="vkButton"
+            href="${escapeHtml(link)}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            VK ↗
+          </a>
 
         </div>
 
@@ -496,46 +634,12 @@ function renderFeaturedPost() {
 
   `;
 
-
-  const openButton =
-    document.querySelector(
-      "#openFeatured"
-    );
-
-
-  if (openButton) {
-
-    openButton.onclick =
-      () => openPost(post);
-
-  }
-
-
-  const favoriteButton =
-    document.querySelector(
-      "#featuredFavorite"
-    );
-
-
-  if (favoriteButton) {
-
-    favoriteButton.onclick =
-      event => {
-
-        event.stopPropagation();
-
-        toggleFavorite(post.id);
-
-      };
-
-  }
-
 }
 
 
-/* =========================
+/* =========================================================
    POST CARD
-========================= */
+========================================================= */
 
 function createPost(post) {
 
@@ -545,98 +649,147 @@ function createPost(post) {
   const image =
     getImage(post);
 
-  const date =
-    formatDate(post.post_date);
-
   const category =
-    detectCategory(text);
+    detectCategory(post);
 
   const favorite =
     isFavorite(post.id);
+
+  const link =
+    getPostLink(post);
 
 
   return `
 
     <article
-      class="post"
-      data-post-id="${escapeHtml(post.id)}"
+      class="card"
+      data-post-id="${Number(post.id)}"
     >
 
-
       <div
-        class="postImg ${image ? "" : "noImage"}"
-        ${
-          image
-            ? `style="background-image:url('${escapeHtml(image)}')"`
-            : ""
-        }
+        class="cardImage"
+        onclick="openPost(${Number(post.id)})"
       >
 
-
         ${
-          !image
+          image
             ? `
-              <span class="noImageText">
-                NATIONAL GEOGRAPHIC
-              </span>
+              <img
+                src="${escapeHtml(image)}"
+                alt="${escapeHtml(
+                  truncateText(text, 80)
+                )}"
+                loading="lazy"
+                onerror="this.parentElement.classList.add('imageError'); this.remove();"
+              >
             `
-            : ""
+            : `
+              <div class="cardPlaceholder">
+
+                <span>
+                  ${categoryIcon(category)}
+                </span>
+
+                <small>
+                  NATIONAL GEOGRAPHIC
+                </small>
+
+              </div>
+            `
         }
 
 
-        <span class="tag">
+        <div class="cardCategory">
+
+          ${categoryIcon(category)}
+
           ${escapeHtml(category)}
-        </span>
+
+        </div>
 
 
         <button
-          class="favoriteButton ${
+          class="cardFavorite ${
             favorite ? "active" : ""
           }"
-          data-favorite="${escapeHtml(post.id)}"
-          aria-label="Добавить в избранное"
+          onclick="
+            event.stopPropagation();
+            toggleFavorite(${Number(post.id)});
+          "
+          aria-label="Избранное"
         >
           ${favorite ? "★" : "☆"}
         </button>
 
-
       </div>
 
 
-      <div class="postBody">
+      <div class="cardBody">
 
 
-        <h3>
-          ${escapeHtml(text)}
+        <div class="cardDate">
+
+          ${formatDate(post.post_date)}
+
+        </div>
+
+
+        <h3
+          onclick="openPost(${Number(post.id)})"
+        >
+
+          ${
+            escapeHtml(
+              truncateText(
+                text || "Без названия",
+                120
+              )
+            )
+          }
+
         </h3>
 
 
-        ${
-          date
-            ? `
-              <p class="postDate">
-                ${escapeHtml(date)}
-              </p>
-            `
-            : ""
-        }
+        <p>
+
+          ${
+            escapeHtml(
+              truncateText(
+                text ||
+                "Откройте материал, чтобы узнать подробности.",
+                190
+              )
+            )
+          }
+
+        </p>
 
 
-        <div class="postCardBottom">
+        <div class="cardFooter">
 
-          <span class="readPost">
-            Читать материал →
-          </span>
 
-          <span class="shareHint">
-            ↗
-          </span>
+          <button
+            class="moreButton"
+            onclick="openPost(${Number(post.id)})"
+          >
+            СМОТРЕТЬ →
+          </button>
+
+
+          <a
+            href="${escapeHtml(link)}"
+            target="_blank"
+            rel="noopener noreferrer"
+            onclick="event.stopPropagation();"
+          >
+            VK ↗
+          </a>
+
 
         </div>
 
 
       </div>
-
 
     </article>
 
@@ -645,9 +798,9 @@ function createPost(post) {
 }
 
 
-/* =========================
-   POSTS
-========================= */
+/* =========================================================
+   RENDER POSTS
+========================================================= */
 
 function renderPosts() {
 
@@ -656,146 +809,148 @@ function renderPosts() {
   }
 
 
-  const filteredPosts =
+  const filtered =
     getFilteredPosts();
 
 
-  const postsToShow =
-    filteredPosts.slice(
-      0,
-      visiblePosts
-    );
+  if (resultCount) {
 
-
-  if (!filteredPosts.length) {
-
-    postsContainer.innerHTML = `
-
-      <div class="loading">
-
-        ${
-          activeCategory === "Избранное"
-            ? "В избранном пока ничего нет."
-            : "Ничего не найдено."
-        }
-
-        <br><br>
-
-        Попробуйте изменить запрос
-        или выбрать другую категорию.
-
-      </div>
-
-    `;
-
-    return;
+    resultCount.textContent =
+      filtered.length;
 
   }
 
 
-  postsContainer.innerHTML =
-    postsToShow
-      .map(createPost)
-      .join("");
+  if (!filtered.length) {
 
+    postsContainer.innerHTML = `
 
-  postsContainer
-    .querySelectorAll(".post")
-    .forEach(
-      (card, index) => {
+      <div class="emptyState">
 
-        card.onclick =
-          () => openPost(
-            postsToShow[index]
-          );
+        <div class="emptyIcon">
+          🔎
+        </div>
 
-      }
-    );
+        <h3>
+          Ничего не найдено
+        </h3>
 
+        <p>
+          Попробуйте изменить поиск
+          или выбрать другую категорию.
+        </p>
 
-  postsContainer
-    .querySelectorAll(
-      "[data-favorite]"
-    )
-    .forEach(
-      button => {
-
-        button.onclick =
-          event => {
-
-            event.stopPropagation();
-
-            toggleFavorite(
-              button.dataset.favorite
-            );
-
-          };
-
-      }
-    );
-
-
-  if (
-    visiblePosts <
-    filteredPosts.length
-  ) {
-
-    postsContainer.innerHTML += `
-
-      <div class="loadMoreWrap">
-
-        <button id="loadMore">
-          ЗАГРУЗИТЬ ЕЩЁ
+        <button
+          onclick="resetFilters()"
+        >
+          СБРОСИТЬ ФИЛЬТРЫ
         </button>
 
       </div>
 
     `;
 
+    return;
 
-    const loadMore =
-      document.querySelector(
-        "#loadMore"
-      );
+  }
 
 
-    if (loadMore) {
+  const posts =
+    filtered.slice(
+      0,
+      visiblePosts
+    );
 
-      loadMore.onclick =
-        () => {
 
-          visiblePosts += 6;
+  postsContainer.innerHTML =
+    posts.map(createPost).join("");
 
-          renderPosts();
 
-        };
+  if (filtered.length > visiblePosts) {
 
-    }
+    postsContainer.innerHTML += `
+
+      <div class="loadMoreWrap">
+
+        <button
+          class="loadMore"
+          onclick="loadMorePosts()"
+        >
+          ЗАГРУЗИТЬ ЕЩЁ
+        </button>
+
+        <span>
+          Показано ${posts.length}
+          из ${filtered.length}
+        </span>
+
+      </div>
+
+    `;
 
   }
 
 }
 
 
-/* =========================
-   POST VIEWER
-========================= */
+/* =========================================================
+   LOAD MORE
+========================================================= */
 
-function openPost(post) {
+function loadMorePosts() {
 
-  if (!post) {
-    return;
+  visiblePosts += 6;
+
+  renderPosts();
+
+}
+
+
+/* =========================================================
+   RESET FILTERS
+========================================================= */
+
+function resetFilters() {
+
+  activeCategory = "Все";
+  searchText = "";
+  visiblePosts = 6;
+
+  if (postSearch) {
+    postSearch.value = "";
   }
 
 
-  const old =
-    document.querySelector(
-      "#postViewer"
+  document
+    .querySelectorAll(".categoryBtn")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.category === "Все"
+      );
+
+    });
+
+
+  renderPosts();
+
+}
+
+
+/* =========================================================
+   OPEN POST
+========================================================= */
+
+function openPost(id) {
+
+  const post =
+    allPosts.find(
+      item => Number(item.id) === Number(id)
     );
 
-
-  if (old) {
-    old.remove();
+  if (!post) {
+    return;
   }
 
 
@@ -805,130 +960,158 @@ function openPost(post) {
   const image =
     getImage(post);
 
-  const date =
-    formatDate(post.post_date);
-
   const category =
-    detectCategory(text);
+    detectCategory(post);
+
+  const favorite =
+    isFavorite(post.id);
 
   const link =
-    getPostLink(post.vk_id);
+    getPostLink(post);
 
 
-  const viewer =
-    document.createElement(
-      "div"
-    );
+  const modal =
+    document.createElement("div");
+
+  modal.className =
+    "postModal";
 
 
-  viewer.id =
-    "postViewer";
+  modal.innerHTML = `
 
-
-  viewer.innerHTML = `
-
-    <div class="viewerBackdrop"></div>
+    <div
+      class="modalBackdrop"
+      onclick="closePostModal()"
+    ></div>
 
 
     <div
-      class="viewerWindow"
+      class="modalWindow"
       role="dialog"
       aria-modal="true"
-      aria-label="Материал National Geographic"
     >
 
 
       <button
-        class="viewerClose"
-        id="viewerClose"
+        class="modalClose"
+        onclick="closePostModal()"
         aria-label="Закрыть"
       >
         ×
       </button>
 
 
+      ${
+        image
+          ? `
+            <div class="modalImage">
 
-      <div
-        class="viewerImage ${
-          image ? "" : "noImage"
-        }"
-        ${
-          image
-            ? `style="background-image:url('${escapeHtml(image)}')"`
-            : ""
-        }
-      >
+              <img
+                src="${escapeHtml(image)}"
+                alt="${escapeHtml(
+                  truncateText(text, 100)
+                )}"
+              >
 
+            </div>
+          `
+          : `
+            <div class="modalImage modalPlaceholder">
 
-        ${
-          !image
-            ? `
               <span>
-                NATIONAL GEOGRAPHIC
+                ${categoryIcon(category)}
               </span>
-            `
-            : ""
-        }
+
+            </div>
+          `
+      }
 
 
-      </div>
+      <div class="modalContent">
 
 
+        <div class="modalMeta">
 
-      <div class="viewerContent">
+          <span class="tag">
+
+            ${categoryIcon(category)}
+
+            ${escapeHtml(category)}
+
+          </span>
 
 
-        <div class="viewerCategory">
-          ${escapeHtml(category)}
+          <span>
+            ${formatDate(post.post_date)}
+          </span>
+
         </div>
 
 
         <h2>
-          ${escapeHtml(text)}
+          ${
+            escapeHtml(
+              truncateText(
+                text || "National Geographic",
+                180
+              )
+            )
+          }
         </h2>
 
 
-        <div class="viewerDate">
-          ${escapeHtml(date)}
+        <div class="modalText">
+
+          ${
+            escapeHtml(
+              text ||
+              "Подробная информация о публикации."
+            )
+          }
+
         </div>
 
 
+        <div class="modalActions">
 
-        <div class="viewerButtons">
+
+          <button
+            class="favoriteLarge ${
+              favorite ? "active" : ""
+            }"
+            onclick="
+              toggleFavorite(${Number(post.id)});
+              refreshOpenModal(${Number(post.id)});
+            "
+          >
+            ${favorite ? "★ В избранном" : "☆ В избранное"}
+          </button>
+
+
+          <button
+            class="shareButton"
+            onclick="sharePost(${Number(post.id)})"
+          >
+            ↗ Поделиться
+          </button>
+
+
+          <button
+            class="copyButton"
+            onclick="copyPostLink(${Number(post.id)})"
+          >
+            ⧉ Скопировать
+          </button>
 
 
           <a
-            class="viewerVk"
+            class="vkLarge"
             href="${escapeHtml(link)}"
             target="_blank"
             rel="noopener noreferrer"
           >
-            ОТКРЫТЬ ВО ВКОНТАКТЕ ↗
+            ОТКРЫТЬ В VK ↗
           </a>
-
-
-          <button
-            class="viewerShare"
-            id="viewerShare"
-          >
-            ПОДЕЛИТЬСЯ
-          </button>
-
-
-          <button
-            class="viewerCopy"
-            id="viewerCopy"
-          >
-            КОПИРОВАТЬ ССЫЛКУ
-          </button>
-
-
-          <button
-            class="viewerBack"
-            id="viewerBack"
-          >
-            НАЗАД
-          </button>
 
 
         </div>
@@ -948,239 +1131,203 @@ function openPost(post) {
   `;
 
 
-  document.body.appendChild(
-    viewer
-  );
+  document.body.appendChild(modal);
+
+  document.body.classList.add("modalOpen");
 
 
-  document.body.classList.add(
-    "viewerOpen"
-  );
+  requestAnimationFrame(() => {
 
+    modal.classList.add("visible");
 
-  const closeButton =
-    document.querySelector(
-      "#viewerClose"
-    );
-
-
-  const backButton =
-    document.querySelector(
-      "#viewerBack"
-    );
-
-
-  const backdrop =
-    document.querySelector(
-      ".viewerBackdrop"
-    );
-
-
-  const shareButton =
-    document.querySelector(
-      "#viewerShare"
-    );
-
-
-  const copyButton =
-    document.querySelector(
-      "#viewerCopy"
-    );
-
-
-  if (closeButton) {
-    closeButton.onclick =
-      closePost;
-  }
-
-
-  if (backButton) {
-    backButton.onclick =
-      closePost;
-  }
-
-
-  if (backdrop) {
-    backdrop.onclick =
-      closePost;
-  }
-
-
-  if (shareButton) {
-
-    shareButton.onclick =
-      () => sharePost(
-        post,
-        link
-      );
-
-  }
-
-
-  if (copyButton) {
-
-    copyButton.onclick =
-      () => copyPostLink(
-        link
-      );
-
-  }
+  });
 
 
   document.addEventListener(
     "keydown",
-    handleViewerKey
+    handleModalEscape
   );
 
 }
 
 
-/* =========================
-   CLOSE VIEWER
-========================= */
+function handleModalEscape(event) {
 
-function closePost() {
+  if (event.key === "Escape") {
+    closePostModal();
+  }
 
-  const viewer =
-    document.querySelector(
-      "#postViewer"
-    );
+}
 
 
-  if (viewer) {
-    viewer.remove();
+function closePostModal() {
+
+  const modal =
+    document.querySelector(".postModal");
+
+  if (!modal) {
+    return;
   }
 
 
-  document.body.classList.remove(
-    "viewerOpen"
-  );
+  modal.classList.remove("visible");
+
+
+  setTimeout(() => {
+
+    modal.remove();
+
+    document.body.classList.remove(
+      "modalOpen"
+    );
+
+  }, 200);
 
 
   document.removeEventListener(
     "keydown",
-    handleViewerKey
+    handleModalEscape
   );
 
 }
 
 
-/* =========================
-   ESCAPE
-========================= */
+function refreshOpenModal(id) {
 
-function handleViewerKey(event) {
+  closePostModal();
 
-  if (
-    event.key ===
-    "Escape"
-  ) {
+  setTimeout(() => {
 
-    closePost();
+    openPost(id);
 
-  }
+  }, 220);
 
 }
 
 
-/* =========================
+/* =========================================================
    SHARE
-========================= */
+========================================================= */
 
-async function sharePost(
-  post,
-  link
-) {
+async function sharePost(id) {
+
+  const post =
+    allPosts.find(
+      item => Number(item.id) === Number(id)
+    );
+
+  if (!post) {
+    return;
+  }
+
+
+  const link =
+    getPostLink(post);
 
   const title =
-    "National Geographic";
+    truncateText(
+      cleanText(post.text) ||
+      "National Geographic",
+      100
+    );
 
 
-  const text =
-    cleanText(post.text);
-
-
-  if (
-    navigator.share
-  ) {
+  if (navigator.share) {
 
     try {
 
       await navigator.share({
 
-        title,
+        title:
+          "National Geographic",
 
-        text,
+        text:
+          title,
 
-        url: link
+        url:
+          link
 
       });
 
       return;
 
-    } catch (error) {
+    } catch {
 
-      if (
-        error &&
-        error.name ===
-        "AbortError"
-      ) {
-        return;
-      }
+      // Пользователь закрыл окно
+      // отправки — ничего не делаем.
 
     }
 
   }
 
 
-  await copyPostLink(
-    link,
+  await copyText(link);
+
+  showViewerStatus(
     "Ссылка скопирована"
   );
 
 }
 
 
-/* =========================
+/* =========================================================
    COPY LINK
-========================= */
+========================================================= */
 
-async function copyPostLink(
-  link,
-  successText = "Ссылка скопирована"
-) {
+async function copyPostLink(id) {
+
+  const post =
+    allPosts.find(
+      item => Number(item.id) === Number(id)
+    );
+
+  if (!post) {
+    return;
+  }
+
+
+  const link =
+    getPostLink(post);
+
+
+  await copyText(link);
+
+  showViewerStatus(
+    "Ссылка скопирована"
+  );
+
+}
+
+
+async function copyText(text) {
 
   try {
 
     await navigator.clipboard.writeText(
-      link
+      text
     );
 
-
-    showViewerStatus(
-      successText
-    );
-
+    return true;
 
   } catch {
 
-    const input =
-      document.createElement(
-        "input"
-      );
+    const textarea =
+      document.createElement("textarea");
 
+    textarea.value =
+      text;
 
-    input.value =
-      link;
+    textarea.style.position =
+      "fixed";
 
+    textarea.style.opacity =
+      "0";
 
     document.body.appendChild(
-      input
+      textarea
     );
 
-
-    input.select();
-
+    textarea.select();
 
     try {
 
@@ -1188,40 +1335,33 @@ async function copyPostLink(
         "copy"
       );
 
+      textarea.remove();
 
-      showViewerStatus(
-        successText
-      );
+      return true;
 
     } catch {
 
-      showViewerStatus(
-        "Не удалось скопировать ссылку"
-      );
+      textarea.remove();
+
+      return false;
 
     }
-
-
-    input.remove();
 
   }
 
 }
 
 
-/* =========================
+/* =========================================================
    VIEWER STATUS
-========================= */
+========================================================= */
 
-function showViewerStatus(
-  message
-) {
+function showViewerStatus(message) {
 
   const status =
-    document.querySelector(
-      "#viewerStatus"
+    document.getElementById(
+      "viewerStatus"
     );
-
 
   if (!status) {
     return;
@@ -1231,64 +1371,61 @@ function showViewerStatus(
   status.textContent =
     message;
 
-
-  clearTimeout(
-    showViewerStatus.timer
+  status.classList.add(
+    "show"
   );
 
 
-  showViewerStatus.timer =
-    setTimeout(
-      () => {
+  setTimeout(() => {
 
-        status.textContent =
-          "";
-
-      },
-      2500
+    status.classList.remove(
+      "show"
     );
+
+  }, 2200);
 
 }
 
 
-/* =========================
+/* =========================================================
    GALLERY
-========================= */
+========================================================= */
 
 function renderGallery() {
 
-  const gallery =
-    document.querySelector(
-      "#photoGallery"
-    );
-
-
-  if (!gallery) {
+  if (!photoGallery) {
     return;
   }
 
 
   const photoPosts =
-    allPosts
-      .filter(
-        post =>
-          getImage(post)
-      )
-      .slice(
-        0,
-        6
-      );
+    allPosts.filter(
+      post => Boolean(getImage(post))
+    );
+
+
+  if (photosCount) {
+
+    photosCount.textContent =
+      photoPosts.length;
+
+  }
 
 
   if (!photoPosts.length) {
 
-    gallery.innerHTML = `
+    photoGallery.innerHTML = `
 
       <div class="galleryEmpty">
 
-        Фотографии появятся
-        автоматически после загрузки
-        изображений из VK.
+        <span>
+          📷
+        </span>
+
+        <p>
+          Фотографии появятся
+          вместе с новыми публикациями.
+        </p>
 
       </div>
 
@@ -1299,105 +1436,67 @@ function renderGallery() {
   }
 
 
-  gallery.innerHTML =
-    photoPosts
-      .map(
-        (post, index) => {
-
-          const image =
-            getImage(post);
+  const gallery =
+    photoPosts.slice(0, 12);
 
 
-          return `
+  photoGallery.innerHTML =
+    gallery.map((post, index) => {
 
-            <div
-              class="
-                galleryPhoto
-                galleryPhoto${index + 1}
-              "
-              data-gallery="${escapeHtml(post.id)}"
-              style="
-                background-image:
-                url('${escapeHtml(image)}')
-              "
-            >
+      const image =
+        getImage(post);
 
-              <span>
-                ${escapeHtml(
-                  detectCategory(
-                    post.text
-                  )
-                )}
-              </span>
-
-            </div>
-
-          `;
-
-        }
-      )
-      .join("");
+      const category =
+        detectCategory(post);
 
 
-  gallery
-    .querySelectorAll(
-      "[data-gallery]"
-    )
-    .forEach(
-      element => {
+      return `
 
-        element.onclick =
-          () => {
+        <button
+          class="photoItem photoItem${index + 1}"
+          onclick="openPost(${Number(post.id)})"
+          aria-label="Открыть фотографию"
+        >
 
-            const post =
-              allPosts.find(
-                item =>
-                  String(item.id) ===
-                  String(
-                    element.dataset.gallery
-                  )
-              );
+          <img
+            src="${escapeHtml(image)}"
+            alt="${escapeHtml(
+              truncateText(
+                post.text ||
+                category,
+                80
+              )
+            )}"
+            loading="lazy"
+          >
 
 
-            if (post) {
+          <span class="photoOverlay">
 
-              openPost(
-                post
-              );
+            <strong>
+              ${categoryIcon(category)}
+            </strong>
 
-            }
+            <small>
+              ${escapeHtml(category)}
+            </small>
 
-          };
+          </span>
 
-      }
-    );
+        </button>
+
+      `;
+
+    }).join("");
 
 }
 
 
-/* =========================
+/* =========================================================
    STATS
-========================= */
+========================================================= */
 
 function updateStats() {
-
-  const postsCount =
-    document.querySelector(
-      "#postsCount"
-    );
-
-
-  const photosCount =
-    document.querySelector(
-      "#photosCount"
-    );
-
-
-  const categoriesCount =
-    document.querySelector(
-      "#categoriesCount"
-    );
-
 
   if (postsCount) {
 
@@ -1407,79 +1506,65 @@ function updateStats() {
   }
 
 
-  if (photosCount) {
+  if (categoriesCount) {
 
-    photosCount.textContent =
-      allPosts.filter(
-        post =>
-          getImage(post)
+    categoriesCount.textContent =
+      Object.keys(
+        categoryKeywords
       ).length;
 
   }
 
 
-  if (categoriesCount) {
-
-    const found =
-      new Set(
-        allPosts.map(
-          post =>
-            detectCategory(
-              post.text
-            )
-        )
-      );
+  const photoCount =
+    allPosts.filter(
+      post => Boolean(getImage(post))
+    ).length;
 
 
-    categoriesCount.textContent =
-      Math.max(
-        5,
-        found.size
-      );
+  if (photosCount) {
+
+    photosCount.textContent =
+      photoCount;
 
   }
 
 }
 
 
-/* =========================
+/* =========================================================
    REFRESH TIME
-========================= */
+========================================================= */
 
 function updateRefreshTime() {
 
-  const element =
-    document.querySelector(
-      "#refreshTime"
-    );
-
-
-  if (!element) {
+  if (!refreshTime) {
     return;
   }
 
 
-  element.textContent =
-    "Обновлено в " +
-    new Date()
-      .toLocaleTimeString(
-        "ru-RU",
-        {
-          hour: "2-digit",
-          minute: "2-digit"
-        }
-      );
+  const now =
+    new Date();
+
+
+  refreshTime.textContent =
+    "Обновлено " +
+    now.toLocaleTimeString(
+      "ru-RU",
+      {
+        hour: "2-digit",
+        minute: "2-digit"
+      }
+    );
 
 }
 
 
-/* =========================
-   API
-========================= */
+/* =========================================================
+   LOAD POSTS
+========================================================= */
 
-async function loadPosts(
-  showLoading = true
-) {
+async function loadPosts() {
 
   if (isLoading) {
     return;
@@ -1489,24 +1574,14 @@ async function loadPosts(
   isLoading = true;
 
 
-  if (
-    showLoading &&
-    postsContainer
-  ) {
+  if (refreshButton) {
 
-    postsContainer.innerHTML = `
+    refreshButton.disabled =
+      true;
 
-      <div class="loadingGrid">
-
-        <div class="skeleton skeletonCard"></div>
-
-        <div class="skeleton skeletonCard"></div>
-
-        <div class="skeleton skeletonCard"></div>
-
-      </div>
-
-    `;
+    refreshButton.classList.add(
+      "loading"
+    );
 
   }
 
@@ -1515,8 +1590,11 @@ async function loadPosts(
 
     const response =
       await fetch(
-        API_URL,
+        API_URL +
+        "?t=" +
+        Date.now(),
         {
+          method: "GET",
           cache: "no-store"
         }
       );
@@ -1525,7 +1603,8 @@ async function loadPosts(
     if (!response.ok) {
 
       throw new Error(
-        `API ${response.status}`
+        "HTTP " +
+        response.status
       );
 
     }
@@ -1537,9 +1616,7 @@ async function loadPosts(
 
     if (
       !data ||
-      !Array.isArray(
-        data.posts
-      )
+      !Array.isArray(data.posts)
     ) {
 
       throw new Error(
@@ -1550,8 +1627,19 @@ async function loadPosts(
 
 
     allPosts =
-      data.posts;
+      data.posts
+        .filter(Boolean)
+        .sort(
+          (a, b) =>
+            Number(b.post_date || 0) -
+            Number(a.post_date || 0)
+        );
 
+
+    visiblePosts = 6;
+
+
+    updateStats();
 
     renderFeaturedPost();
 
@@ -1559,40 +1647,45 @@ async function loadPosts(
 
     renderGallery();
 
-    updateStats();
-
     updateRefreshTime();
 
 
   } catch (error) {
 
     console.error(
-      "Ошибка загрузки публикаций:",
+      "National Geographic API:",
       error
     );
 
 
     if (
-      showLoading &&
+      !allPosts.length &&
       postsContainer
     ) {
 
       postsContainer.innerHTML = `
 
-        <div class="loading">
+        <div class="errorState">
 
-          Не удалось загрузить
-          публикации.
+          <div class="emptyIcon">
+            ⚠️
+          </div>
 
-          <br><br>
+          <h3>
+            Не удалось загрузить материалы
+          </h3>
 
-          <a
-            href="https://vk.ru/national.geograph1c"
-            target="_blank"
-            rel="noopener noreferrer"
+          <p>
+            Проверьте соединение
+            и попробуйте обновить страницу.
+          </p>
+
+
+          <button
+            onclick="loadPosts()"
           >
-            Открыть ВКонтакте →
-          </a>
+            ПОВТОРИТЬ
+          </button>
 
         </div>
 
@@ -1600,129 +1693,111 @@ async function loadPosts(
 
     }
 
+
+    if (refreshTime) {
+
+      refreshTime.textContent =
+        "Ошибка обновления";
+
+    }
+
   } finally {
 
     isLoading = false;
 
+
+    if (refreshButton) {
+
+      refreshButton.disabled =
+        false;
+
+      refreshButton.classList.remove(
+        "loading"
+      );
+
+    }
+
   }
 
 }
 
 
-/* =========================
-   FILTERS
-========================= */
+/* =========================================================
+   CATEGORY BUTTONS
+========================================================= */
 
-function setupFilters() {
-
+function setupCategoryButtons() {
 
   document
-    .querySelectorAll(
-      ".categoryBtn"
-    )
-    .forEach(
-      button => {
+    .querySelectorAll(".categoryBtn")
+    .forEach(button => {
 
-        button.onclick =
-          () => {
+      button.addEventListener(
+        "click",
+        () => {
 
-            document
-              .querySelectorAll(
-                ".categoryBtn"
-              )
-              .forEach(
-                btn =>
-                  btn.classList.remove(
-                    "active"
-                  )
+          activeCategory =
+            button.dataset.category ||
+            "Все";
+
+          visiblePosts = 6;
+
+
+          document
+            .querySelectorAll(
+              ".categoryBtn"
+            )
+            .forEach(item => {
+
+              item.classList.toggle(
+                "active",
+                item === button
               );
 
-
-            button.classList.add(
-              "active"
-            );
+            });
 
 
-            activeCategory =
-              button.dataset.category;
+          renderPosts();
 
-
-            visiblePosts = 6;
-
-
-            renderPosts();
-
-          };
-
-      }
-    );
-
-
-
-  const search =
-    document.querySelector(
-      "#postSearch"
-    );
-
-
-  if (search) {
-
-    search.oninput =
-      event => {
-
-        searchText =
-          event.target.value;
-
-
-        visiblePosts = 6;
-
-
-        renderPosts();
-
-      };
-
-  }
-
-
-
-  const refresh =
-    document.querySelector(
-      "#refreshButton"
-    );
-
-
-  if (refresh) {
-
-    refresh.onclick =
-      async () => {
-
-        if (isLoading) {
-          return;
         }
+      );
 
-
-        refresh.textContent =
-          "↻ ОБНОВЛЕНИЕ...";
-
-
-        await loadPosts(
-          false
-        );
-
-
-        refresh.textContent =
-          "↻ ОБНОВИТЬ";
-
-      };
-
-  }
+    });
 
 }
 
 
-/* =========================
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function setupSearch() {
+
+  if (!postSearch) {
+    return;
+  }
+
+
+  postSearch.addEventListener(
+    "input",
+    event => {
+
+      searchText =
+        event.target.value.trim();
+
+      visiblePosts = 6;
+
+      renderPosts();
+
+    }
+  );
+
+}
+
+
+/* =========================================================
    CATEGORY CARDS
-========================= */
+========================================================= */
 
 function setupCategoryCards() {
 
@@ -1730,166 +1805,280 @@ function setupCategoryCards() {
     .querySelectorAll(
       "[data-jump-category]"
     )
-    .forEach(
-      card => {
+    .forEach(card => {
 
-        card.onclick =
-          () => {
+      card.addEventListener(
+        "click",
+        event => {
 
-            const category =
-              card.dataset.jumpCategory;
-
-
-            activeCategory =
-              category;
+          event.preventDefault();
 
 
-            document
-              .querySelectorAll(
-                ".categoryBtn"
-              )
-              .forEach(
-                button => {
+          const category =
+            card.dataset.jumpCategory;
 
-                  button.classList.toggle(
-                    "active",
-                    button.dataset.category ===
-                    category
-                  );
 
-                }
+          activeCategory =
+            category;
+
+          visiblePosts = 6;
+
+
+          document
+            .querySelectorAll(
+              ".categoryBtn"
+            )
+            .forEach(button => {
+
+              button.classList.toggle(
+                "active",
+                button.dataset.category ===
+                category
               );
 
+            });
 
-            visiblePosts = 6;
+
+          renderPosts();
 
 
-            renderPosts();
+          const latest =
+            document.getElementById(
+              "latest"
+            );
 
-          };
 
-      }
-    );
+          if (latest) {
+
+            latest.scrollIntoView({
+              behavior: "smooth",
+              block: "start"
+            });
+
+          }
+
+        }
+      );
+
+    });
 
 }
 
 
-/* =========================
+/* =========================================================
    MOBILE MENU
-========================= */
+========================================================= */
 
-function setupMenu() {
-
-  const menu =
-    document.querySelector(
-      "#menu"
-    );
-
-
-  const links =
-    document.querySelector(
-      "#links"
-    );
-
+function setupMobileMenu() {
 
   if (!menu || !links) {
     return;
   }
 
 
-  menu.onclick =
+  menu.addEventListener(
+    "click",
     () => {
 
       links.classList.toggle(
         "open"
       );
 
+      menu.classList.toggle(
+        "active"
+      );
 
-      menu.textContent =
-        links.classList.contains(
-          "open"
-        )
-          ? "×"
-          : "☰";
-
-    };
+    }
+  );
 
 
   links
     .querySelectorAll("a")
-    .forEach(
-      link => {
+    .forEach(link => {
 
-        link.onclick =
-          () => {
+      link.addEventListener(
+        "click",
+        () => {
 
-            links.classList.remove(
-              "open"
-            );
+          links.classList.remove(
+            "open"
+          );
 
+          menu.classList.remove(
+            "active"
+          );
 
-            menu.textContent =
-              "☰";
+        }
+      );
 
-          };
-
-      }
-    );
+    });
 
 }
 
 
-/* =========================
-   BACK TO TOP
-========================= */
+/* =========================================================
+   MOBILE BOTTOM NAVIGATION
+========================================================= */
 
-function setupBackToTop() {
+function setupMobileNavigation() {
 
-  const button =
-    document.querySelector(
-      "#backToTop"
-    );
-
-
-  if (!button) {
+  if (!mobileNav) {
     return;
   }
 
 
-  button.onclick =
-    () => {
+  const items =
+    mobileNav.querySelectorAll(
+      ".mobileNavItem"
+    );
 
-      window.scrollTo({
 
-        top: 0,
+  items.forEach(item => {
 
-        behavior: "smooth"
+    item.addEventListener(
+      "click",
+      event => {
 
-      });
+        event.preventDefault();
 
-    };
+
+        const targetId =
+          item.dataset.mobileTarget;
+
+
+        const target =
+          document.getElementById(
+            targetId
+          );
+
+
+        if (!target) {
+          return;
+        }
+
+
+        items.forEach(navItem => {
+
+          navItem.classList.remove(
+            "active"
+          );
+
+        });
+
+
+        item.classList.add(
+          "active"
+        );
+
+
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+
+      }
+    );
+
+  });
+
+
+  updateMobileNavigation();
+
+}
+
+
+/* =========================================================
+   MOBILE NAV ACTIVE ON SCROLL
+========================================================= */
+
+function updateMobileNavigation() {
+
+  if (!mobileNav) {
+    return;
+  }
+
+
+  const items =
+    mobileNav.querySelectorAll(
+      ".mobileNavItem"
+    );
+
+
+  const sections = [
+
+    "home",
+    "latest",
+    "geography",
+    "photos",
+    "about"
+
+  ];
+
+
+  let current =
+    "home";
+
+
+  const scrollPosition =
+    window.scrollY +
+    window.innerHeight * 0.35;
+
+
+  sections.forEach(id => {
+
+    const section =
+      document.getElementById(id);
+
+
+    if (!section) {
+      return;
+    }
+
+
+    if (
+      section.offsetTop <=
+      scrollPosition
+    ) {
+
+      current = id;
+
+    }
+
+  });
+
+
+  items.forEach(item => {
+
+    item.classList.toggle(
+      "active",
+      item.dataset.mobileTarget ===
+      current
+    );
+
+  });
+
+}
+
+
+/* =========================================================
+   BACK TO TOP
+========================================================= */
+
+function setupBackToTop() {
+
+  if (!backToTop) {
+    return;
+  }
 
 
   window.addEventListener(
     "scroll",
     () => {
 
-      if (
-        window.scrollY >
-        500
-      ) {
-
-        button.classList.add(
-          "visible"
-        );
-
-      } else {
-
-        button.classList.remove(
-          "visible"
-        );
-
-      }
+      backToTop.classList.toggle(
+        "show",
+        window.scrollY > 600
+      );
 
     },
     {
@@ -1897,59 +2086,302 @@ function setupBackToTop() {
     }
   );
 
+
+  backToTop.addEventListener(
+    "click",
+    () => {
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+    }
+  );
+
 }
 
 
-/* =========================
-   YEAR
-========================= */
+/* =========================================================
+   GEOGRAPHY MAP
+========================================================= */
 
-const year =
-  document.querySelector(
-    "#year"
+function setupGeographyMap() {
+
+  const map =
+    document.getElementById(
+      "geoMap"
+    );
+
+
+  if (!map) {
+    return;
+  }
+
+
+  const points =
+    map.querySelectorAll(
+      ".mapPoint"
+    );
+
+
+  const places = {
+
+    point1: {
+      title: "Алтай",
+      text: "Горы, озёра и дикая природа России."
+    },
+
+    point2: {
+      title: "Курилы",
+      text: "Вулканы, океан и островные пейзажи."
+    },
+
+    point3: {
+      title: "Приморье",
+      text: "Тайга встречается с Тихим океаном."
+    },
+
+    point4: {
+      title: "Байкал",
+      text: "Одно из самых известных природных мест России."
+    }
+
+  };
+
+
+  points.forEach(point => {
+
+    const key =
+      Array.from(
+        point.classList
+      ).find(
+        className =>
+          className.startsWith(
+            "point"
+          )
+      );
+
+
+    const data =
+      places[key];
+
+
+    if (!data) {
+      return;
+    }
+
+
+    point.addEventListener(
+      "click",
+      event => {
+
+        event.stopPropagation();
+
+
+        map
+          .querySelectorAll(
+            ".mapPoint"
+          )
+          .forEach(item => {
+
+            item.classList.remove(
+              "selected"
+            );
+
+          });
+
+
+        point.classList.add(
+          "selected"
+        );
+
+
+        showMapTooltip(
+          map,
+          point,
+          data
+        );
+
+      }
+    );
+
+  });
+
+
+  map.addEventListener(
+    "click",
+    event => {
+
+      if (
+        !event.target.closest(
+          ".mapPoint"
+        )
+      ) {
+
+        removeMapTooltip(map);
+
+      }
+
+    }
+  );
+
+}
+
+
+function showMapTooltip(
+  map,
+  point,
+  data
+) {
+
+  removeMapTooltip(map);
+
+
+  const tooltip =
+    document.createElement(
+      "div"
+    );
+
+
+  tooltip.className =
+    "geoTooltip";
+
+
+  tooltip.innerHTML = `
+
+    <strong>
+      ${escapeHtml(data.title)}
+    </strong>
+
+    <span>
+      ${escapeHtml(data.text)}
+    </span>
+
+  `;
+
+
+  map.appendChild(
+    tooltip
   );
 
 
-if (year) {
+  const pointRect =
+    point.getBoundingClientRect();
 
-  year.textContent =
-    new Date().getFullYear();
+  const mapRect =
+    map.getBoundingClientRect();
+
+
+  let left =
+    pointRect.left -
+    mapRect.left +
+    pointRect.width / 2;
+
+
+  let top =
+    pointRect.top -
+    mapRect.top -
+    12;
+
+
+  tooltip.style.left =
+    left + "px";
+
+  tooltip.style.top =
+    top + "px";
 
 }
 
 
-/* =========================
-   START
-========================= */
+function removeMapTooltip(map) {
 
-setupFilters();
-
-setupCategoryCards();
-
-setupMenu();
-
-setupBackToTop();
-
-loadPosts();
+  const tooltip =
+    map.querySelector(
+      ".geoTooltip"
+    );
 
 
-/* =========================
-   AUTO UPDATE
-========================= */
-
-setInterval(
-  () => {
-
-    loadPosts(false);
-
-  },
-  5 * 60 * 1000
-);
+  if (tooltip) {
+    tooltip.remove();
+  }
 
 
-/* =========================
-   RETURN TO TAB
-========================= */
+  map
+    .querySelectorAll(
+      ".mapPoint"
+    )
+    .forEach(point => {
+
+      point.classList.remove(
+        "selected"
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+   SMOOTH INTERNAL LINKS
+========================================================= */
+
+function setupSmoothLinks() {
+
+  document
+    .querySelectorAll(
+      'a[href^="#"]'
+    )
+    .forEach(link => {
+
+      link.addEventListener(
+        "click",
+        event => {
+
+          const href =
+            link.getAttribute(
+              "href"
+            );
+
+
+          if (
+            !href ||
+            href === "#"
+          ) {
+            return;
+          }
+
+
+          const target =
+            document.querySelector(
+              href
+            );
+
+
+          if (!target) {
+            return;
+          }
+
+
+          event.preventDefault();
+
+
+          target.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+
+        }
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+   VISIBILITY UPDATE
+========================================================= */
 
 document.addEventListener(
   "visibilitychange",
@@ -1960,9 +2392,114 @@ document.addEventListener(
       "visible"
     ) {
 
-      loadPosts(false);
+      loadPosts();
 
     }
 
   }
 );
+
+
+/* =========================================================
+   AUTO UPDATE
+========================================================= */
+
+setInterval(
+  () => {
+
+    loadPosts();
+
+  },
+  5 * 60 * 1000
+);
+
+
+/* =========================================================
+   SCROLL
+========================================================= */
+
+window.addEventListener(
+  "scroll",
+  updateMobileNavigation,
+  {
+    passive: true
+  }
+);
+
+
+/* =========================================================
+   REFRESH BUTTON
+========================================================= */
+
+if (refreshButton) {
+
+  refreshButton.addEventListener(
+    "click",
+    () => {
+
+      loadPosts();
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    setupCategoryButtons();
+
+    setupSearch();
+
+    setupCategoryCards();
+
+    setupMobileMenu();
+
+    setupMobileNavigation();
+
+    setupBackToTop();
+
+    setupGeographyMap();
+
+    setupSmoothLinks();
+
+    loadPosts();
+
+  }
+);
+
+
+/* =========================================================
+   GLOBAL FUNCTIONS
+   Нужны для onclick в HTML
+========================================================= */
+
+window.openPost =
+  openPost;
+
+window.closePostModal =
+  closePostModal;
+
+window.toggleFavorite =
+  toggleFavorite;
+
+window.sharePost =
+  sharePost;
+
+window.copyPostLink =
+  copyPostLink;
+
+window.loadMorePosts =
+  loadMorePosts;
+
+window.resetFilters =
+  resetFilters;
+
+window.loadPosts =
+  loadPosts;
