@@ -1,11 +1,49 @@
 const API_URL =
   "https://national-geographic-backend.9dnwrczbz7.workers.dev/api/posts";
 
-const postsContainer =
-  document.querySelector("#posts");
+const postsContainer = document.querySelector("#posts");
 
 let allPosts = [];
 let visiblePosts = 6;
+let activeCategory = "Все";
+let searchText = "";
+
+const categories = {
+  "Природа": [
+    "природ", "гора", "горы", "лес", "озеро", "река",
+    "водопад", "океан", "море", "пустын", "вулкан",
+    "пейзаж", "остров", "ледник", "парк"
+  ],
+
+  "Путешествия": [
+    "путешеств", "туризм", "маршрут", "поездк",
+    "путешествен", "дорог", "отправ", "курорт",
+    "турист"
+  ],
+
+  "Россия": [
+    "росси", "москв", "санкт-петербург", "петербург",
+    "крым", "алтай", "сибир", "кавказ", "примор",
+    "курил", "камчат", "байкал"
+  ],
+
+  "Мир": [
+    "мир", "европ", "ази", "америк", "африк",
+    "австрали", "япони", "китай", "франци",
+    "итал", "испан", "инд"
+  ],
+
+  "Животные": [
+    "живот", "медвед", "тигр", "лев", "волк",
+    "слон", "кит", "дельфин", "акул", "птиц",
+    "орёл", "орел", "кот", "собак", "звер"
+  ]
+};
+
+
+/* =========================
+   ДАТА
+========================= */
 
 function formatDate(timestamp) {
 
@@ -19,6 +57,11 @@ function formatDate(timestamp) {
     });
 }
 
+
+/* =========================
+   ТЕКСТ
+========================= */
+
 function cleanText(text) {
 
   if (!text) {
@@ -29,6 +72,11 @@ function cleanText(text) {
     .replace(/\n+/g, " ")
     .trim();
 }
+
+
+/* =========================
+   ССЫЛКА VK
+========================= */
 
 function getPostLink(vkId) {
 
@@ -45,6 +93,77 @@ function getPostLink(vkId) {
   return "https://vk.ru/national.geograph1c";
 }
 
+
+/* =========================
+   ОПРЕДЕЛЕНИЕ КАТЕГОРИИ
+========================= */
+
+function detectCategory(text) {
+
+  const lower = text.toLowerCase();
+
+  for (const category in categories) {
+
+    const words = categories[category];
+
+    for (const word of words) {
+
+      if (lower.includes(word)) {
+        return category;
+      }
+
+    }
+
+  }
+
+  return "Мир";
+}
+
+
+/* =========================
+   ФИЛЬТРАЦИЯ
+========================= */
+
+function getFilteredPosts() {
+
+  let posts = [...allPosts];
+
+  if (activeCategory !== "Все") {
+
+    posts = posts.filter(post => {
+
+      const text = cleanText(post.text);
+
+      return detectCategory(text) === activeCategory;
+
+    });
+
+  }
+
+  if (searchText.trim()) {
+
+    const query =
+      searchText.toLowerCase().trim();
+
+    posts = posts.filter(post => {
+
+      const text =
+        cleanText(post.text).toLowerCase();
+
+      return text.includes(query);
+
+    });
+
+  }
+
+  return posts;
+}
+
+
+/* =========================
+   КАРТОЧКА ПОСТА
+========================= */
+
 function createPost(post) {
 
   const text =
@@ -59,6 +178,9 @@ function createPost(post) {
   const link =
     getPostLink(post.vk_id);
 
+  const category =
+    detectCategory(text);
+
   return `
     <article class="post">
 
@@ -72,7 +194,7 @@ function createPost(post) {
       >
 
         <span class="tag">
-          NATIONAL GEOGRAPHIC
+          ${category}
         </span>
 
       </div>
@@ -103,17 +225,43 @@ function createPost(post) {
   `;
 }
 
+
+/* =========================
+   ОТОБРАЖЕНИЕ
+========================= */
+
 function renderPosts() {
 
+  const filteredPosts =
+    getFilteredPosts();
+
   const postsToShow =
-    allPosts.slice(0, visiblePosts);
+    filteredPosts.slice(0, visiblePosts);
+
+  if (!filteredPosts.length) {
+
+    postsContainer.innerHTML = `
+      <div class="loading">
+
+        Ничего не найдено
+
+        <br><br>
+
+        Попробуйте изменить запрос
+        или выбрать другую категорию.
+
+      </div>
+    `;
+
+    return;
+  }
 
   postsContainer.innerHTML =
     postsToShow
       .map(createPost)
       .join("");
 
-  if (visiblePosts < allPosts.length) {
+  if (visiblePosts < filteredPosts.length) {
 
     postsContainer.innerHTML += `
       <div class="loadMoreWrap">
@@ -136,6 +284,11 @@ function renderPosts() {
       });
   }
 }
+
+
+/* =========================
+   ЗАГРУЗКА
+========================= */
 
 async function loadPosts(showLoading = true) {
 
@@ -160,9 +313,11 @@ async function loadPosts(showLoading = true) {
       });
 
     if (!response.ok) {
+
       throw new Error(
         `API error ${response.status}`
       );
+
     }
 
     const data =
@@ -172,9 +327,11 @@ async function loadPosts(showLoading = true) {
       !data ||
       !Array.isArray(data.posts)
     ) {
+
       throw new Error(
         "Неверный формат API"
       );
+
     }
 
     allPosts =
@@ -189,7 +346,7 @@ async function loadPosts(showLoading = true) {
   } catch (error) {
 
     console.error(
-      "Ошибка загрузки постов:",
+      "Ошибка загрузки:",
       error
     );
 
@@ -211,24 +368,167 @@ async function loadPosts(showLoading = true) {
 
         </div>
       `;
+
     }
+
   }
+
 }
 
 
-/* ГОД */
+/* =========================
+   ПОИСК + КАТЕГОРИИ
+========================= */
+
+function createFilters() {
+
+  const section =
+    document.querySelector("#latest");
+
+  if (!section) return;
+
+  const heading =
+    section.querySelector(".heading");
+
+  if (!heading) return;
+
+  const filters =
+    document.createElement("div");
+
+  filters.className =
+    "postFilters";
+
+  filters.innerHTML = `
+
+    <div class="searchBox">
+
+      <input
+        id="postSearch"
+        type="search"
+        placeholder="Поиск по публикациям..."
+        autocomplete="off"
+      >
+
+      <span>⌕</span>
+
+    </div>
+
+    <div class="categoryButtons">
+
+      <button
+        class="categoryBtn active"
+        data-category="Все"
+      >
+        Все
+      </button>
+
+      <button
+        class="categoryBtn"
+        data-category="Природа"
+      >
+        🏔️ Природа
+      </button>
+
+      <button
+        class="categoryBtn"
+        data-category="Путешествия"
+      >
+        ✈️ Путешествия
+      </button>
+
+      <button
+        class="categoryBtn"
+        data-category="Россия"
+      >
+        🇷🇺 Россия
+      </button>
+
+      <button
+        class="categoryBtn"
+        data-category="Мир"
+      >
+        🌍 Мир
+      </button>
+
+      <button
+        class="categoryBtn"
+        data-category="Животные"
+      >
+        🐾 Животные
+      </button>
+
+    </div>
+
+  `;
+
+  heading.after(filters);
+
+
+  const search =
+    document.querySelector("#postSearch");
+
+  search.addEventListener(
+    "input",
+    event => {
+
+      searchText =
+        event.target.value;
+
+      visiblePosts = 6;
+
+      renderPosts();
+
+    }
+  );
+
+
+  document
+    .querySelectorAll(".categoryBtn")
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+
+          document
+            .querySelectorAll(".categoryBtn")
+            .forEach(btn =>
+              btn.classList.remove("active")
+            );
+
+          button.classList.add("active");
+
+          activeCategory =
+            button.dataset.category;
+
+          visiblePosts = 6;
+
+          renderPosts();
+
+        }
+      );
+
+    });
+
+}
+
+
+/* =========================
+   ГОД
+========================= */
 
 const year =
   document.querySelector("#year");
 
 if (year) {
-
   year.textContent =
     new Date().getFullYear();
 }
 
 
-/* МОБИЛЬНОЕ МЕНЮ */
+/* =========================
+   МОБИЛЬНОЕ МЕНЮ
+========================= */
 
 const menu =
   document.querySelector("#menu");
@@ -263,18 +563,23 @@ if (menu && links) {
       };
 
     });
+
 }
 
 
-/* ПЕРВАЯ ЗАГРУЗКА */
+/* =========================
+   ЗАПУСК
+========================= */
+
+createFilters();
 
 loadPosts();
 
 
-/*
+/* =========================
    АВТООБНОВЛЕНИЕ
-   Каждые 5 минут
-*/
+   КАЖДЫЕ 5 МИНУТ
+========================= */
 
 setInterval(() => {
 
@@ -283,10 +588,9 @@ setInterval(() => {
 }, 5 * 60 * 1000);
 
 
-/*
+/* =========================
    ОБНОВЛЕНИЕ ПРИ ВОЗВРАТЕ
-   ПОЛЬЗОВАТЕЛЯ НА СТРАНИЦУ
-*/
+========================= */
 
 document.addEventListener(
   "visibilitychange",
