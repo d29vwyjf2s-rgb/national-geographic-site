@@ -9,21 +9,21 @@ const POSTS_PER_PAGE = 10;
 let allPosts = [];
 let visiblePosts = POSTS_PER_PAGE;
 
+
+/* =========================
+   ELEMENTS
+========================= */
+
 const postsContainer = document.getElementById("posts");
 const feedStatus = document.getElementById("feedStatus");
 const loadMoreWrap = document.getElementById("loadMoreWrap");
 const loadMoreButton = document.getElementById("loadMore");
+
+const menuButton = document.getElementById("menuButton");
+const mobileMenu = document.getElementById("mobileMenu");
+
 const backToTop = document.getElementById("backToTop");
 const toast = document.getElementById("toast");
-
-const mobileMenuButton =
-  document.getElementById("mobileMenuButton");
-
-const mobileMenu =
-  document.getElementById("mobileMenu");
-
-const yearElement =
-  document.getElementById("year");
 
 
 /* =========================
@@ -32,28 +32,10 @@ const yearElement =
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  if (yearElement) {
-    yearElement.textContent =
-      new Date().getFullYear();
-  }
-
+  initMenu();
+  initBackToTop();
+  initNavigation();
   loadPosts();
-
-  setupNavigation();
-  setupBackToTop();
-  setupMobileMenu();
-
-  if (loadMoreButton) {
-    loadMoreButton.addEventListener(
-      "click",
-      loadMorePosts
-    );
-  }
-
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js")
-      .catch(() => {});
-  }
 
 });
 
@@ -64,29 +46,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function loadPosts() {
 
-  feedStatus.textContent =
-    "ЗАГРУЗКА ПУБЛИКАЦИЙ…";
+  setStatus("Загружаем публикации…");
 
   try {
 
-    const response =
-      await fetch(API_URL, {
-        cache: "no-store"
-      });
+    const response = await fetch(API_URL, {
+      cache: "no-store"
+    });
 
     if (!response.ok) {
-      throw new Error(
-        `HTTP ${response.status}`
-      );
+      throw new Error("API error");
     }
 
-    const data =
-      await response.json();
+    const data = await response.json();
 
     if (!data || !Array.isArray(data.posts)) {
-      throw new Error(
-        "Неверный формат API"
-      );
+      throw new Error("Неверный формат API");
     }
 
     allPosts = data.posts;
@@ -95,82 +70,63 @@ async function loadPosts() {
 
     renderPosts();
 
-  } catch (error) {
+    if (allPosts.length === 0) {
+      setStatus("Публикаций пока нет.");
+      return;
+    }
 
-    console.error(
-      "Ошибка загрузки:",
-      error
+    setStatus(
+      `Загружено публикаций: ${allPosts.length}`
     );
 
-    feedStatus.textContent =
-      "НЕ УДАЛОСЬ ЗАГРУЗИТЬ ПУБЛИКАЦИИ";
+  } catch (error) {
 
-    postsContainer.innerHTML = `
-      <div class="vkPost">
-        <div class="vkPostContent">
-          <p class="vkPostText">
-            Не удалось получить публикации.
-            Проверьте подключение к интернету
-            и попробуйте обновить страницу.
-          </p>
+    console.error(error);
 
-          <button
-            class="loadMore"
-            onclick="loadPosts()"
-          >
-            ПОВТОРИТЬ
-          </button>
-        </div>
-      </div>
-    `;
+    setStatus(
+      "Не удалось загрузить публикации."
+    );
+
+    showToast(
+      "Ошибка загрузки ленты"
+    );
+
   }
+
 }
 
 
 /* =========================
-   RENDER
+   RENDER POSTS
 ========================= */
 
 function renderPosts() {
+
+  if (!postsContainer) return;
 
   postsContainer.innerHTML = "";
 
   const postsToShow =
     allPosts.slice(0, visiblePosts);
 
-  if (!postsToShow.length) {
+  postsToShow.forEach(post => {
 
-    feedStatus.textContent =
-      "ПУБЛИКАЦИЙ ПОКА НЕТ";
+    postsContainer.appendChild(
+      createPost(post)
+    );
 
-    loadMoreWrap.hidden = true;
+  });
 
-    return;
-  }
+  updateLoadMore();
 
-  feedStatus.textContent =
-    `${allPosts.length} ПУБЛИКАЦИЙ`;
-
-  postsToShow.forEach(
-    (post, index) => {
-
-      postsContainer.appendChild(
-        createPostCard(post, index)
-      );
-
-    }
-  );
-
-  loadMoreWrap.hidden =
-    visiblePosts >= allPosts.length;
 }
 
 
 /* =========================
-   POST CARD
+   CREATE POST
 ========================= */
 
-function createPostCard(post, index) {
+function createPost(post) {
 
   const article =
     document.createElement("article");
@@ -178,628 +134,451 @@ function createPostCard(post, index) {
   article.className = "vkPost";
 
   const postId =
-    post.id ??
-    post.vk_id ??
-    index;
+    post.id ||
+    post.vk_id ||
+    Date.now();
 
   const text =
     post.text ||
     "";
 
+  const date =
+    formatDate(post.post_date || post.created_at);
+
   const image =
-    getImageUrl(post);
+    getImage(post);
 
   const video =
-    getVideoUrl(post);
-
-  const date =
-    formatDate(
-      post.post_date ||
-      post.created_at
-    );
-
-  const commentsCount =
-    Number(
-      post.comments_count ??
-      post.commentsCount ??
-      0
-    );
-
-  article.innerHTML = `
-
-    <div class="vkPostHeader">
-
-      <div class="vkPostIdentity">
-
-        <div class="vkCommunityAvatar">
-          NG
-        </div>
-
-        <div class="vkPostAuthor">
-
-          <strong>
-            National Geographic
-          </strong>
-
-          <time>
-            ${escapeHtml(date)}
-          </time>
-
-        </div>
-
-      </div>
-
-      <button
-        class="vkPostMenu"
-        data-menu="${escapeAttribute(postId)}"
-        aria-label="Меню"
-      >
-        ⋮
-      </button>
-
-    </div>
-
-
-    <div class="vkPostContent">
-
-      ${
-        text
-          ? `
-            <p class="vkPostText">
-              ${escapeHtml(text)}
-            </p>
-          `
-          : ""
-      }
-
-
-      ${
-        image
-          ? `
-            <img
-              class="vkPostImage"
-              src="${escapeAttribute(image)}"
-              alt="National Geographic"
-              loading="lazy"
-              data-full-image="${escapeAttribute(image)}"
-            >
-          `
-          : ""
-      }
+    getVideo(post);
 
-
-      ${
-        !image && video
-          ? `
-            <div class="vkPostVideo">
-
-              <a
-                href="${escapeAttribute(video)}"
-                target="_blank"
-                rel="noopener"
-                class="vkVideoLink"
-              >
-                ▶ ОТКРЫТЬ ВИДЕО
-              </a>
-
-            </div>
-          `
-          : ""
-      }
-
-
-      ${
-        !image && !video && !text
-          ? `
-            <div class="vkPostPlaceholder">
-              NG
-            </div>
-          `
-          : ""
-      }
+  const liked =
+    localStorage.getItem(
+      `natgeo_like_${postId}`
+    ) === "1";
 
 
-      <div class="vkPostActions">
-
-        <button
-          class="vkAction likeButton"
-          data-post-id="${escapeAttribute(postId)}"
-        >
-          ♡ НРАВИТСЯ
-        </button>
-
-        <button
-          class="vkAction commentButton"
-          data-post-id="${escapeAttribute(postId)}"
-        >
-          ${commentsCount > 0
-            ? `● ${commentsCount} КОММЕНТ.`
-            : "● КОММЕНТАРИИ"}
-        </button>
-
-        <button
-          class="vkAction shareButton"
-          data-post-id="${escapeAttribute(postId)}"
-        >
-          ↗ ПОДЕЛИТЬСЯ
-        </button>
-
-      </div>
-
+  /* HEADER */
 
-      <div class="vkPostBottom">
-
-        <span>
-          VK • ${escapeHtml(String(post.vk_id || ""))}
-        </span>
+  const header =
+    document.createElement("div");
 
-        <a
-          class="vkOpenPost"
-          href="${getVkPostUrl(post)}"
-          target="_blank"
-          rel="noopener"
-        >
-          ОТКРЫТЬ ↗
-        </a>
+  header.className =
+    "vkPostHeader";
 
-      </div>
 
-      ${
-        renderComments(post)
-      }
+  const identity =
+    document.createElement("div");
 
-    </div>
-  `;
+  identity.className =
+    "vkPostIdentity";
 
 
-  setupPostEvents(article, post);
+  const avatar =
+    document.createElement("div");
 
-  return article;
-}
+  avatar.className =
+    "vkCommunityAvatar";
 
 
-/* =========================
-   COMMENTS
-========================= */
+  const authorBox =
+    document.createElement("div");
 
-function renderComments(post) {
 
-  const comments =
-    Array.isArray(post.comments)
-      ? post.comments
-      : Array.isArray(post.comment_list)
-        ? post.comment_list
-        : [];
+  const author =
+    document.createElement("div");
 
-  const count =
-    Number(
-      post.comments_count ??
-      post.commentsCount ??
-      comments.length
-    );
+  author.className =
+    "vkPostAuthor";
 
-  if (!count && !comments.length) {
-    return "";
-  }
+  author.textContent =
+    "National Geographic";
 
-  if (!comments.length) {
 
-    return `
-      <div class="vkComments">
+  const dateElement =
+    document.createElement("div");
 
-        <div class="vkCommentsHeader">
-          КОММЕНТАРИИ
-        </div>
+  dateElement.className =
+    "vkPostDate";
 
-        <div class="vkCommentsEmpty">
-          ${count} комментариев.
-          Открыть обсуждение можно
-          в сообществе VK.
-        </div>
+  dateElement.textContent =
+    date;
 
-      </div>
-    `;
-  }
 
-  return `
-    <div class="vkComments">
+  authorBox.appendChild(author);
+  authorBox.appendChild(dateElement);
 
-      <div class="vkCommentsHeader">
-        КОММЕНТАРИИ
-      </div>
+  identity.appendChild(avatar);
+  identity.appendChild(authorBox);
 
-      ${comments
-        .slice(0, 5)
-        .map(comment => {
 
-          const commentText =
-            typeof comment === "string"
-              ? comment
-              : comment.text || "";
+  const menu =
+    document.createElement("button");
 
-          return `
-            <div class="vkComment">
-              ${escapeHtml(commentText)}
-            </div>
-          `;
+  menu.className =
+    "vkPostMenu";
 
-        })
-        .join("")}
+  menu.type =
+    "button";
 
-    </div>
-  `;
-}
+  menu.textContent =
+    "•••";
 
+  menu.addEventListener("click", () => {
 
-/* =========================
-   POST EVENTS
-========================= */
+    showPostMenu(post);
 
-function setupPostEvents(article, post) {
+  });
 
-  const likeButton =
-    article.querySelector(".likeButton");
 
-  const commentButton =
-    article.querySelector(".commentButton");
+  header.appendChild(identity);
+  header.appendChild(menu);
 
-  const shareButton =
-    article.querySelector(".shareButton");
 
-  const menuButton =
-    article.querySelector(".vkPostMenu");
+  /* CONTENT */
 
-  const image =
-    article.querySelector(".vkPostImage");
+  const content =
+    document.createElement("div");
 
+  content.className =
+    "vkPostContent";
 
-  if (likeButton) {
 
-    likeButton.addEventListener(
-      "click",
-      () => {
+  if (text.trim()) {
 
-        likeButton.classList.toggle("active");
+    const textElement =
+      document.createElement("div");
 
-        likeButton.textContent =
-          likeButton.classList.contains("active")
-            ? "♥ НРАВИТСЯ"
-            : "♡ НРАВИТСЯ";
+    textElement.className =
+      "vkPostText";
 
-      }
+    textElement.textContent =
+      text;
+
+    content.appendChild(
+      textElement
     );
 
   }
 
 
-  if (commentButton) {
-
-    commentButton.addEventListener(
-      "click",
-      () => {
-
-        const comments =
-          article.querySelector(".vkComments");
-
-        if (comments) {
-
-          comments.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-          });
-
-        } else {
-
-          showToast(
-            "Комментарии доступны в VK"
-          );
-
-          window.open(
-            getVkPostUrl(post),
-            "_blank",
-            "noopener"
-          );
-
-        }
-
-      }
-    );
-
-  }
-
-
-  if (shareButton) {
-
-    shareButton.addEventListener(
-      "click",
-      () => sharePost(post)
-    );
-
-  }
-
-
-  if (menuButton) {
-
-    menuButton.addEventListener(
-      "click",
-      event => {
-
-        event.stopPropagation();
-
-        showPostMenu(
-          menuButton,
-          post
-        );
-
-      }
-    );
-
-  }
-
+  /* IMAGE */
 
   if (image) {
 
-    image.addEventListener(
+    const imageElement =
+      document.createElement("img");
+
+    imageElement.className =
+      "vkPostImage";
+
+    imageElement.src =
+      image;
+
+    imageElement.alt =
+      "National Geographic";
+
+    imageElement.loading =
+      "lazy";
+
+    imageElement.addEventListener(
       "click",
-      () => openImage(image.src)
+      () => openImage(image)
+    );
+
+    imageElement.addEventListener(
+      "error",
+      () => {
+        imageElement.remove();
+      }
+    );
+
+    content.appendChild(
+      imageElement
     );
 
   }
 
-}
+
+  /* VIDEO */
+
+  if (video) {
+
+    const videoElement =
+      document.createElement("video");
+
+    videoElement.className =
+      "vkPostVideo";
+
+    videoElement.src =
+      video;
+
+    videoElement.controls =
+      true;
+
+    videoElement.playsInline =
+      true;
+
+    videoElement.preload =
+      "metadata";
+
+    content.appendChild(
+      videoElement
+    );
+
+  }
 
 
-/* =========================
-   LOAD MORE
-========================= */
-
-function loadMorePosts() {
-
-  visiblePosts += POSTS_PER_PAGE;
-
-  renderPosts();
-
-}
-
-
-/* =========================
-   SHARE
-========================= */
-
-async function sharePost(post) {
-
-  const url =
-    getVkPostUrl(post);
-
-  const text =
-    post.text
-      ? post.text.slice(0, 180)
-      : "National Geographic";
+  /* EMPTY MEDIA */
 
   if (
-    navigator.share
+    !text.trim() &&
+    !image &&
+    !video
   ) {
 
-    try {
+    const placeholder =
+      document.createElement("div");
 
-      await navigator.share({
-        title:
-          "National Geographic",
-        text,
-        url
-      });
+    placeholder.className =
+      "vkPostPlaceholder";
 
-      return;
+    placeholder.textContent =
+      "NATIONAL GEOGRAPHIC";
 
-    } catch (error) {}
-
-  }
-
-  try {
-
-    await navigator.clipboard.writeText(
-      url
-    );
-
-    showToast(
-      "Ссылка скопирована"
-    );
-
-  } catch (error) {
-
-    window.open(
-      url,
-      "_blank",
-      "noopener"
+    content.appendChild(
+      placeholder
     );
 
   }
 
-}
 
+  /* ACTIONS */
 
-/* =========================
-   IMAGE VIEWER
-========================= */
-
-function openImage(src) {
-
-  const overlay =
+  const actions =
     document.createElement("div");
 
-  overlay.style.cssText = `
-    position:fixed;
-    inset:0;
-    z-index:5000;
-    background:rgba(0,0,0,.96);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    cursor:zoom-out;
-  `;
+  actions.className =
+    "vkPostActions";
 
-  overlay.innerHTML = `
-    <img
-      src="${escapeAttribute(src)}"
-      style="
-        max-width:100%;
-        max-height:100%;
-        object-fit:contain;
-      "
-      alt=""
-    >
-  `;
 
-  overlay.addEventListener(
-    "click",
-    () => overlay.remove()
+  /* LIKE */
+
+  const likeButton =
+    document.createElement("button");
+
+  likeButton.type =
+    "button";
+
+  likeButton.className =
+    `vkAction likeButton ${
+      liked ? "liked" : ""
+    }`;
+
+  likeButton.setAttribute(
+    "aria-label",
+    liked
+      ? "Убрать лайк"
+      : "Нравится"
   );
 
-  document.body.appendChild(
-    overlay
-  );
-
-}
-
-
-/* =========================
-   POST MENU
-========================= */
-
-function showPostMenu(button, post) {
-
-  closePostMenu();
-
-  const menu =
-    document.createElement("div");
-
-  menu.className =
-    "postPopupMenu";
-
-  menu.innerHTML = `
-
-    <button data-action="copy">
-      Копировать текст
-    </button>
-
-    <button data-action="vk">
-      Открыть в VK
-    </button>
-
+  likeButton.innerHTML = `
+    <span class="heart">♥</span>
+    <span>НРАВИТСЯ</span>
   `;
 
-  document.body.appendChild(menu);
 
-  const rect =
-    button.getBoundingClientRect();
-
-  menu.style.top =
-    `${rect.bottom + 6}px`;
-
-  menu.style.left =
-    `${Math.max(
-      10,
-      rect.right - 180
-    )}px`;
-
-
-  menu.addEventListener(
+  likeButton.addEventListener(
     "click",
-    async event => {
+    () => {
 
-      const action =
-        event.target.dataset.action;
-
-      if (action === "copy") {
-
-        try {
-
-          await navigator.clipboard.writeText(
-            post.text || ""
-          );
-
-          showToast(
-            "Текст скопирован"
-          );
-
-        } catch (error) {
-
-          showToast(
-            "Не удалось скопировать"
-          );
-
-        }
-
-      }
-
-      if (action === "vk") {
-
-        window.open(
-          getVkPostUrl(post),
-          "_blank",
-          "noopener"
-        );
-
-      }
-
-      closePostMenu();
+      toggleLike(
+        postId,
+        likeButton
+      );
 
     }
   );
 
-  setTimeout(() => {
 
-    document.addEventListener(
-      "click",
-      closePostMenu,
-      {
-        once: true
-      }
-    );
+  /* COMMENTS */
 
-  }, 0);
+  const commentsButton =
+    document.createElement("button");
 
-}
+  commentsButton.type =
+    "button";
+
+  commentsButton.className =
+    "vkAction";
+
+  commentsButton.innerHTML =
+    "💬 КОММЕНТАРИИ";
+
+  commentsButton.addEventListener(
+    "click",
+    () => {
+
+      showToast(
+        "Комментарии скоро будут доступны"
+      );
+
+    }
+  );
 
 
-function closePostMenu() {
+  /* SHARE */
 
-  document
-    .querySelectorAll(".postPopupMenu")
-    .forEach(menu => menu.remove());
+  const shareButton =
+    document.createElement("button");
+
+  shareButton.type =
+    "button";
+
+  shareButton.className =
+    "vkAction";
+
+  shareButton.innerHTML =
+    "↗ ПОДЕЛИТЬСЯ";
+
+  shareButton.addEventListener(
+    "click",
+    () => {
+
+      sharePost(post);
+
+    }
+  );
+
+
+  actions.appendChild(
+    likeButton
+  );
+
+  actions.appendChild(
+    commentsButton
+  );
+
+  actions.appendChild(
+    shareButton
+  );
+
+
+  /* BOTTOM */
+
+  const bottom =
+    document.createElement("div");
+
+  bottom.className =
+    "vkPostBottom";
+
+
+  const open =
+    document.createElement("a");
+
+  open.className =
+    "vkOpenPost";
+
+  open.href =
+    VK_GROUP_URL;
+
+  open.target =
+    "_blank";
+
+  open.rel =
+    "noopener noreferrer";
+
+  open.textContent =
+    "Открыть сообщество VK →";
+
+
+  bottom.appendChild(
+    open
+  );
+
+
+  article.appendChild(header);
+  article.appendChild(content);
+  article.appendChild(actions);
+  article.appendChild(bottom);
+
+  return article;
 
 }
 
 
 /* =========================
-   IMAGE / VIDEO
+   LIKE
 ========================= */
 
-function getImageUrl(post) {
+function toggleLike(postId, button) {
 
-  const possible = [
+  const key =
+    `natgeo_like_${postId}`;
 
-    post.image_url,
-    post.image,
-    post.photo,
-    post.photo_url,
-    post.imageUrl
+  const liked =
+    localStorage.getItem(key) === "1";
 
-  ];
 
-  for (const value of possible) {
+  if (liked) {
+
+    localStorage.removeItem(key);
+
+    button.classList.remove(
+      "liked"
+    );
+
+    button.setAttribute(
+      "aria-label",
+      "Нравится"
+    );
+
+  } else {
+
+    localStorage.setItem(
+      key,
+      "1"
+    );
+
+    button.classList.add(
+      "liked"
+    );
+
+    button.setAttribute(
+      "aria-label",
+      "Убрать лайк"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   IMAGE
+========================= */
+
+function getImage(post) {
+
+  const possible =
+    [
+      post.image_url,
+      post.image,
+      post.photo,
+      post.photo_url,
+      post.imageUrl
+    ];
+
+  for (const item of possible) {
 
     if (
-      typeof value === "string" &&
-      value.trim()
+      typeof item === "string" &&
+      item.startsWith("http")
     ) {
-
-      return value.trim();
-
+      return item;
     }
 
   }
+
 
   if (
     Array.isArray(post.attachments)
@@ -818,12 +597,14 @@ function getImageUrl(post) {
           attachment.photo;
 
         if (
-          photo?.sizes &&
-          photo.sizes.length
+          photo?.sizes?.length
         ) {
 
-          return photo.sizes[
-            photo.sizes.length - 1
+          const sizes =
+            photo.sizes;
+
+          return sizes[
+            sizes.length - 1
           ].url;
 
         }
@@ -835,107 +616,37 @@ function getImageUrl(post) {
   }
 
   return null;
+
 }
 
 
-function getVideoUrl(post) {
+/* =========================
+   VIDEO
+========================= */
 
-  const possible = [
+function getVideo(post) {
 
-    post.video_url,
-    post.videoUrl,
-    post.video_mp4,
-    post.video_url_hd
+  const possible =
+    [
+      post.video_url,
+      post.videoUrl,
+      post.video_mp4,
+      post.video_url_hd
+    ];
 
-  ];
-
-  for (const value of possible) {
+  for (const item of possible) {
 
     if (
-      typeof value === "string" &&
-      value.trim()
+      typeof item === "string" &&
+      item.startsWith("http")
     ) {
-
-      return value.trim();
-
-    }
-
-  }
-
-  if (
-    typeof post.video === "string"
-  ) {
-
-    return post.video;
-
-  }
-
-  if (
-    post.video?.url
-  ) {
-
-    return post.video.url;
-
-  }
-
-  if (
-    Array.isArray(post.attachments)
-  ) {
-
-    for (
-      const attachment
-      of post.attachments
-    ) {
-
-      if (
-        attachment.type === "video"
-      ) {
-
-        if (
-          attachment.video?.player
-        ) {
-
-          return attachment.video.player;
-
-        }
-
-      }
-
+      return item;
     }
 
   }
 
   return null;
-}
 
-
-/* =========================
-   VK URL
-========================= */
-
-function getVkPostUrl(post) {
-
-  if (post.vk_url) {
-    return post.vk_url;
-  }
-
-  const vkId =
-    String(
-      post.vk_id || ""
-    );
-
-  const match =
-    vkId.match(
-      /^(-?\d+)_(\d+)$/
-    );
-
-  if (match) {
-
-    return `https://vk.com/wall${match[1]}_${match[2]}`;
-
-  }
-
-  return VK_GROUP_URL;
 }
 
 
@@ -968,13 +679,17 @@ function formatDate(value) {
 
   }
 
+
   if (
-    Number.isNaN(date.getTime())
+    Number.isNaN(
+      date.getTime()
+    )
   ) {
 
-    return String(value);
+    return "";
 
   }
+
 
   return date.toLocaleDateString(
     "ru-RU",
@@ -984,6 +699,277 @@ function formatDate(value) {
       year: "numeric"
     }
   );
+
+}
+
+
+/* =========================
+   LOAD MORE
+========================= */
+
+function updateLoadMore() {
+
+  if (!loadMoreWrap) {
+    return;
+  }
+
+  if (
+    visiblePosts >=
+    allPosts.length
+  ) {
+
+    loadMoreWrap.style.display =
+      "none";
+
+  } else {
+
+    loadMoreWrap.style.display =
+      "flex";
+
+  }
+
+}
+
+
+if (loadMoreButton) {
+
+  loadMoreButton.addEventListener(
+    "click",
+    () => {
+
+      visiblePosts +=
+        POSTS_PER_PAGE;
+
+      renderPosts();
+
+    }
+  );
+
+}
+
+
+/* =========================
+   SHARE
+========================= */
+
+async function sharePost(post) {
+
+  const text =
+    post.text ||
+    "National Geographic";
+
+  const url =
+    VK_GROUP_URL;
+
+
+  if (
+    navigator.share
+  ) {
+
+    try {
+
+      await navigator.share({
+        title:
+          "National Geographic",
+        text,
+        url
+      });
+
+      return;
+
+    } catch (error) {
+
+      return;
+
+    }
+
+  }
+
+
+  try {
+
+    await navigator.clipboard.writeText(
+      `${text}\n\n${url}`
+    );
+
+    showToast(
+      "Ссылка скопирована"
+    );
+
+  } catch (error) {
+
+    showToast(
+      "Не удалось скопировать ссылку"
+    );
+
+  }
+
+}
+
+
+/* =========================
+   IMAGE VIEWER
+========================= */
+
+function openImage(src) {
+
+  const viewer =
+    document.createElement("div");
+
+  viewer.style.position =
+    "fixed";
+
+  viewer.style.inset =
+    "0";
+
+  viewer.style.zIndex =
+    "5000";
+
+  viewer.style.background =
+    "rgba(0,0,0,.96)";
+
+  viewer.style.display =
+    "flex";
+
+  viewer.style.alignItems =
+    "center";
+
+  viewer.style.justifyContent =
+    "center";
+
+  viewer.style.padding =
+    "20px";
+
+  viewer.style.cursor =
+    "zoom-out";
+
+
+  const image =
+    document.createElement("img");
+
+  image.src =
+    src;
+
+  image.style.maxWidth =
+    "100%";
+
+  image.style.maxHeight =
+    "100%";
+
+  image.style.objectFit =
+    "contain";
+
+
+  viewer.appendChild(
+    image
+  );
+
+  document.body.appendChild(
+    viewer
+  );
+
+
+  viewer.addEventListener(
+    "click",
+    () => {
+
+      viewer.remove();
+
+    }
+  );
+
+}
+
+
+/* =========================
+   POST MENU
+========================= */
+
+function showPostMenu(post) {
+
+  const text =
+    post.text || "";
+
+
+  if (!text) {
+
+    showToast(
+      "В этой публикации нет текста"
+    );
+
+    return;
+
+  }
+
+
+  if (
+    navigator.clipboard
+  ) {
+
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+
+        showToast(
+          "Текст скопирован"
+        );
+
+      });
+
+  }
+
+}
+
+
+/* =========================
+   MENU
+========================= */
+
+function initMenu() {
+
+  if (
+    !menuButton ||
+    !mobileMenu
+  ) {
+    return;
+  }
+
+
+  menuButton.addEventListener(
+    "click",
+    () => {
+
+      const open =
+        mobileMenu.classList.toggle(
+          "open"
+        );
+
+      menuButton.setAttribute(
+        "aria-expanded",
+        String(open)
+      );
+
+    }
+  );
+
+
+  mobileMenu
+    .querySelectorAll("a")
+    .forEach(link => {
+
+      link.addEventListener(
+        "click",
+        () => {
+
+          mobileMenu.classList.remove(
+            "open"
+          );
+
+        }
+      );
+
+    });
+
 }
 
 
@@ -991,32 +977,21 @@ function formatDate(value) {
    NAVIGATION
 ========================= */
 
-function setupNavigation() {
+function initNavigation() {
 
   document
-    .querySelectorAll(
-      'a[href^="#"]'
-    )
+    .querySelectorAll('a[href^="#"]')
     .forEach(link => {
 
       link.addEventListener(
         "click",
         event => {
 
-          const targetId =
+          const id =
             link.getAttribute("href");
 
-          if (
-            !targetId ||
-            targetId === "#"
-          ) {
-            return;
-          }
-
           const target =
-            document.querySelector(
-              targetId
-            );
+            document.querySelector(id);
 
           if (!target) {
             return;
@@ -1029,8 +1004,6 @@ function setupNavigation() {
             block: "start"
           });
 
-          closeMobileMenu();
-
         }
       );
 
@@ -1040,71 +1013,36 @@ function setupNavigation() {
 
 
 /* =========================
-   MOBILE MENU
-========================= */
-
-function setupMobileMenu() {
-
-  if (!mobileMenuButton) {
-    return;
-  }
-
-  mobileMenuButton.addEventListener(
-    "click",
-    () => {
-
-      mobileMenu.classList.toggle(
-        "active"
-      );
-
-    }
-  );
-
-}
-
-
-function closeMobileMenu() {
-
-  if (mobileMenu) {
-
-    mobileMenu.classList.remove(
-      "active"
-    );
-
-  }
-
-}
-
-
-/* =========================
    BACK TO TOP
 ========================= */
 
-function setupBackToTop() {
+function initBackToTop() {
+
+  if (!backToTop) {
+    return;
+  }
+
 
   window.addEventListener(
     "scroll",
     () => {
 
       if (
-        window.scrollY > 600
+        window.scrollY > 500
       ) {
 
         backToTop.classList.add(
-          "visible"
+          "show"
         );
 
       } else {
 
         backToTop.classList.remove(
-          "visible"
+          "show"
         );
 
       }
 
-    },
-    {
-      passive: true
     }
   );
 
@@ -1125,6 +1063,22 @@ function setupBackToTop() {
 
 
 /* =========================
+   STATUS
+========================= */
+
+function setStatus(text) {
+
+  if (feedStatus) {
+
+    feedStatus.textContent =
+      text;
+
+  }
+
+}
+
+
+/* =========================
    TOAST
 ========================= */
 
@@ -1136,47 +1090,28 @@ function showToast(message) {
     return;
   }
 
-  clearTimeout(
-    toastTimer
-  );
-
   toast.textContent =
     message;
 
   toast.classList.add(
-    "visible"
+    "show"
+  );
+
+  clearTimeout(
+    toastTimer
   );
 
   toastTimer =
-    setTimeout(() => {
+    setTimeout(
+      () => {
 
-      toast.classList.remove(
-        "visible"
-      );
+        toast.classList.remove(
+          "show"
+        );
 
-    }, 2200);
-
-}
-
-
-/* =========================
-   ESCAPE
-========================= */
-
-function escapeHtml(value) {
-
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-
-function escapeAttribute(value) {
-
-  return escapeHtml(value);
+      },
+      2200
+    );
 
 }
 
@@ -1193,3 +1128,32 @@ setInterval(
   },
   5 * 60 * 1000
 );
+
+
+/* =========================
+   PWA
+========================= */
+
+if (
+  "serviceWorker" in navigator
+) {
+
+  window.addEventListener(
+    "load",
+    () => {
+
+      navigator.serviceWorker
+        .register("./sw.js")
+        .catch(error => {
+
+          console.error(
+            "Service Worker:",
+            error
+          );
+
+        });
+
+    }
+  );
+
+}
