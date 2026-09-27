@@ -730,3 +730,93 @@ footer a {
     max-width: 280px;
   }
 }
+/* =========================
+   ПОИСК И КАТЕГОРИИ
+========================= */
+
+.postFilters {
+  margin: 0 0 35px;
+}
+
+.searchBox {
+  position: relative;
+  max-width: 600px;
+  margin-bottom: 18px;
+}
+
+.searchBox input {
+  width: 100%;
+  height: 52px;
+  padding: 0 50px 0 18px;
+  background: #101010;
+  border: 1px solid #292929;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: .2s ease;
+}
+
+.searchBox input::placeholder {
+  color: #666;
+}
+
+.searchBox input:focus {
+  border-color: #ffcc00;
+}
+
+.searchBox span {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffcc00;
+  font-size: 24px;
+}
+
+.categoryButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.categoryBtn {
+  border: 1px solid #292929;
+  background: #101010;
+  color: #aaa;
+  padding: 11px 15px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.categoryBtn:hover {
+  color: #fff;
+  border-color: #555;
+}
+
+.categoryBtn.active {
+  background: #ffcc00;
+  border-color: #ffcc00;
+  color: #000;
+}
+
+@media (max-width: 520px) {
+
+  .postFilters {
+    margin-bottom: 25px;
+  }
+
+  .categoryButtons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .categoryBtn {
+    width: 100%;
+    padding: 12px 8px;
+  }
+
+}
