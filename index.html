@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050505">
+<meta name="description" content="National Geographic — природа, путешествия и красивые места мира.">
+<title>National Geographic</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <div class="nav">
+    <a class="logo" href="#home">
+      <i></i>
+      <span>NATIONAL<br><b>GEOGRAPHIC</b></span>
+    </a>
+
+    <button id="menu">☰</button>
+
+    <nav id="links">
+      <a href="#home">Главная</a>
+      <a href="#nature">Природа</a>
+      <a href="#travel">Путешествия</a>
+      <a href="#places">Места</a>
+      <a href="#about">О проекте</a>
+    </nav>
+  </div>
+</header>
+
+<main id="home">
+
+<section class="hero">
+  <div class="heroText">
+    <small>NATIONAL GEOGRAPHIC</small>
+
+    <h1>
+      Мир, который<br>
+      <em>хочется увидеть</em>
+    </h1>
+
+    <p>
+      Природа, путешествия и самые красивые места планеты.
+    </p>
+
+    <div>
+      <a class="btn yellow" href="#latest">
+        Смотреть материалы
+      </a>
+
+      <a class="btn"
+         href="https://vk.ru/national.geograph1c"
+         target="_blank">
+        Мы во ВКонтакте ↗
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="cats">
+
+  <a href="#nature">
+    🏔️
+    <b>Природа</b>
+    <small>Горы, леса, океаны</small>
+  </a>
+
+  <a href="#travel">
+    ✈️
+    <b>Путешествия</b>
+    <small>Маршруты и открытия</small>
+  </a>
+
+  <a href="#places">
+    📍
+    <b>Места</b>
+    <small>Точки на карте</small>
+  </a>
+
+  <a href="#photos">
+    📸
+    <b>Фото</b>
+    <small>Красота вокруг нас</small>
+  </a>
+
+</section>
+
+<section class="section" id="latest">
+
+  <div class="heading">
+    <div>
+      <small>ИЗБРАННОЕ</small>
+      <h2>Последние материалы</h2>
+    </div>
+  </div>
+
+  <div class="grid" id="posts"></div>
+
+</section>
+
+<section class="banner" id="nature">
+
+  <div>
+    <small>ПРИРОДА</small>
+
+    <h2>
+      Там, где человек<br>
+      остаётся гостем
+    </h2>
+
+    <p>
+      Дикие пейзажи, редкие животные и места,
+      которые заставляют остановиться и просто смотреть.
+    </p>
+  </div>
+
+</section>
+
+<section class="section" id="travel">
+
+  <div class="heading">
+    <div>
+      <small>ПУТЕШЕСТВИЯ</small>
+      <h2>Куда отправиться?</h2>
+    </div>
+  </div>
+
+  <div class="travel">
+
+    <article>
+      <b>01</b>
+      <h3>Алтай</h3>
+      <p>
+        Горы, озёра и бесконечные дороги
+        среди дикой природы.
+      </p>
+    </article>
+
+    <article>
+      <b>02</b>
+      <h3>Курилы</h3>
+      <p>
+        Вулканы, океан и пейзажи,
+        похожие на другую планету.
+      </p>
+    </article>
+
+    <article>
+      <b>03</b>
+      <h3>Приморье</h3>
+      <p>
+        Тайга встречается с морем,
+        создавая уникальный мир.
+      </p>
+    </article>
+
+  </div>
+
+</section>
+
+<section class="section" id="places">
+
+  <div class="place">
+
+    <div>
+      <small>МЕСТО ДНЯ</small>
+
+      <h2>
+        Откройте планету<br>
+        заново
+      </h2>
+
+      <p>
+        Каждый день — новое место,
+        природное чудо или маршрут,
+        который стоит добавить в свой список.
+      </p>
+
+      <a class="yellowText"
+         href="https://vk.ru/national.geograph1c"
+         target="_blank">
+        Больше во ВКонтакте →
+      </a>
+    </div>
+
+    <strong>
+      43° 35′ N<br>
+      39° 43′ E
+    </strong>
+
+  </div>
+
+</section>
+
+<section class="section" id="photos">
+
+  <div class="heading">
+    <div>
+      <small>ФОТОГРАФИЯ</small>
+      <h2>Красота планеты</h2>
+    </div>
+  </div>
+
+  <div class="photos">
+
+    <div class="photo p1">
+      <b>ГОРЫ</b>
+    </div>
+
+    <div class="photo p2">
+      <b>ОКЕАН</b>
+    </div>
+
+    <div class="photo p3">
+      <b>ДИКАЯ ПРИРОДА</b>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="about" id="about">
+
+  <div>
+    <small>О ПРОЕКТЕ</small>
+    <h2>National Geographic</h2>
+  </div>
+
+  <p>
+    Место для тех, кто любит природу,
+    путешествия, фотографию и удивительные
+    уголки нашей планеты.
+  </p>
+
+</section>
+
+</main>
+
+<footer>
+
+  <div class="logo">
+    <i></i>
+    <span>
+      NATIONAL<br>
+      <b>GEOGRAPHIC</b>
+    </span>
+  </div>
+
+  <span>
+    © <span id="year"></span>
+  </span>
+
+  <a href="https://vk.ru/national.geograph1c"
+     target="_blank">
+    ВКонтакте ↗
+  </a>
+
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
