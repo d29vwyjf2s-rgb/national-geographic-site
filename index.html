@@ -1,496 +1,321 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
 
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
 
-  <meta
-    name="theme-color"
-    content="#050505"
-  >
+  <meta name="theme-color" content="#050505">
 
   <meta
     name="description"
     content="National Geographic — природа, путешествия, животные и удивительные места планеты."
   >
 
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="National Geographic">
-
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icon-192.png">
-
   <title>National Geographic</title>
 
-  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icon-192.png">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
 
+  <!-- HEADER -->
+  <header class="ngHeader">
+    <div class="ngHeaderInner">
 
-<!-- =====================================================
-     TOP
-===================================================== -->
+      <a href="#home" class="ngBrand">
+        <span class="ngBrandBox">NATIONAL</span>
+        <span class="ngBrandText">GEOGRAPHIC</span>
+      </a>
 
-<header class="ngHeader">
+      <nav class="ngNav">
+        <a href="#home">Главная</a>
+        <a href="#feed">Лента</a>
+        <a href="#about">О проекте</a>
+      </nav>
 
-  <div class="ngHeaderInner">
+      <button
+        class="ngMenu"
+        id="mobileMenuButton"
+        aria-label="Открыть меню"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
 
-    <a
-      href="#home"
-      class="ngBrand"
-    >
+    </div>
+  </header>
 
-      <span class="ngBrandBox"></span>
 
-      <span class="ngBrandText">
+  <!-- MOBILE MENU -->
+  <div class="ngMobileMenu" id="mobileMenu">
 
-        <small>NATIONAL</small>
+    <div class="ngMobileMenuInner">
 
+      <a href="#home">Главная</a>
+      <a href="#feed">Лента</a>
+      <a href="#about">О проекте</a>
+
+    </div>
+
+  </div>
+
+
+  <main>
+
+    <!-- HERO -->
+    <section class="ngHero" id="home">
+
+      <div class="ngHeroOverlay"></div>
+
+      <div class="ngHeroContent">
+
+        <div class="ngHeroMeta">
+          <span class="ngYellowLine"></span>
+          DIGITAL EDITION
+          <span>2026</span>
+        </div>
+
+        <h1>
+          МИР,
+          <br>
+          КОТОРЫЙ
+          <br>
+          СТОИТ УВИДЕТЬ
+        </h1>
+
+        <p>
+          Природа, путешествия, животные и самые удивительные места нашей планеты.
+        </p>
+
+        <a href="#feed" class="ngHeroButton">
+          СМОТРЕТЬ ЛЕНТУ
+          <span>↓</span>
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- COMMUNITY -->
+    <section class="ngCommunityBar">
+
+      <div class="ngCommunityIdentity">
+
+        <div class="ngAvatar">
+          <span>NG</span>
+        </div>
+
+        <div>
+          <div class="ngCommunityTitle">
+            National Geographic
+          </div>
+
+          <div class="ngCommunitySubtitle">
+            Официальная лента проекта
+          </div>
+        </div>
+
+      </div>
+
+      <a
+        class="ngVkButton"
+        href="https://vk.ru/national.geograph1c"
+        target="_blank"
+        rel="noopener"
+      >
+        VK
+        <span>↗</span>
+      </a>
+
+    </section>
+
+
+    <!-- FEED -->
+    <section class="ngFeedSection" id="feed">
+
+      <div class="ngContainer">
+
+        <div class="ngSectionHeading">
+
+          <div>
+            <div class="ngEyebrow">
+              NATIONAL GEOGRAPHIC
+            </div>
+
+            <h2>
+              Последние публикации
+            </h2>
+          </div>
+
+          <div class="ngSectionNumber">
+            01
+          </div>
+
+        </div>
+
+
+        <div class="ngSectionDivider"></div>
+
+
+        <div
+          class="ngFeedStatus"
+          id="feedStatus"
+        >
+          ЗАГРУЗКА ПУБЛИКАЦИЙ…
+        </div>
+
+
+        <div
+          class="ngPosts"
+          id="posts"
+        ></div>
+
+
+        <div
+          class="loadMoreWrap"
+          id="loadMoreWrap"
+          hidden
+        >
+          <button
+            class="loadMore"
+            id="loadMore"
+          >
+            ПОКАЗАТЬ ЕЩЁ
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ABOUT -->
+    <section class="ngAbout" id="about">
+
+      <div class="ngContainer">
+
+        <div class="ngAboutGrid">
+
+          <div>
+
+            <div class="ngEyebrow">
+              ABOUT
+            </div>
+
+            <h2>
+              National Geographic
+            </h2>
+
+          </div>
+
+          <div class="ngAboutText">
+
+            <p>
+              Пространство о природе, путешествиях,
+              животных и местах, которые заставляют
+              остановиться и посмотреть вокруг.
+            </p>
+
+            <p>
+              Здесь собраны публикации сообщества
+              National Geographic — прямо из VK.
+            </p>
+
+            <a
+              href="https://vk.ru/national.geograph1c"
+              target="_blank"
+              rel="noopener"
+              class="ngAboutLink"
+            >
+              ПЕРЕЙТИ В СООБЩЕСТВО
+              <span>↗</span>
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="ngFooter">
+
+    <div class="ngFooterInner">
+
+      <div class="ngFooterBrand">
+        NATIONAL
         <strong>GEOGRAPHIC</strong>
+      </div>
 
-      </span>
+      <div class="ngFooterCopy">
+        © <span id="year"></span> National Geographic
+      </div>
 
+    </div>
+
+  </footer>
+
+
+  <!-- MOBILE NAV -->
+  <nav class="ngMobileNav">
+
+    <a href="#home">
+      <span>⌂</span>
+      <small>Главная</small>
     </a>
 
+    <a href="#feed">
+      <span>▤</span>
+      <small>Лента</small>
+    </a>
 
-    <nav class="ngNav">
+    <a href="#about">
+      <span>◎</span>
+      <small>О проекте</small>
+    </a>
 
-      <a href="#home">
-        Главная
-      </a>
-
-      <a href="#latest">
-        Лента
-      </a>
-
-      <a href="#about">
-        О проекте
-      </a>
-
-    </nav>
+  </nav>
 
 
-    <button
-      id="menu"
-      class="ngMenu"
-      aria-label="Меню"
-    >
-      ☰
-    </button>
-
-  </div>
-
-</header>
-
-
-
-<!-- =====================================================
-     HERO
-===================================================== -->
-
-<main id="home">
-
-
-<section class="ngHero">
-
-  <div class="ngHeroNoise"></div>
-
-  <div class="ngHeroContent">
-
-    <div class="ngEdition">
-      DIGITAL EDITION · 2026
-    </div>
-
-
-    <h1>
-
-      NATIONAL
-
-      <span>
-        GEOGRAPHIC
-      </span>
-
-    </h1>
-
-
-    <p>
-      Планета глазами тех,
-      кто умеет её видеть.
-    </p>
-
-
-    <div class="ngHeroLine"></div>
-
-
-    <div class="ngHeroMeta">
-
-      <span>
-        ПРИРОДА
-      </span>
-
-      <span>
-        ПУТЕШЕСТВИЯ
-      </span>
-
-      <span>
-        ЖИВОТНЫЕ
-      </span>
-
-      <span>
-        ОТКРЫТИЯ
-      </span>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-
-<!-- =====================================================
-     COMMUNITY BAR
-===================================================== -->
-
-<section class="ngCommunityBar">
-
-  <div class="ngCommunityIdentity">
-
-    <div class="ngAvatar">
-      NG
-    </div>
-
-
-    <div>
-
-      <h2>
-        National Geographic
-        <span class="ngVerified">✓</span>
-      </h2>
-
-      <span>
-        официальная лента сообщества
-      </span>
-
-    </div>
-
-  </div>
-
-
-  <a
-    href="https://vk.ru/national.geograph1c"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="ngVkButton"
+  <!-- BACK TO TOP -->
+  <button
+    class="ngTop"
+    id="backToTop"
+    aria-label="Наверх"
   >
-    VK ↗
-  </a>
+    ↑
+  </button>
 
-</section>
-
-
-
-<!-- =====================================================
-     LATEST
-===================================================== -->
-
-<section
-  class="ngFeedSection"
-  id="latest"
->
-
-
-  <div class="ngSectionHeading">
-
-    <div>
-
-      <span>
-        LATEST STORIES
-      </span>
-
-      <h2>
-        Последние публикации
-      </h2>
-
-    </div>
-
-
-    <div class="ngLive">
-
-      <i></i>
-
-      LIVE
-
-    </div>
-
-  </div>
-
-
-
-  <!-- SEARCH -->
-
-  <div class="ngSearchRow">
-
-    <div class="ngSearch">
-
-      <span>
-        ⌕
-      </span>
-
-      <input
-        id="postSearch"
-        type="search"
-        placeholder="Найти историю..."
-        autocomplete="off"
-      >
-
-    </div>
-
-
-    <button
-      id="refreshButton"
-      class="ngRefresh"
-    >
-      ↻
-    </button>
-
-
-    <span
-      id="refreshTime"
-      class="ngRefreshTime"
-    >
-      Загрузка...
-    </span>
-
-  </div>
-
-
-
-  <!-- FILTER -->
-
-  <div class="ngFilters">
-
-    <button
-      class="categoryBtn active"
-      data-category="Все"
-    >
-      ВСЕ
-    </button>
-
-
-    <button
-      class="categoryBtn"
-      data-category="Избранное"
-    >
-      ★ ИЗБРАННОЕ
-    </button>
-
-  </div>
-
-
-
-  <!-- POSTS -->
 
   <div
-    id="posts"
-    class="ngPosts"
-  >
+    class="ngToast"
+    id="toast"
+  ></div>
 
-    <div class="ngLoading">
 
-      <div></div>
-      <div></div>
-      <div></div>
-
-    </div>
-
-  </div>
-
-
-</section>
-
-
-
-<!-- =====================================================
-     ABOUT
-===================================================== -->
-
-<section
-  id="about"
-  class="ngAbout"
->
-
-  <div class="ngAboutMark">
-
-    <span></span>
-
-    NATIONAL<br>
-    GEOGRAPHIC
-
-  </div>
-
-
-  <div class="ngAboutContent">
-
-    <span>
-      ABOUT
-    </span>
-
-
-    <h2>
-      Исследуем планету
-      вместе.
-    </h2>
-
-
-    <p>
-      Природа. Путешествия. Животные.
-      Люди и места, которые заставляют
-      остановиться и посмотреть вокруг.
-    </p>
-
-
-    <p>
-      Публикации автоматически поступают
-      из сообщества National Geographic
-      во ВКонтакте.
-    </p>
-
-
-    <a
-      href="https://vk.ru/national.geograph1c"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="ngAboutButton"
-    >
-      ОТКРЫТЬ VK ↗
-    </a>
-
-  </div>
-
-</section>
-
-
-
-</main>
-
-
-
-<!-- =====================================================
-     FOOTER
-===================================================== -->
-
-<footer class="ngFooter">
-
-  <div class="ngFooterBrand">
-
-    <span></span>
-
-    <div>
-      NATIONAL<br>
-      <b>GEOGRAPHIC</b>
-    </div>
-
-  </div>
-
-
-  <div>
-    © <span id="year"></span>
-    National Geographic
-  </div>
-
-
-  <a
-    href="https://vk.ru/national.geograph1c"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    VK ↗
-  </a>
-
-</footer>
-
-
-
-<!-- =====================================================
-     MOBILE
-===================================================== -->
-
-<nav class="ngMobileNav">
-
-  <a
-    href="#home"
-    class="active"
-  >
-    <span>⌂</span>
-    <small>Главная</small>
-  </a>
-
-
-  <a href="#latest">
-
-    <span>▤</span>
-
-    <small>
-      Лента
-    </small>
-
-  </a>
-
-
-  <a href="#about">
-
-    <span>◎</span>
-
-    <small>
-      О проекте
-    </small>
-
-  </a>
-
-</nav>
-
-
-
-<button
-  id="backToTop"
-  class="ngTop"
->
-  ↑
-</button>
-
-
-
-<script src="script.js"></script>
-
-
-<script>
-
-if ("serviceWorker" in navigator) {
-
-  window.addEventListener("load", () => {
-
-    navigator.serviceWorker
-      .register("./sw.js")
-      .catch(error => {
-        console.error(error);
-      });
-
-  });
-
-}
-
-</script>
-
+  <script src="./script.js"></script>
 
 </body>
 </html>
