@@ -859,3 +859,206 @@ footer a {
   }
 
 }
+/* =========================
+   ПРОСМОТР ПУБЛИКАЦИИ
+========================= */
+
+.viewerOpen {
+  overflow: hidden;
+}
+
+#postViewer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+}
+
+.viewerBackdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, .88);
+  backdrop-filter: blur(12px);
+}
+
+.viewerWindow {
+  position: relative;
+  z-index: 2;
+  width: min(900px, 100%);
+  max-height: 92vh;
+  overflow-y: auto;
+  background: #0d0d0d;
+  border: 1px solid #333;
+  box-shadow: 0 30px 100px rgba(0,0,0,.7);
+  animation: viewerIn .25s ease;
+}
+
+@keyframes viewerIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.viewerClose {
+  position: absolute;
+  z-index: 5;
+  right: 15px;
+  top: 15px;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255,255,255,.3);
+  background: rgba(0,0,0,.65);
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.viewerClose:hover {
+  background: #ffcc00;
+  color: #000;
+  border-color: #ffcc00;
+}
+
+.viewerImage {
+  height: 430px;
+  background-size: cover;
+  background-position: center;
+}
+
+.viewerImage.noImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      #252525,
+      transparent 45%
+    ),
+    linear-gradient(
+      135deg,
+      #171717,
+      #050505
+    );
+}
+
+.viewerImage.noImage span {
+  color: #333;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+.viewerContent {
+  padding: 35px;
+}
+
+.viewerCategory {
+  display: inline-block;
+  background: #ffcc00;
+  color: #000;
+  padding: 6px 9px;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.viewerContent h2 {
+  margin: 18px 0;
+  font-size: clamp(26px, 4vw, 42px);
+  line-height: 1.08;
+  letter-spacing: -1.5px;
+}
+
+.viewerDate {
+  color: #666;
+  font-size: 11px;
+  margin-bottom: 25px;
+}
+
+.viewerButtons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.viewerVk {
+  display: inline-block;
+  background: #ffcc00;
+  color: #000;
+  padding: 14px 18px;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.viewerVk:hover {
+  background: #fff;
+}
+
+.viewerBack {
+  background: transparent;
+  border: 1px solid #444;
+  color: #aaa;
+  padding: 13px 18px;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.viewerBack:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+.readPost {
+  display: inline-block;
+  margin-top: 17px;
+  color: #ffcc00;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.post {
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+
+  #postViewer {
+    padding: 10px;
+  }
+
+  .viewerWindow {
+    max-height: 95vh;
+  }
+
+  .viewerImage {
+    height: 260px;
+  }
+
+  .viewerContent {
+    padding: 25px 20px;
+  }
+
+  .viewerContent h2 {
+    font-size: 26px;
+  }
+
+  .viewerImage.noImage span {
+    font-size: 18px;
+  }
+
+}
