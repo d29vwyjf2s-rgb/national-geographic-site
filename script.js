@@ -3,6 +3,8 @@ const API_URL =
 
 const postsContainer = document.querySelector("#posts");
 
+let allPosts = [];
+let visiblePosts = 6;
 
 function formatDate(timestamp) {
   if (!timestamp) return "";
@@ -14,31 +16,15 @@ function formatDate(timestamp) {
   });
 }
 
-
 function cleanText(text) {
   if (!text) {
     return "Новая публикация National Geographic";
   }
 
-  return text
-    .replace(/\n+/g, " ")
-    .trim();
+  return text.replace(/\n+/g, " ").trim();
 }
-
-
-function getPreview(text) {
-  const clean = cleanText(text);
-
-  if (clean.length > 180) {
-    return clean.substring(0, 180) + "...";
-  }
-
-  return clean;
-}
-
 
 function getPostLink(vkId) {
-
   if (!vkId) {
     return "https://vk.ru/national.geograph1c";
   }
@@ -46,51 +32,49 @@ function getPostLink(vkId) {
   const parts = vkId.split("_");
 
   if (parts.length === 2) {
-
-    const ownerId = parts[0];
-    const postId = parts[1];
-
-    return `https://vk.ru/wall${ownerId}_${postId}`;
+    return `https://vk.ru/wall${parts[0]}_${parts[1]}`;
   }
 
   return "https://vk.ru/national.geograph1c";
 }
 
-
 function createPost(post) {
 
+  const text = cleanText(post.text);
+
   const image = post.image_url;
-  const title = getPreview(post.text);
+
   const date = formatDate(post.post_date);
+
   const link = getPostLink(post.vk_id);
 
   return `
     <article class="post">
 
-      ${
-        image
-          ? `
-            <div
-              class="postImg"
-              style="background-image:url('${image}')"
-            >
-              <span class="tag">NATIONAL GEOGRAPHIC</span>
-            </div>
-          `
-          : `
-            <div class="postImg noImage">
-              <span class="tag">NATIONAL GEOGRAPHIC</span>
-            </div>
-          `
-      }
+      <div
+        class="postImg ${image ? "" : "noImage"}"
+        ${
+          image
+            ? `style="background-image:url('${image}')"`
+            : ""
+        }
+      >
+
+        <span class="tag">
+          NATIONAL GEOGRAPHIC
+        </span>
+
+      </div>
 
       <div class="postBody">
 
-        <h3>${title}</h3>
+        <h3>
+          ${text}
+        </h3>
 
         ${
           date
-            ? `<p>${date}</p>`
+            ? `<p class="postDate">${date}</p>`
             : ""
         }
 
@@ -108,12 +92,43 @@ function createPost(post) {
   `;
 }
 
+function renderPosts() {
+
+  const postsToShow =
+    allPosts.slice(0, visiblePosts);
+
+  postsContainer.innerHTML =
+    postsToShow.map(createPost).join("");
+
+  if (visiblePosts < allPosts.length) {
+
+    postsContainer.innerHTML += `
+      <div class="loadMoreWrap">
+
+        <button id="loadMore">
+          ЗАГРУЗИТЬ ЕЩЁ
+        </button>
+
+      </div>
+    `;
+
+    document
+      .querySelector("#loadMore")
+      .addEventListener("click", () => {
+
+        visiblePosts += 6;
+
+        renderPosts();
+
+      });
+  }
+}
 
 async function loadPosts() {
 
   postsContainer.innerHTML = `
     <div class="loading">
-      Загружаем публикации...
+      ЗАГРУЖАЕМ ПОСЛЕДНИЕ ПУБЛИКАЦИИ...
     </div>
   `;
 
@@ -123,12 +138,13 @@ async function loadPosts() {
       method: "GET",
       headers: {
         "Accept": "application/json"
-      }
+      },
+      cache: "no-store"
     });
 
     if (!response.ok) {
       throw new Error(
-        `API error: ${response.status}`
+        `API error ${response.status}`
       );
     }
 
@@ -139,32 +155,19 @@ async function loadPosts() {
       !Array.isArray(data.posts)
     ) {
       throw new Error(
-        "API вернул неправильный формат"
+        "Неверный формат API"
       );
     }
 
-    if (data.posts.length === 0) {
+    allPosts = data.posts;
 
-      postsContainer.innerHTML = `
-        <div class="loading">
-          Пока нет публикаций.
-        </div>
-      `;
+    visiblePosts = 6;
 
-      return;
-    }
-
-    postsContainer.innerHTML =
-      data.posts
-        .map(createPost)
-        .join("");
+    renderPosts();
 
   } catch (error) {
 
-    console.error(
-      "Ошибка загрузки постов:",
-      error
-    );
+    console.error(error);
 
     postsContainer.innerHTML = `
       <div class="loading">
@@ -176,9 +179,8 @@ async function loadPosts() {
         <a
           href="https://vk.ru/national.geograph1c"
           target="_blank"
-          rel="noopener noreferrer"
         >
-          Открыть группу ВКонтакте →
+          Открыть ВКонтакте →
         </a>
 
       </div>
@@ -186,21 +188,19 @@ async function loadPosts() {
   }
 }
 
-
-const year = document.querySelector("#year");
+const year =
+  document.querySelector("#year");
 
 if (year) {
   year.textContent =
     new Date().getFullYear();
 }
 
-
 const menu =
   document.querySelector("#menu");
 
 const links =
   document.querySelector("#links");
-
 
 if (menu && links) {
 
@@ -214,7 +214,6 @@ if (menu && links) {
         : "☰";
   };
 
-
   links
     .querySelectorAll("a")
     .forEach(link => {
@@ -224,10 +223,10 @@ if (menu && links) {
         links.classList.remove("open");
 
         menu.textContent = "☰";
+
       };
 
     });
 }
-
 
 loadPosts();
