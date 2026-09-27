@@ -1,37 +1,97 @@
 <!doctype html>
 <html lang="ru">
+
 <head>
+
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#050505">
-  <meta name="description" content="National Geographic — природа, путешествия и красивые места мира.">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="theme-color"
+    content="#050505"
+  >
+
+  <meta
+    name="description"
+    content="National Geographic — природа, путешествия, животные и удивительные места нашей планеты."
+  >
+
   <title>National Geographic</title>
-  <link rel="stylesheet" href="style.css">
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
+
 </head>
 
+
 <body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
 
 <header class="header">
 
   <div class="nav">
 
-    <a class="logo" href="#home">
+
+    <a
+      class="logo"
+      href="#home"
+      aria-label="National Geographic"
+    >
+
       <i></i>
+
       <span>
         NATIONAL<br>
         <b>GEOGRAPHIC</b>
       </span>
+
     </a>
 
-    <button id="menu" aria-label="Меню">☰</button>
+
+    <button
+      id="menu"
+      aria-label="Открыть меню"
+    >
+      ☰
+    </button>
+
 
     <nav id="links">
-      <a href="#home">Главная</a>
-      <a href="#latest">Последние</a>
-      <a href="#nature">Природа</a>
-      <a href="#travel">Путешествия</a>
-      <a href="#photos">Фото</a>
-      <a href="#about">О проекте</a>
+
+      <a href="#home">
+        Главная
+      </a>
+
+      <a href="#latest">
+        Последние
+      </a>
+
+      <a href="#nature">
+        Природа
+      </a>
+
+      <a href="#travel">
+        Путешествия
+      </a>
+
+      <a href="#photos">
+        Фото
+      </a>
+
+      <a href="#about">
+        О проекте
+      </a>
+
     </nav>
 
   </div>
@@ -39,14 +99,18 @@
 </header>
 
 
+
 <main id="home">
 
 
-<!-- HERO -->
+<!-- =========================
+     HERO
+========================= -->
 
 <section class="hero">
 
   <div class="heroOverlay"></div>
+
 
   <div class="heroText">
 
@@ -54,27 +118,34 @@
       NATIONAL GEOGRAPHIC
     </div>
 
+
     <h1>
       Мир, который
       <em>хочется увидеть</em>
     </h1>
+
 
     <p>
       Природа, путешествия, животные
       и самые невероятные места нашей планеты.
     </p>
 
+
     <div class="heroButtons">
 
-      <a class="btn yellow" href="#latest">
+      <a
+        class="btn yellow"
+        href="#latest"
+      >
         Смотреть материалы
       </a>
+
 
       <a
         class="btn"
         href="https://vk.ru/national.geograph1c"
         target="_blank"
-        rel="noopener"
+        rel="noopener noreferrer"
       >
         ВКонтакте ↗
       </a>
@@ -86,81 +157,196 @@
 </section>
 
 
-<!-- STATS -->
+
+<!-- =========================
+     STATS
+========================= -->
 
 <section class="stats">
 
-  <div>
-    <strong id="postsCount">0</strong>
-    <span>ПУБЛИКАЦИЙ</span>
-  </div>
 
   <div>
-    <strong id="photosCount">0</strong>
-    <span>ФОТО</span>
+
+    <strong id="postsCount">
+      0
+    </strong>
+
+    <span>
+      ПУБЛИКАЦИЙ
+    </span>
+
   </div>
 
-  <div>
-    <strong id="categoriesCount">5</strong>
-    <span>КАТЕГОРИЙ</span>
-  </div>
 
   <div>
-    <strong>24/7</strong>
-    <span>ОБНОВЛЕНИЕ</span>
+
+    <strong id="photosCount">
+      0
+    </strong>
+
+    <span>
+      ФОТО
+    </span>
+
   </div>
+
+
+  <div>
+
+    <strong id="categoriesCount">
+      5
+    </strong>
+
+    <span>
+      КАТЕГОРИЙ
+    </span>
+
+  </div>
+
+
+  <div>
+
+    <strong>
+      24/7
+    </strong>
+
+    <span>
+      ОБНОВЛЕНИЕ
+    </span>
+
+  </div>
+
 
 </section>
 
 
-<!-- CATEGORIES -->
+
+<!-- =========================
+     CATEGORIES
+========================= -->
 
 <section class="cats">
 
-  <a href="#latest" data-jump-category="Природа">
-    <span class="catIcon">🏔️</span>
-    <b>Природа</b>
-    <small>Горы, леса, океаны</small>
+
+  <a
+    href="#latest"
+    data-jump-category="Природа"
+  >
+
+    <span class="catIcon">
+      🏔️
+    </span>
+
+    <b>
+      Природа
+    </b>
+
+    <small>
+      Горы, леса, океаны
+    </small>
+
   </a>
 
-  <a href="#latest" data-jump-category="Путешествия">
-    <span class="catIcon">✈️</span>
-    <b>Путешествия</b>
-    <small>Маршруты и открытия</small>
+
+
+  <a
+    href="#latest"
+    data-jump-category="Путешествия"
+  >
+
+    <span class="catIcon">
+      ✈️
+    </span>
+
+    <b>
+      Путешествия
+    </b>
+
+    <small>
+      Маршруты и открытия
+    </small>
+
   </a>
 
-  <a href="#latest" data-jump-category="Россия">
-    <span class="catIcon">🇷🇺</span>
-    <b>Россия</b>
-    <small>Неизведанные места</small>
+
+
+  <a
+    href="#latest"
+    data-jump-category="Россия"
+  >
+
+    <span class="catIcon">
+      🇷🇺
+    </span>
+
+    <b>
+      Россия
+    </b>
+
+    <small>
+      Неизведанные места
+    </small>
+
   </a>
 
-  <a href="#latest" data-jump-category="Животные">
-    <span class="catIcon">🐾</span>
-    <b>Животные</b>
-    <small>Дикий мир планеты</small>
+
+
+  <a
+    href="#latest"
+    data-jump-category="Животные"
+  >
+
+    <span class="catIcon">
+      🐾
+    </span>
+
+    <b>
+      Животные
+    </b>
+
+    <small>
+      Дикий мир планеты
+    </small>
+
   </a>
+
 
 </section>
 
 
-<!-- FEATURED -->
+
+<!-- =========================
+     FEATURED
+========================= -->
 
 <section class="section featuredSection">
+
 
   <div class="heading">
 
     <div>
-      <small>ГЛАВНОЕ СЕГОДНЯ</small>
-      <h2>Свежий материал</h2>
+
+      <small>
+        ГЛАВНОЕ СЕГОДНЯ
+      </small>
+
+      <h2>
+        Свежий материал
+      </h2>
+
     </div>
 
+
     <div class="live">
+
       <i></i>
+
       LIVE
+
     </div>
 
   </div>
+
 
   <div id="featuredPost">
 
@@ -168,24 +354,43 @@
 
   </div>
 
+
 </section>
 
 
-<!-- LATEST -->
 
-<section class="section" id="latest">
+<!-- =========================
+     LATEST POSTS
+========================= -->
+
+<section
+  class="section"
+  id="latest"
+>
+
 
   <div class="heading">
 
     <div>
-      <small>ЛЕНТА</small>
-      <h2>Последние материалы</h2>
+
+      <small>
+        ЛЕНТА
+      </small>
+
+      <h2>
+        Последние материалы
+      </h2>
+
     </div>
 
   </div>
 
 
+
+  <!-- SEARCH -->
+
   <div class="postFilters">
+
 
     <div class="searchBox">
 
@@ -196,86 +401,151 @@
         autocomplete="off"
       >
 
-      <span>⌕</span>
+      <span>
+        ⌕
+      </span>
 
     </div>
 
+
+
+    <!-- CATEGORIES -->
 
     <div class="categoryButtons">
 
-      <button class="categoryBtn active" data-category="Все">
+
+      <button
+        class="categoryBtn active"
+        data-category="Все"
+      >
         Все
       </button>
 
-      <button class="categoryBtn" data-category="Природа">
+
+      <button
+        class="categoryBtn"
+        data-category="Природа"
+      >
         🏔️ Природа
       </button>
 
-      <button class="categoryBtn" data-category="Путешествия">
+
+      <button
+        class="categoryBtn"
+        data-category="Путешествия"
+      >
         ✈️ Путешествия
       </button>
 
-      <button class="categoryBtn" data-category="Россия">
+
+      <button
+        class="categoryBtn"
+        data-category="Россия"
+      >
         🇷🇺 Россия
       </button>
 
-      <button class="categoryBtn" data-category="Мир">
+
+      <button
+        class="categoryBtn"
+        data-category="Мир"
+      >
         🌍 Мир
       </button>
 
-      <button class="categoryBtn" data-category="Животные">
+
+      <button
+        class="categoryBtn"
+        data-category="Животные"
+      >
         🐾 Животные
       </button>
 
-      <button class="categoryBtn" data-category="Избранное">
+
+      <button
+        class="categoryBtn"
+        data-category="Избранное"
+      >
         ★ Избранное
       </button>
+
 
     </div>
 
 
+
+    <!-- REFRESH -->
+
     <div class="refreshPanel">
 
-      <button id="refreshButton">
+
+      <button
+        id="refreshButton"
+      >
         ↻ ОБНОВИТЬ
       </button>
+
 
       <span id="refreshTime">
         Загрузка...
       </span>
 
+
     </div>
+
 
   </div>
 
 
-  <div class="grid" id="posts">
+
+  <!-- POSTS -->
+
+  <div
+    class="grid"
+    id="posts"
+  >
+
 
     <div class="loadingGrid">
 
       <div class="skeleton skeletonCard"></div>
+
       <div class="skeleton skeletonCard"></div>
+
       <div class="skeleton skeletonCard"></div>
 
     </div>
 
+
   </div>
+
 
 </section>
 
 
-<!-- NATURE -->
 
-<section class="banner" id="nature">
+<!-- =========================
+     NATURE
+========================= -->
+
+<section
+  class="banner"
+  id="nature"
+>
+
 
   <div>
 
-    <small>ПРИРОДА</small>
+    <small>
+      ПРИРОДА
+    </small>
+
 
     <h2>
       Там, где человек
       остаётся гостем
     </h2>
+
 
     <p>
       Дикие пейзажи, редкие животные
@@ -283,84 +553,172 @@
       остановиться и просто смотреть.
     </p>
 
+
   </div>
+
 
 </section>
 
 
-<!-- TRAVEL -->
 
-<section class="section" id="travel">
+<!-- =========================
+     TRAVEL
+========================= -->
+
+<section
+  class="section"
+  id="travel"
+>
+
 
   <div class="heading">
 
     <div>
-      <small>ПУТЕШЕСТВИЯ</small>
-      <h2>Куда отправиться?</h2>
+
+      <small>
+        ПУТЕШЕСТВИЯ
+      </small>
+
+      <h2>
+        Куда отправиться?
+      </h2>
+
     </div>
 
   </div>
+
 
 
   <div class="travel">
 
+
     <article>
-      <b>01</b>
-      <h3>Алтай</h3>
+
+      <b>
+        01
+      </b>
+
+      <h3>
+        Алтай
+      </h3>
+
       <p>
         Горы, озёра и бесконечные
         дороги среди дикой природы.
       </p>
+
     </article>
 
+
+
     <article>
-      <b>02</b>
-      <h3>Курилы</h3>
+
+      <b>
+        02
+      </b>
+
+      <h3>
+        Курилы
+      </h3>
+
       <p>
         Вулканы, океан и пейзажи,
         похожие на другую планету.
       </p>
+
     </article>
 
+
+
     <article>
-      <b>03</b>
-      <h3>Приморье</h3>
+
+      <b>
+        03
+      </b>
+
+      <h3>
+        Приморье
+      </h3>
+
       <p>
         Тайга встречается с морем,
         создавая уникальный мир.
       </p>
+
     </article>
 
+
   </div>
+
 
 </section>
 
 
-<!-- PHOTOS -->
 
-<section class="section" id="photos">
+<!-- =========================
+     PHOTO GALLERY
+========================= -->
+
+<section
+  class="section"
+  id="photos"
+>
+
 
   <div class="heading">
 
     <div>
-      <small>ГАЛЕРЕЯ</small>
-      <h2>Фото из публикаций</h2>
+
+      <small>
+        ГАЛЕРЕЯ
+      </small>
+
+      <h2>
+        Фото из публикаций
+      </h2>
+
     </div>
 
   </div>
 
-  <div class="photos" id="photoGallery"></div>
+
+
+  <div
+    class="photos"
+    id="photoGallery"
+  >
+
+
+    <div class="galleryLoading">
+
+      ЗАГРУЖАЕМ ФОТОГРАФИИ...
+
+    </div>
+
+
+  </div>
+
 
 </section>
 
 
-<!-- ABOUT -->
 
-<section class="about" id="about">
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section
+  class="about"
+  id="about"
+>
+
 
   <div>
 
-    <small>О ПРОЕКТЕ</small>
+    <small>
+      О ПРОЕКТЕ
+    </small>
+
 
     <h2>
       National Geographic
@@ -368,48 +726,99 @@
 
   </div>
 
+
   <p>
+
     Место для тех, кто любит природу,
     путешествия, фотографию и удивительные
     уголки нашей планеты.
-    Все новые публикации загружаются
-    автоматически из сообщества.
+
+    <br><br>
+
+    Новые публикации загружаются
+    автоматически из сообщества
+    National Geographic.
+
   </p>
 
+
 </section>
+
+
 
 </main>
 
 
+
+<!-- =========================
+     FOOTER
+========================= -->
+
 <footer>
+
 
   <div class="logo">
 
     <i></i>
 
     <span>
+
       NATIONAL<br>
-      <b>GEOGRAPHIC</b>
+
+      <b>
+        GEOGRAPHIC
+      </b>
+
     </span>
 
   </div>
 
+
+
   <span>
-    © <span id="year"></span>
+
+    ©
+    <span id="year"></span>
+
   </span>
+
+
 
   <a
     href="https://vk.ru/national.geograph1c"
     target="_blank"
-    rel="noopener"
+    rel="noopener noreferrer"
   >
+
     ВКонтакте ↗
+
   </a>
+
 
 </footer>
 
 
+
+<!-- =========================
+     BACK TO TOP
+========================= -->
+
+<button
+  id="backToTop"
+  aria-label="Наверх"
+>
+  ↑
+</button>
+
+
+
+<!-- =========================
+     SCRIPT
+========================= -->
+
 <script src="script.js"></script>
 
+
 </body>
+
 </html>
