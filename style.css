@@ -820,3 +820,42 @@ footer a {
   }
 
 }
+.refreshPanel {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: 18px;
+}
+
+#refreshButton {
+  border: 1px solid #ffcc00;
+  background: transparent;
+  color: #ffcc00;
+  padding: 10px 15px;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+#refreshButton:hover {
+  background: #ffcc00;
+  color: #000;
+}
+
+#refreshTime {
+  color: #555;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+@media (max-width: 520px) {
+
+  .refreshPanel {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+}
