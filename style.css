@@ -44,7 +44,9 @@ button {
 }
 
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 
 .header {
   position: sticky;
@@ -52,7 +54,9 @@ button {
   z-index: 1000;
 
   background: rgba(5,5,5,.94);
-  border-bottom: 1px solid var(--border);
+
+  border-bottom:
+    1px solid var(--border);
 
   backdrop-filter: blur(18px);
 }
@@ -78,12 +82,14 @@ button {
 .logo i {
   width: 8px;
   height: 43px;
+
   background: var(--yellow);
 }
 
 .logo span {
   font-size: 14px;
   font-weight: 700;
+
   line-height: 1;
   letter-spacing: 2px;
 }
@@ -102,6 +108,7 @@ nav a {
 
   font-size: 12px;
   font-weight: 800;
+
   text-transform: uppercase;
 
   transition: .2s;
@@ -115,14 +122,18 @@ nav a:hover {
   display: none;
 
   border: 0;
+
   background: none;
+
   color: white;
 
   font-size: 30px;
 }
 
 
-/* HERO */
+/* =========================
+   HERO
+========================= */
 
 .hero {
   min-height: 700px;
@@ -154,9 +165,10 @@ nav a:hover {
   position: relative;
   z-index: 2;
 
-  width: min(1250px, 100%);
+  width: min(1250px,100%);
 
   margin: auto;
+
   padding: 80px 25px;
 }
 
@@ -165,6 +177,7 @@ nav a:hover {
 
   font-size: 12px;
   font-weight: 900;
+
   letter-spacing: 4px;
 }
 
@@ -173,9 +186,13 @@ nav a:hover {
 
   margin: 18px 0;
 
-  font-size: clamp(48px, 7vw, 92px);
+  font-size:
+    clamp(48px,7vw,92px);
+
   line-height: .92;
+
   letter-spacing: -4px;
+
   text-transform: uppercase;
 }
 
@@ -183,6 +200,7 @@ nav a:hover {
   display: block;
 
   color: var(--yellow);
+
   font-style: normal;
 }
 
@@ -192,27 +210,32 @@ nav a:hover {
   margin-bottom: 30px;
 
   color: #ddd;
+
   font-size: 18px;
 }
 
 .heroButtons {
   display: flex;
   flex-wrap: wrap;
+
   gap: 10px;
 }
 
 .btn {
   min-height: 50px;
+
   padding: 0 22px;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  border: 1px solid rgba(255,255,255,.35);
+  border:
+    1px solid rgba(255,255,255,.35);
 
   font-size: 11px;
   font-weight: 900;
+
   text-transform: uppercase;
 
   transition: .25s;
@@ -224,12 +247,16 @@ nav a:hover {
 
 .btn.yellow {
   background: var(--yellow);
+
   border-color: var(--yellow);
+
   color: #050505;
 }
 
 
-/* STATS */
+/* =========================
+   STATS
+========================= */
 
 .stats {
   max-width: 1250px;
@@ -238,20 +265,25 @@ nav a:hover {
   padding: 0 25px;
 
   display: grid;
-  grid-template-columns: repeat(4,1fr);
 
-  border-bottom: 1px solid var(--border);
+  grid-template-columns:
+    repeat(4,1fr);
+
+  border-bottom:
+    1px solid var(--border);
 }
 
 .stats div {
   min-height: 120px;
+
   padding: 25px;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
 
-  border-right: 1px solid var(--border);
+  border-right:
+    1px solid var(--border);
 }
 
 .stats div:last-child {
@@ -271,20 +303,27 @@ nav a:hover {
 
   font-size: 9px;
   font-weight: 900;
+
   letter-spacing: 2px;
 }
 
 
-/* CATEGORIES */
+/* =========================
+   CATEGORIES
+========================= */
 
 .cats {
   max-width: 1250px;
 
   margin: auto;
+
   padding: 35px 25px;
 
   display: grid;
-  grid-template-columns: repeat(4,1fr);
+
+  grid-template-columns:
+    repeat(4,1fr);
+
   gap: 1px;
 
   background: var(--border);
@@ -306,7 +345,9 @@ nav a:hover {
 
 .cats a:hover {
   background: var(--card2);
-  transform: translateY(-4px);
+
+  transform:
+    translateY(-4px);
 }
 
 .catIcon {
@@ -321,16 +362,20 @@ nav a:hover {
 
 .cats small {
   color: #777;
+
   font-size: 12px;
 }
 
 
-/* SECTIONS */
+/* =========================
+   SECTIONS
+========================= */
 
 .section {
   max-width: 1250px;
 
   margin: auto;
+
   padding: 100px 25px;
 }
 
@@ -349,13 +394,16 @@ nav a:hover {
 
   font-size: 10px;
   font-weight: 900;
+
   letter-spacing: 3px;
 }
 
 .heading h2 {
   margin-top: 8px;
 
-  font-size: clamp(30px,4vw,48px);
+  font-size:
+    clamp(30px,4vw,48px);
+
   line-height: 1;
 
   text-transform: uppercase;
@@ -364,6 +412,7 @@ nav a:hover {
 .live {
   display: flex;
   align-items: center;
+
   gap: 7px;
 
   color: #777;
@@ -380,37 +429,50 @@ nav a:hover {
 
   background: #ff3333;
 
-  box-shadow: 0 0 10px #ff3333;
+  box-shadow:
+    0 0 10px #ff3333;
 
-  animation: livePulse 1.5s infinite;
+  animation:
+    livePulse 1.5s infinite;
 }
 
 @keyframes livePulse {
+
   50% {
     opacity: .3;
   }
+
 }
 
 
-/* FEATURED */
+/* =========================
+   FEATURED
+========================= */
 
 .featuredPost {
   display: grid;
-  grid-template-columns: 1.35fr 1fr;
+
+  grid-template-columns:
+    1.35fr 1fr;
 
   min-height: 460px;
 
   overflow: hidden;
 
   background: var(--card);
-  border: 1px solid var(--border);
+
+  border:
+    1px solid var(--border);
 
   transition: .3s;
 }
 
 .featuredPost:hover {
-  border-color: rgba(255,204,0,.5);
-  transform: translateY(-4px);
+  border-color:
+    rgba(255,204,0,.5);
+
+  transform:
+    translateY(-4px);
 }
 
 .featuredImage {
@@ -442,6 +504,7 @@ nav a:hover {
 
   font-size: 15px;
   font-weight: 900;
+
   letter-spacing: 3px;
 }
 
@@ -458,19 +521,24 @@ nav a:hover {
 
   font-size: 10px;
   font-weight: 900;
+
   letter-spacing: 2px;
+
   text-transform: uppercase;
 }
 
 .featuredContent h3 {
   margin: 18px 0;
 
-  font-size: clamp(25px,3vw,42px);
+  font-size:
+    clamp(25px,3vw,42px);
+
   line-height: 1.08;
 }
 
 .featuredDate {
   color: #666;
+
   font-size: 11px;
 }
 
@@ -478,28 +546,36 @@ nav a:hover {
   margin-top: 25px;
 
   display: flex;
+
   gap: 8px;
 }
 
 .featuredButton {
   padding: 14px 18px;
 
-  border: 1px solid var(--yellow);
+  border:
+    1px solid var(--yellow);
+
   background: transparent;
 
   color: var(--yellow);
 
   font-size: 10px;
   font-weight: 900;
+
+  transition: .2s;
 }
 
 .featuredButton:hover {
   background: var(--yellow);
+
   color: #050505;
 }
 
 
-/* FILTERS */
+/* =========================
+   FILTERS
+========================= */
 
 .postFilters {
   margin-bottom: 35px;
@@ -517,18 +593,31 @@ nav a:hover {
   width: 100%;
   height: 52px;
 
-  padding: 0 50px 0 18px;
+  padding:
+    0 50px 0 18px;
 
   outline: none;
 
   background: #0c0c0c;
-  border: 1px solid var(--border);
+
+  border:
+    1px solid var(--border);
 
   color: white;
+
+  transition: .2s;
+}
+
+.searchBox input::placeholder {
+  color: #666;
 }
 
 .searchBox input:focus {
   border-color: var(--yellow);
+
+  box-shadow:
+    0 0 0 2px
+    rgba(255,204,0,.08);
 }
 
 .searchBox span {
@@ -537,7 +626,8 @@ nav a:hover {
   right: 17px;
   top: 50%;
 
-  transform: translateY(-50%);
+  transform:
+    translateY(-50%);
 
   color: var(--yellow);
 
@@ -546,14 +636,18 @@ nav a:hover {
 
 .categoryButtons {
   display: flex;
+
   flex-wrap: wrap;
+
   gap: 8px;
 }
 
 .categoryBtn {
   padding: 10px 15px;
 
-  border: 1px solid var(--border);
+  border:
+    1px solid var(--border);
+
   background: #0c0c0c;
 
   color: #999;
@@ -566,11 +660,13 @@ nav a:hover {
 
 .categoryBtn:hover {
   border-color: var(--yellow);
+
   color: white;
 }
 
 .categoryBtn.active {
   background: var(--yellow);
+
   border-color: var(--yellow);
 
   color: #050505;
@@ -581,6 +677,7 @@ nav a:hover {
 
   display: flex;
   align-items: center;
+
   gap: 12px;
 
   color: #666;
@@ -592,25 +689,35 @@ nav a:hover {
   padding: 9px 14px;
 
   background: transparent;
-  border: 1px solid var(--border);
+
+  border:
+    1px solid var(--border);
 
   color: #999;
 
   font-size: 9px;
   font-weight: 900;
+
+  transition: .2s;
 }
 
 #refreshButton:hover {
   border-color: var(--yellow);
+
   color: var(--yellow);
 }
 
 
-/* GRID */
+/* =========================
+   POSTS GRID
+========================= */
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+
+  grid-template-columns:
+    repeat(3,1fr);
+
   gap: 20px;
 }
 
@@ -618,16 +725,28 @@ nav a:hover {
   overflow: hidden;
 
   background: var(--card);
-  border: 1px solid var(--border);
+
+  border:
+    1px solid var(--border);
 
   cursor: pointer;
 
-  transition: .3s;
+  transition:
+    transform .3s,
+    border-color .3s,
+    box-shadow .3s;
 }
 
 .post:hover {
-  border-color: rgba(255,204,0,.5);
-  transform: translateY(-5px);
+  border-color:
+    rgba(255,204,0,.5);
+
+  transform:
+    translateY(-5px);
+
+  box-shadow:
+    0 15px 45px
+    rgba(0,0,0,.35);
 }
 
 .postImg {
@@ -639,15 +758,35 @@ nav a:hover {
   background-size: cover;
 }
 
+.postImg::after {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent 45%,
+      rgba(0,0,0,.2)
+    );
+}
+
 .tag {
   position: absolute;
 
   top: 15px;
   left: 15px;
 
+  z-index: 2;
+
   padding: 6px 9px;
 
   background: var(--yellow);
+
   color: #050505;
 
   font-size: 9px;
@@ -663,15 +802,18 @@ nav a:hover {
   width: 38px;
   height: 38px;
 
-  border: 1px solid rgba(255,255,255,.25);
+  z-index: 5;
 
-  background: rgba(0,0,0,.65);
+  border:
+    1px solid
+    rgba(255,255,255,.25);
+
+  background:
+    rgba(0,0,0,.65);
 
   color: white;
 
   font-size: 21px;
-
-  z-index: 3;
 
   transition: .2s;
 }
@@ -679,13 +821,18 @@ nav a:hover {
 .favoriteButton:hover,
 .favoriteButton.active {
   background: var(--yellow);
+
   border-color: var(--yellow);
 
   color: #050505;
+
+  transform:
+    scale(1.06);
 }
 
 .featuredFavorite {
   position: static;
+
   width: 48px;
   height: 45px;
 }
@@ -696,6 +843,7 @@ nav a:hover {
 
 .postBody h3 {
   font-size: 18px;
+
   line-height: 1.3;
 }
 
@@ -707,23 +855,46 @@ nav a:hover {
   font-size: 10px;
 }
 
+.postCardBottom {
+  margin-top: 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .readPost {
   display: inline-block;
-
-  margin-top: 15px;
 
   color: var(--yellow);
 
   font-size: 10px;
   font-weight: 900;
+
   text-transform: uppercase;
+}
+
+.shareHint {
+  color: #555;
+
+  font-size: 18px;
+
+  transition: .2s;
+}
+
+.post:hover .shareHint {
+  color: var(--yellow);
+
+  transform:
+    translate(2px,-2px);
 }
 
 .loading,
 .galleryEmpty {
   padding: 70px 20px;
 
-  border: 1px solid var(--border);
+  border:
+    1px solid var(--border);
 
   color: #777;
 
@@ -733,19 +904,29 @@ nav a:hover {
   font-weight: 800;
 }
 
+.loading a {
+  color: var(--yellow);
+}
+
 .loadingGrid {
-  grid-column: 1/-1;
+  grid-column: 1 / -1;
 
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+
+  grid-template-columns:
+    repeat(3,1fr);
+
   gap: 20px;
 }
 
 .loadMoreWrap {
-  grid-column: 1/-1;
+  grid-column: 1 / -1;
 
   display: flex;
+
   justify-content: center;
+
+  padding-top: 15px;
 }
 
 #loadMore {
@@ -753,21 +934,27 @@ nav a:hover {
 
   background: transparent;
 
-  border: 1px solid var(--yellow);
+  border:
+    1px solid var(--yellow);
 
   color: var(--yellow);
 
   font-size: 10px;
   font-weight: 900;
+
+  transition: .2s;
 }
 
 #loadMore:hover {
   background: var(--yellow);
+
   color: #050505;
 }
 
 
-/* SKELETON */
+/* =========================
+   SKELETON
+========================= */
 
 .skeleton {
   position: relative;
@@ -784,7 +971,8 @@ nav a:hover {
 
   inset: 0;
 
-  transform: translateX(-100%);
+  transform:
+    translateX(-100%);
 
   background:
     linear-gradient(
@@ -794,21 +982,31 @@ nav a:hover {
       transparent
     );
 
-  animation: skeleton 1.3s infinite;
+  animation:
+    skeleton 1.3s infinite;
 }
 
 .skeletonCard {
   height: 360px;
 }
 
+.featuredLoading {
+  min-height: 460px;
+}
+
 @keyframes skeleton {
+
   100% {
-    transform: translateX(100%);
+    transform:
+      translateX(100%);
   }
+
 }
 
 
-/* NATURE */
+/* =========================
+   NATURE BANNER
+========================= */
 
 .banner {
   min-height: 570px;
@@ -830,6 +1028,7 @@ nav a:hover {
 
 .banner > div {
   width: min(1250px,100%);
+
   margin: auto;
 }
 
@@ -838,7 +1037,9 @@ nav a:hover {
 
   margin: 18px 0;
 
-  font-size: clamp(40px,6vw,78px);
+  font-size:
+    clamp(40px,6vw,78px);
+
   line-height: .95;
 
   text-transform: uppercase;
@@ -851,11 +1052,16 @@ nav a:hover {
 }
 
 
-/* TRAVEL */
+/* =========================
+   TRAVEL
+========================= */
 
 .travel {
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+
+  grid-template-columns:
+    repeat(3,1fr);
+
   gap: 20px;
 }
 
@@ -865,14 +1071,18 @@ nav a:hover {
   padding: 30px;
 
   background: var(--card);
-  border: 1px solid var(--border);
+
+  border:
+    1px solid var(--border);
 
   transition: .3s;
 }
 
 .travel article:hover {
   border-color: var(--yellow);
-  transform: translateY(-4px);
+
+  transform:
+    translateY(-4px);
 }
 
 .travel article > b {
@@ -883,6 +1093,7 @@ nav a:hover {
   margin: 35px 0 12px;
 
   font-size: 30px;
+
   text-transform: uppercase;
 }
 
@@ -891,13 +1102,19 @@ nav a:hover {
 }
 
 
-/* GALLERY */
+/* =========================
+   GALLERY
+========================= */
 
 .photos {
+  min-height: 515px;
+
   display: grid;
 
   grid-template-columns: 2fr 1fr;
-  grid-template-rows: 250px 250px;
+
+  grid-template-rows:
+    250px 250px;
 
   gap: 15px;
 }
@@ -912,24 +1129,57 @@ nav a:hover {
 
   cursor: pointer;
 
-  transition: .3s;
+  transition:
+    transform .3s,
+    filter .3s;
+}
+
+.galleryPhoto::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 1;
+
+  background:
+    linear-gradient(
+      180deg,
+      transparent 40%,
+      rgba(0,0,0,.85)
+    );
 }
 
 .galleryPhoto::after {
   content: "";
 
   position: absolute;
+
   inset: 0;
 
   background:
     linear-gradient(
-      transparent 35%,
-      rgba(0,0,0,.8)
+      135deg,
+      rgba(255,204,0,.08),
+      transparent 50%
     );
+
+  opacity: 0;
+
+  transition: .3s;
 }
 
 .galleryPhoto:hover {
-  transform: scale(.98);
+  transform:
+    scale(.985);
+
+  filter:
+    brightness(1.1);
+}
+
+.galleryPhoto:hover::after {
+  opacity: 1;
 }
 
 .galleryPhoto span {
@@ -944,6 +1194,7 @@ nav a:hover {
 
   font-size: 10px;
   font-weight: 900;
+
   letter-spacing: 2px;
 }
 
@@ -951,26 +1202,55 @@ nav a:hover {
   grid-row: span 2;
 }
 
+.galleryLoading,
+.galleryEmpty {
+  grid-column: 1 / -1;
 
-/* ABOUT */
+  min-height: 300px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border:
+    1px solid var(--border);
+
+  color: #666;
+
+  font-size: 10px;
+  font-weight: 900;
+
+  letter-spacing: 1px;
+}
+
+
+/* =========================
+   ABOUT
+========================= */
 
 .about {
   max-width: 1250px;
 
   margin: auto;
+
   padding: 80px 25px;
 
   display: grid;
-  grid-template-columns: 1fr 1fr;
+
+  grid-template-columns:
+    1fr 1fr;
+
   gap: 60px;
 
-  border-top: 1px solid var(--border);
+  border-top:
+    1px solid var(--border);
 }
 
 .about h2 {
   margin-top: 12px;
 
-  font-size: clamp(30px,4vw,52px);
+  font-size:
+    clamp(30px,4vw,52px);
 
   text-transform: uppercase;
 }
@@ -979,23 +1259,28 @@ nav a:hover {
   color: #999;
 
   font-size: 17px;
+
   line-height: 1.7;
 }
 
 
-/* FOOTER */
+/* =========================
+   FOOTER
+========================= */
 
 footer {
   max-width: 1250px;
 
   margin: auto;
+
   padding: 35px 25px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  border-top: 1px solid var(--border);
+  border-top:
+    1px solid var(--border);
 
   color: #666;
 
@@ -1011,15 +1296,19 @@ footer a {
 }
 
 
-/* VIEWER */
+/* =========================
+   POST VIEWER
+========================= */
 
 #postViewer {
   position: fixed;
+
   inset: 0;
 
   z-index: 9999;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -1028,39 +1317,57 @@ footer a {
 
 .viewerBackdrop {
   position: absolute;
+
   inset: 0;
 
-  background: rgba(0,0,0,.9);
+  background:
+    rgba(0,0,0,.9);
 
-  backdrop-filter: blur(15px);
+  backdrop-filter:
+    blur(15px);
 }
 
 .viewerWindow {
   position: relative;
+
   z-index: 2;
 
-  width: min(1000px,100%);
+  width:
+    min(1000px,100%);
+
   max-height: 92vh;
 
   overflow: auto;
 
   background: #0c0c0c;
 
-  border: 1px solid var(--border);
+  border:
+    1px solid var(--border);
 
-  animation: viewerIn .25s ease;
+  box-shadow:
+    0 30px 100px
+    rgba(0,0,0,.7);
+
+  animation:
+    viewerIn .25s ease;
 }
 
 @keyframes viewerIn {
 
   from {
     opacity: 0;
-    transform: scale(.97) translateY(20px);
+
+    transform:
+      scale(.97)
+      translateY(20px);
   }
 
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
+
+    transform:
+      scale(1)
+      translateY(0);
   }
 
 }
@@ -1076,18 +1383,27 @@ footer a {
   width: 42px;
   height: 42px;
 
-  background: rgba(0,0,0,.7);
+  background:
+    rgba(0,0,0,.7);
 
-  border: 1px solid rgba(255,255,255,.25);
+  border:
+    1px solid
+    rgba(255,255,255,.25);
 
   color: white;
 
   font-size: 27px;
+
+  transition: .2s;
 }
 
 .viewerClose:hover {
   background: var(--yellow);
+
   color: #050505;
+
+  transform:
+    rotate(90deg);
 }
 
 .viewerImage {
@@ -1107,18 +1423,22 @@ footer a {
 
   font-size: 10px;
   font-weight: 900;
+
   letter-spacing: 2px;
 }
 
 .viewerContent h2 {
   margin: 15px 0;
 
-  font-size: clamp(25px,4vw,42px);
+  font-size:
+    clamp(25px,4vw,42px);
+
   line-height: 1.1;
 }
 
 .viewerDate {
   color: #666;
+
   font-size: 11px;
 }
 
@@ -1126,42 +1446,128 @@ footer a {
   margin-top: 30px;
 
   display: flex;
+
+  flex-wrap: wrap;
+
   gap: 10px;
 }
 
 .viewerVk,
-.viewerBack {
+.viewerBack,
+.viewerShare,
+.viewerCopy {
   min-height: 45px;
 
   padding: 0 18px;
 
   display: inline-flex;
+
   align-items: center;
   justify-content: center;
 
-  border: 1px solid var(--yellow);
+  border:
+    1px solid var(--yellow);
 
   font-size: 10px;
   font-weight: 900;
+
+  transition: .2s;
 }
 
 .viewerVk {
   background: var(--yellow);
+
   color: #050505;
 }
 
+.viewerShare,
+.viewerCopy,
 .viewerBack {
   background: transparent;
+
   color: var(--yellow);
 }
 
+.viewerShare:hover,
+.viewerCopy:hover,
 .viewerBack:hover {
   background: var(--yellow);
+
   color: #050505;
 }
 
+.viewerStatus {
+  min-height: 20px;
 
-/* SCROLLBAR */
+  margin-top: 15px;
+
+  color: var(--yellow);
+
+  font-size: 11px;
+}
+
+
+/* =========================
+   BACK TO TOP
+========================= */
+
+#backToTop {
+  position: fixed;
+
+  right: 25px;
+  bottom: 25px;
+
+  z-index: 5000;
+
+  width: 48px;
+  height: 48px;
+
+  border:
+    1px solid var(--yellow);
+
+  background:
+    rgba(5,5,5,.88);
+
+  color: var(--yellow);
+
+  font-size: 22px;
+
+  opacity: 0;
+
+  visibility: hidden;
+
+  transform:
+    translateY(15px);
+
+  transition:
+    opacity .25s,
+    visibility .25s,
+    transform .25s,
+    background .25s;
+}
+
+#backToTop.visible {
+  opacity: 1;
+
+  visibility: visible;
+
+  transform:
+    translateY(0);
+}
+
+#backToTop:hover {
+  background: var(--yellow);
+
+  color: #050505;
+
+  transform:
+    translateY(-3px);
+}
+
+
+/* =========================
+   SCROLLBAR
+========================= */
 
 ::-webkit-scrollbar {
   width: 8px;
@@ -1180,13 +1586,16 @@ footer a {
 }
 
 
-/* TABLET */
+/* =========================
+   TABLET
+========================= */
 
 @media (max-width: 900px) {
 
   #menu {
     display: block;
   }
+
 
   nav {
     position: absolute;
@@ -1196,53 +1605,77 @@ footer a {
     right: 0;
 
     display: none;
+
     flex-direction: column;
+
     gap: 0;
 
     padding: 10px;
 
     background: #080808;
 
-    border-bottom: 1px solid var(--border);
+    border-bottom:
+      1px solid var(--border);
   }
+
 
   nav.open {
     display: flex;
   }
 
+
   nav a {
     padding: 15px;
 
-    border-bottom: 1px solid var(--border);
+    border-bottom:
+      1px solid var(--border);
   }
 
+
   .stats {
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns:
+      repeat(2,1fr);
   }
+
 
   .stats div:nth-child(2) {
     border-right: 0;
   }
 
-  .cats {
-    grid-template-columns: repeat(2,1fr);
+
+  .stats div:nth-child(3) {
+    border-right:
+      1px solid var(--border);
   }
+
+
+  .cats {
+    grid-template-columns:
+      repeat(2,1fr);
+  }
+
 
   .featuredPost {
     grid-template-columns: 1fr;
   }
 
+
   .featuredImage {
     min-height: 330px;
   }
 
+
   .grid {
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns:
+      repeat(2,1fr);
   }
 
+
   .loadingGrid {
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns:
+      repeat(2,1fr);
   }
+
 
   .travel {
     grid-template-columns: 1fr;
@@ -1251,150 +1684,249 @@ footer a {
 }
 
 
-/* MOBILE */
+/* =========================
+   MOBILE
+========================= */
 
 @media (max-width: 600px) {
 
   .nav {
     min-height: 68px;
+
     padding: 0 16px;
   }
+
 
   nav {
     top: 68px;
   }
 
+
+  .logo span {
+    font-size: 11px;
+  }
+
+
+  .logo b {
+    font-size: 12px;
+  }
+
+
   .hero {
     min-height: 620px;
   }
 
+
   .heroText {
-    padding: 60px 18px;
+    padding:
+      60px 18px;
   }
+
 
   .hero h1 {
     font-size: 48px;
+
     letter-spacing: -2px;
   }
+
+
+  .hero p {
+    font-size: 16px;
+  }
+
 
   .heroButtons {
     flex-direction: column;
   }
 
+
   .btn {
     width: 100%;
   }
+
 
   .stats {
     padding: 0 15px;
   }
 
+
   .stats strong {
     font-size: 25px;
   }
 
+
   .stats div {
     min-height: 100px;
+
     padding: 18px;
   }
+
 
   .cats {
     padding: 15px;
+
     gap: 1px;
   }
 
+
   .cats a {
     min-height: 130px;
+
     padding: 18px;
   }
 
+
   .section {
-    padding: 65px 18px;
+    padding:
+      65px 18px;
   }
+
 
   .heading {
     margin-bottom: 28px;
   }
 
+
   .heading h2 {
     font-size: 31px;
   }
+
+
+  .live {
+    display: none;
+  }
+
 
   .grid {
     grid-template-columns: 1fr;
   }
 
+
   .loadingGrid {
     grid-template-columns: 1fr;
   }
+
 
   .postImg {
     height: 240px;
   }
 
+
+  .postBody {
+    padding: 20px;
+  }
+
+
   .featuredContent {
     padding: 28px;
   }
+
 
   .featuredImage {
     min-height: 250px;
   }
 
+
+  .featuredContent h3 {
+    font-size: 27px;
+  }
+
+
   .banner {
     min-height: 520px;
-    padding: 70px 18px;
+
+    padding:
+      70px 18px;
   }
+
 
   .banner h2 {
     font-size: 45px;
   }
 
+
   .photos {
+    min-height: auto;
+
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(3,220px);
+
+    grid-template-rows:
+      repeat(3,220px);
   }
+
 
   .galleryPhoto1 {
     grid-row: auto;
   }
 
+
   .about {
     grid-template-columns: 1fr;
-    padding: 60px 18px;
+
+    padding:
+      60px 18px;
   }
+
+
+  .about p {
+    font-size: 15px;
+  }
+
 
   footer {
-    padding: 30px 18px;
+    padding:
+      30px 18px;
 
     flex-direction: column;
+
     align-items: flex-start;
+
     gap: 15px;
   }
+
 
   .viewerWindow {
     max-height: 95vh;
   }
 
+
   .viewerImage {
     height: 260px;
   }
 
+
   .viewerContent {
-    padding: 25px 20px;
+    padding:
+      25px 20px;
   }
+
 
   .viewerButtons {
     flex-direction: column;
   }
 
+
   .viewerVk,
-  .viewerBack {
+  .viewerBack,
+  .viewerShare,
+  .viewerCopy {
     width: 100%;
   }
 
+
   .refreshPanel {
     align-items: flex-start;
+
     flex-direction: column;
+  }
+
+
+  #backToTop {
+    right: 16px;
+    bottom: 16px;
+
+    width: 44px;
+    height: 44px;
   }
 
 }
