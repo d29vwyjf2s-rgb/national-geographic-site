@@ -43,6 +43,22 @@ const categories = {
 
 
 /* =========================
+   ТЕКСТ
+========================= */
+
+function cleanText(text) {
+
+  if (!text) {
+    return "Новая публикация National Geographic";
+  }
+
+  return text
+    .replace(/\n+/g, " ")
+    .trim();
+}
+
+
+/* =========================
    ДАТА
 ========================= */
 
@@ -60,45 +76,7 @@ function formatDate(timestamp) {
 
 
 /* =========================
-   ВРЕМЯ ОБНОВЛЕНИЯ
-========================= */
-
-function updateRefreshTime() {
-
-  const element =
-    document.querySelector("#refreshTime");
-
-  if (!element) return;
-
-  const now = new Date();
-
-  element.textContent =
-    "Обновлено в " +
-    now.toLocaleTimeString("ru-RU", {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-}
-
-
-/* =========================
-   ТЕКСТ
-========================= */
-
-function cleanText(text) {
-
-  if (!text) {
-    return "Новая публикация National Geographic";
-  }
-
-  return text
-    .replace(/\n+/g, " ")
-    .trim();
-}
-
-
-/* =========================
-   VK
+   ССЫЛКА VK
 ========================= */
 
 function getPostLink(vkId) {
@@ -143,7 +121,7 @@ function detectCategory(text) {
 
 
 /* =========================
-   ФИЛЬТР
+   ФИЛЬТРАЦИЯ
 ========================= */
 
 function getFilteredPosts() {
@@ -152,13 +130,11 @@ function getFilteredPosts() {
 
   if (activeCategory !== "Все") {
 
-    posts = posts.filter(post => {
-
-      return detectCategory(
+    posts = posts.filter(post =>
+      detectCategory(
         cleanText(post.text)
-      ) === activeCategory;
-
-    });
+      ) === activeCategory
+    );
 
   }
 
@@ -167,17 +143,186 @@ function getFilteredPosts() {
     const query =
       searchText.toLowerCase().trim();
 
-    posts = posts.filter(post => {
-
-      return cleanText(post.text)
+    posts = posts.filter(post =>
+      cleanText(post.text)
         .toLowerCase()
-        .includes(query);
-
-    });
+        .includes(query)
+    );
 
   }
 
   return posts;
+}
+
+
+/* =========================
+   ОТКРЫТИЕ ПОСТА
+========================= */
+
+function openPost(post) {
+
+  const oldViewer =
+    document.querySelector("#postViewer");
+
+  if (oldViewer) {
+    oldViewer.remove();
+  }
+
+  const text =
+    cleanText(post.text);
+
+  const image =
+    post.image_url;
+
+  const date =
+    formatDate(post.post_date);
+
+  const link =
+    getPostLink(post.vk_id);
+
+  const category =
+    detectCategory(text);
+
+  const viewer =
+    document.createElement("div");
+
+  viewer.id =
+    "postViewer";
+
+  viewer.innerHTML = `
+
+    <div class="viewerBackdrop"></div>
+
+    <div class="viewerWindow">
+
+      <button
+        class="viewerClose"
+        id="viewerClose"
+      >
+        ×
+      </button>
+
+      ${
+        image
+          ? `
+            <div
+              class="viewerImage"
+              style="
+                background-image:
+                url('${image}')
+              "
+            ></div>
+          `
+          : `
+            <div class="viewerImage noImage">
+              <span>
+                NATIONAL GEOGRAPHIC
+              </span>
+            </div>
+          `
+      }
+
+      <div class="viewerContent">
+
+        <div class="viewerCategory">
+          ${category}
+        </div>
+
+        <h2>
+          ${text}
+        </h2>
+
+        ${
+          date
+            ? `<div class="viewerDate">
+                ${date}
+              </div>`
+            : ""
+        }
+
+        <div class="viewerButtons">
+
+          <a
+            class="viewerVk"
+            href="${link}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ОТКРЫТЬ ВО ВКОНТАКТЕ ↗
+          </a>
+
+          <button
+            class="viewerBack"
+            id="viewerBack"
+          >
+            НАЗАД
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+  document.body.appendChild(viewer);
+
+  document.body.classList.add(
+    "viewerOpen"
+  );
+
+  document
+    .querySelector("#viewerClose")
+    .onclick = closePost;
+
+  document
+    .querySelector("#viewerBack")
+    .onclick = closePost;
+
+  document
+    .querySelector(".viewerBackdrop")
+    .onclick = closePost;
+
+  document.addEventListener(
+    "keydown",
+    handleViewerKey
+  );
+
+}
+
+
+/* =========================
+   ЗАКРЫТИЕ
+========================= */
+
+function closePost() {
+
+  const viewer =
+    document.querySelector("#postViewer");
+
+  if (viewer) {
+    viewer.remove();
+  }
+
+  document.body.classList.remove(
+    "viewerOpen"
+  );
+
+  document.removeEventListener(
+    "keydown",
+    handleViewerKey
+  );
+
+}
+
+
+function handleViewerKey(event) {
+
+  if (event.key === "Escape") {
+    closePost();
+  }
+
 }
 
 
@@ -196,20 +341,23 @@ function createPost(post) {
   const date =
     formatDate(post.post_date);
 
-  const link =
-    getPostLink(post.vk_id);
-
   const category =
     detectCategory(text);
 
   return `
-    <article class="post">
+    <article
+      class="post"
+      data-post-id="${post.id}"
+    >
 
       <div
         class="postImg ${image ? "" : "noImage"}"
         ${
           image
-            ? `style="background-image:url('${image}')"`
+            ? `style="
+                background-image:
+                url('${image}')
+              "`
             : ""
         }
       >
@@ -222,21 +370,21 @@ function createPost(post) {
 
       <div class="postBody">
 
-        <h3>${text}</h3>
+        <h3>
+          ${text}
+        </h3>
 
         ${
           date
-            ? `<p class="postDate">${date}</p>`
+            ? `<p class="postDate">
+                ${date}
+              </p>`
             : ""
         }
 
-        <a
-          href="${link}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Читать во ВКонтакте →
-        </a>
+        <span class="readPost">
+          Читать материал →
+        </span>
 
       </div>
 
@@ -279,6 +427,21 @@ function renderPosts() {
       .map(createPost)
       .join("");
 
+  document
+    .querySelectorAll(".post")
+    .forEach((card, index) => {
+
+      card.onclick = () => {
+
+        openPost(
+          postsToShow[index]
+        );
+
+      };
+
+    });
+
+
   if (
     visiblePosts <
     filteredPosts.length
@@ -306,6 +469,32 @@ function renderPosts() {
 
   }
 
+}
+
+
+/* =========================
+   ВРЕМЯ ОБНОВЛЕНИЯ
+========================= */
+
+function updateRefreshTime() {
+
+  const element =
+    document.querySelector(
+      "#refreshTime"
+    );
+
+  if (!element) return;
+
+  element.textContent =
+    "Обновлено в " +
+    new Date()
+      .toLocaleTimeString(
+        "ru-RU",
+        {
+          hour: "2-digit",
+          minute: "2-digit"
+        }
+      );
 }
 
 
@@ -365,24 +554,23 @@ async function loadPosts(
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Ошибка загрузки:",
+      error
+    );
 
     if (showLoading) {
 
       postsContainer.innerHTML = `
         <div class="loading">
-
           Не удалось загрузить публикации.
-
           <br><br>
-
           <a
             href="https://vk.ru/national.geograph1c"
             target="_blank"
           >
             Открыть ВКонтакте →
           </a>
-
         </div>
       `;
 
@@ -436,33 +624,45 @@ function createFilters() {
 
     <div class="categoryButtons">
 
-      <button class="categoryBtn active"
-        data-category="Все">
+      <button
+        class="categoryBtn active"
+        data-category="Все"
+      >
         Все
       </button>
 
-      <button class="categoryBtn"
-        data-category="Природа">
+      <button
+        class="categoryBtn"
+        data-category="Природа"
+      >
         🏔️ Природа
       </button>
 
-      <button class="categoryBtn"
-        data-category="Путешествия">
+      <button
+        class="categoryBtn"
+        data-category="Путешествия"
+      >
         ✈️ Путешествия
       </button>
 
-      <button class="categoryBtn"
-        data-category="Россия">
+      <button
+        class="categoryBtn"
+        data-category="Россия"
+      >
         🇷🇺 Россия
       </button>
 
-      <button class="categoryBtn"
-        data-category="Мир">
+      <button
+        class="categoryBtn"
+        data-category="Мир"
+      >
         🌍 Мир
       </button>
 
-      <button class="categoryBtn"
-        data-category="Животные">
+      <button
+        class="categoryBtn"
+        data-category="Животные"
+      >
         🐾 Животные
       </button>
 
@@ -479,24 +679,24 @@ function createFilters() {
       </span>
 
     </div>
+
   `;
 
   heading.after(filters);
 
 
-  const search =
-    document.querySelector("#postSearch");
+  document
+    .querySelector("#postSearch")
+    .oninput = event => {
 
-  search.oninput = event => {
+      searchText =
+        event.target.value;
 
-    searchText =
-      event.target.value;
+      visiblePosts = 6;
 
-    visiblePosts = 6;
+      renderPosts();
 
-    renderPosts();
-
-  };
+    };
 
 
   document
@@ -508,10 +708,14 @@ function createFilters() {
         document
           .querySelectorAll(".categoryBtn")
           .forEach(btn =>
-            btn.classList.remove("active")
+            btn.classList.remove(
+              "active"
+            )
           );
 
-        button.classList.add("active");
+        button.classList.add(
+          "active"
+        );
 
         activeCategory =
           button.dataset.category;
@@ -555,15 +759,13 @@ const year =
   document.querySelector("#year");
 
 if (year) {
-
   year.textContent =
     new Date().getFullYear();
-
 }
 
 
 /* =========================
-   МОБИЛЬНОЕ МЕНЮ
+   МЕНЮ
 ========================= */
 
 const menu =
@@ -591,7 +793,9 @@ if (menu && links) {
 
       link.onclick = () => {
 
-        links.classList.remove("open");
+        links.classList.remove(
+          "open"
+        );
 
         menu.textContent = "☰";
 
