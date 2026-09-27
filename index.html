@@ -5,30 +5,21 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  >
-
-  <meta
-    name="theme-color"
-    content="#111712"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
 
   <meta
     name="description"
-    content="National Geographic — природа, путешествия, животные и удивительные места нашей планеты."
+    content="National Geographic — природа, путешествия, животные и самые удивительные места нашей планеты."
   >
 
-  <meta
-    name="apple-mobile-web-app-capable"
-    content="yes"
-  >
+  <meta name="theme-color" content="#17241d">
 
-  <meta
-    name="apple-mobile-web-app-status-bar-style"
-    content="black-translucent"
-  >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NatGeo">
 
-  <title>National Geographic — Мир рядом</title>
+  <title>National Geographic — Мир, который стоит увидеть</title>
 
   <link rel="manifest" href="./manifest.json">
 
@@ -36,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Oswald:wght@300;400;500;600&display=swap"
     rel="stylesheet"
   >
 
@@ -45,43 +36,43 @@
 
 <body>
 
-  <!-- =====================================
+  <!-- =========================
        HEADER
-  ====================================== -->
+  ========================== -->
 
   <header class="siteHeader">
 
     <div class="headerInner">
 
-      <a
-        href="#home"
-        class="siteLogo"
-        aria-label="National Geographic"
-      >
-        <span class="logoFrame">NG</span>
+      <a href="#home" class="brand" aria-label="National Geographic">
 
-        <span class="logoWords">
-          NATIONAL<br>
-          GEOGRAPHIC
+        <span class="brandMark">
+          <span></span>
         </span>
+
+        <span class="brandText">
+          <strong>NATIONAL</strong>
+          <small>GEOGRAPHIC</small>
+        </span>
+
       </a>
 
 
-      <nav class="desktopNav">
+      <nav class="desktopNav" aria-label="Основная навигация">
 
-        <a href="#home">
+        <a href="#home" class="navLink active">
           Главная
         </a>
 
-        <a href="#explore">
+        <a href="#explore" class="navLink">
           Исследовать
         </a>
 
-        <a href="#feed">
+        <a href="#journal" class="navLink">
           Журнал
         </a>
 
-        <a href="#about">
+        <a href="#about" class="navLink">
           О проекте
         </a>
 
@@ -93,6 +84,7 @@
         id="menuButton"
         type="button"
         aria-label="Открыть меню"
+        aria-expanded="false"
       >
         <span></span>
         <span></span>
@@ -103,58 +95,71 @@
   </header>
 
 
-  <!-- =====================================
+  <!-- =========================
        MOBILE MENU
-  ====================================== -->
+  ========================== -->
 
-  <div
-    class="mobileMenu"
-    id="mobileMenu"
-  >
+  <div class="mobileMenu" id="mobileMenu">
 
     <div class="mobileMenuInner">
 
-      <a href="#home">
-        <span>01</span>
-        Главная
-      </a>
+      <div class="mobileMenuTop">
+        <span>EXPLORE THE WORLD</span>
+      </div>
 
-      <a href="#explore">
-        <span>02</span>
-        Исследовать
-      </a>
+      <nav>
 
-      <a href="#feed">
-        <span>03</span>
-        Журнал
-      </a>
+        <a href="#home">
+          <span>01</span>
+          Главная
+        </a>
 
-      <a href="#about">
-        <span>04</span>
-        О проекте
-      </a>
+        <a href="#explore">
+          <span>02</span>
+          Исследовать
+        </a>
+
+        <a href="#journal">
+          <span>03</span>
+          Журнал
+        </a>
+
+        <a href="#about">
+          <span>04</span>
+          О проекте
+        </a>
+
+      </nav>
+
+      <div class="mobileMenuBottom">
+        NATIONAL GEOGRAPHIC
+      </div>
 
     </div>
 
   </div>
 
 
-  <main id="home">
+  <!-- =========================
+       MAIN
+  ========================== -->
+
+  <main id="main">
 
 
-    <!-- =====================================
+    <!-- =========================
          HERO
-    ====================================== -->
+    ========================== -->
 
-    <section class="hero">
+    <section class="hero" id="home">
 
       <div class="heroBackground">
+
+        <div class="heroSun"></div>
 
         <div class="heroMountain heroMountainOne"></div>
         <div class="heroMountain heroMountainTwo"></div>
         <div class="heroMountain heroMountainThree"></div>
-
-        <div class="heroSun"></div>
 
         <div class="heroGrid"></div>
 
@@ -166,11 +171,11 @@
         <div class="heroTopLine">
 
           <span>
-            NATIONAL GEOGRAPHIC
+            DIGITAL EDITION
           </span>
 
           <span>
-            DIGITAL JOURNAL · 2026
+            2026
           </span>
 
         </div>
@@ -186,26 +191,26 @@
           <div class="heroText">
 
             <div class="heroLabel">
-              МИР НАЧИНАЕТСЯ ЗА ГОРИЗОНТОМ
+              NATIONAL GEOGRAPHIC
             </div>
 
             <h1>
-              УВИДЕТЬ<br>
-              БОЛЬШЕ
+              МИР
+              <br>
+              НАЧИНАЕТСЯ
+              <br>
+              ЗА ГОРИЗОНТОМ
             </h1>
 
             <p>
-              Путешествия, природа и места,
-              ради которых хочется собрать
-              рюкзак и отправиться в путь.
+              Природа. Путешествия. Животные.
+              Места, которые заставляют остановиться
+              и посмотреть вокруг.
             </p>
 
-            <a
-              href="#feed"
-              class="heroLink"
-            >
-              ОТКРЫТЬ ЖУРНАЛ
-              <span>↗</span>
+            <a href="#explore" class="heroLink">
+              Исследовать мир
+              <span>↘</span>
             </a>
 
           </div>
@@ -216,15 +221,11 @@
         <div class="heroBottom">
 
           <span>
-            51° 28′ N
+            51° N / 12° E
           </span>
 
           <span>
-            EXPLORE / DISCOVER / REMEMBER
-          </span>
-
-          <span>
-            12° 33′ E
+            PLANET EARTH
           </span>
 
         </div>
@@ -234,9 +235,9 @@
     </section>
 
 
-    <!-- =====================================
+    <!-- =========================
          INTRO
-    ====================================== -->
+    ========================== -->
 
     <section class="introSection">
 
@@ -245,25 +246,33 @@
         <div class="introGrid">
 
           <div class="introSmall">
-            <span class="line"></span>
-            ИССЛЕДУЙТЕ ПЛАНЕТУ
+
+            <span class="sectionIndex">
+              01 / 06
+            </span>
+
+            <span class="sectionKicker">
+              THE WORLD AROUND US
+            </span>
+
           </div>
 
 
           <div class="introLarge">
 
             <h2>
-              Планета огромна.
-              <br>
-              И она всё ещё
-              <em>полна открытий.</em>
+              Планета гораздо
+              <em>больше</em>,
+              чем кажется.
             </h2>
 
             <p>
-              Мы собираем истории о местах,
-              животных и людях, которые
-              заставляют посмотреть на мир
-              немного иначе.
+              Здесь собраны истории о местах,
+              куда хочется отправиться, животных,
+              которыми невозможно не восхищаться,
+              и природных явлениях, которые
+              напоминают, насколько удивителен
+              наш мир.
             </p>
 
           </div>
@@ -275,34 +284,29 @@
     </section>
 
 
-    <!-- =====================================
+    <!-- =========================
          EXPLORE
-    ====================================== -->
+    ========================== -->
 
-    <section
-      class="exploreSection"
-      id="explore"
-    >
+    <section class="exploreSection" id="explore">
 
       <div class="pageContainer">
 
         <div class="sectionHeader">
 
           <div>
-
-            <div class="sectionKicker">
+            <span class="sectionKicker">
               EXPLORE
-            </div>
+            </span>
 
             <h2>
-              НАПРАВЛЕНИЯ
+              Выбери направление
             </h2>
-
           </div>
 
-          <div class="sectionIndex">
-            02 / 04
-          </div>
+          <span class="sectionIndex">
+            02 / 06
+          </span>
 
         </div>
 
@@ -310,20 +314,17 @@
         <div class="exploreGrid">
 
 
-          <!-- CARD 1 -->
+          <!-- NATURE -->
 
-          <a
-            href="#feed"
-            class="exploreCard exploreCardLarge"
-          >
+          <article class="exploreCard exploreCardLarge">
 
             <div class="exploreImage exploreNature">
 
-              <span class="fakeSun"></span>
+              <div class="fakeSun"></div>
 
-              <span class="fakeMountain mountainA"></span>
-              <span class="fakeMountain mountainB"></span>
-              <span class="fakeMountain mountainC"></span>
+              <div class="mountainA"></div>
+              <div class="mountainB"></div>
+              <div class="mountainC"></div>
 
             </div>
 
@@ -338,25 +339,23 @@
               </span>
 
               <h3>
-                ДИКАЯ<br>
-                ПРИРОДА
+                Природа
               </h3>
 
               <p>
-                Горы · леса · пустыни · океаны
+                Горы, леса, пустыни
+                и места, где человек
+                остаётся гостем.
               </p>
 
             </div>
 
-          </a>
+          </article>
 
 
-          <!-- CARD 2 -->
+          <!-- OCEAN -->
 
-          <a
-            href="#feed"
-            class="exploreCard"
-          >
+          <article class="exploreCard">
 
             <div class="exploreImage exploreOcean">
 
@@ -368,7 +367,9 @@
 
             </div>
 
+
             <div class="exploreOverlay"></div>
+
 
             <div class="exploreContent">
 
@@ -377,34 +378,33 @@
               </span>
 
               <h3>
-                ОКЕАН
+                Океан
               </h3>
 
               <p>
-                Глубина · жизнь · стихия
+                Глубины планеты
+                и жизнь под водой.
               </p>
 
             </div>
 
-          </a>
+          </article>
 
 
-          <!-- CARD 3 -->
+          <!-- TRAVEL -->
 
-          <a
-            href="#feed"
-            class="exploreCard"
-          >
+          <article class="exploreCard">
 
             <div class="exploreImage exploreTravel">
 
-              <div class="travelRoad"></div>
-
               <div class="travelMountain"></div>
+              <div class="travelRoad"></div>
 
             </div>
 
+
             <div class="exploreOverlay"></div>
+
 
             <div class="exploreContent">
 
@@ -413,34 +413,37 @@
               </span>
 
               <h3>
-                ПУТЕШЕСТВИЯ
+                Путешествия
               </h3>
 
               <p>
-                Маршруты · города · открытия
+                Маршруты, города
+                и места, которые
+                хочется увидеть.
               </p>
 
             </div>
 
-          </a>
+          </article>
 
 
-          <!-- CARD 4 -->
+          <!-- WILDLIFE -->
 
-          <a
-            href="#feed"
-            class="exploreCard exploreCardWide"
-          >
+          <article class="exploreCard exploreCardWide">
 
             <div class="exploreImage exploreWildlife">
 
-              <div class="animalEye"></div>
+              <div class="animalShape">
 
-              <div class="animalShape"></div>
+                <div class="animalEye"></div>
+
+              </div>
 
             </div>
 
+
             <div class="exploreOverlay"></div>
+
 
             <div class="exploreContent">
 
@@ -449,16 +452,18 @@
               </span>
 
               <h3>
-                ЖИВОТНЫЕ
+                Дикая природа
               </h3>
 
               <p>
-                Дикие обитатели нашей планеты
+                Животные планеты,
+                редкие виды и жизнь
+                вдали от цивилизации.
               </p>
 
             </div>
 
-          </a>
+          </article>
 
         </div>
 
@@ -467,9 +472,9 @@
     </section>
 
 
-    <!-- =====================================
+    <!-- =========================
          FIELD NOTE
-    ====================================== -->
+    ========================== -->
 
     <section class="fieldSection">
 
@@ -484,15 +489,15 @@
             </div>
 
             <div class="fieldCoordinates">
-              43° 21′ 12″ N<br>
-              42° 26′ 48″ E
+              44° 29' 32" N<br>
+              34° 09' 47" E
             </div>
 
             <div class="fieldLandscape">
 
-              <span></span>
-              <span></span>
-              <span></span>
+              <div></div>
+              <div></div>
+              <div></div>
 
             </div>
 
@@ -501,28 +506,25 @@
 
           <div class="fieldContent">
 
-            <div class="fieldLabel">
+            <span class="fieldLabel">
               FIELD NOTE / 001
-            </div>
+            </span>
 
             <h2>
-              КАЖДЫЙ<br>
-              МАРШРУТ<br>
-              НАЧИНАЕТСЯ<br>
-              С ШАГА.
+              Иногда лучший
+              маршрут —
+              тот, которого
+              нет на карте.
             </h2>
 
             <p>
-              Иногда, чтобы увидеть что-то
-              удивительное, достаточно просто
-              свернуть с привычной дороги.
+              Отправляйся дальше привычных
+              маршрутов. Именно там начинаются
+              самые интересные истории.
             </p>
 
-            <a
-              href="#feed"
-              class="darkButton"
-            >
-              СМОТРЕТЬ ИСТОРИИ
+            <a href="#journal" class="darkButton">
+              Читать журнал
               <span>→</span>
             </a>
 
@@ -535,14 +537,11 @@
     </section>
 
 
-    <!-- =====================================
+    <!-- =========================
          JOURNAL / VK FEED
-    ====================================== -->
+    ========================== -->
 
-    <section
-      class="journalSection"
-      id="feed"
-    >
+    <section class="journalSection" id="journal">
 
       <div class="pageContainer">
 
@@ -550,12 +549,12 @@
 
           <div>
 
-            <div class="sectionKicker">
-              NATIONAL GEOGRAPHIC JOURNAL
-            </div>
+            <span class="sectionKicker">
+              JOURNAL
+            </span>
 
             <h2>
-              ПОСЛЕДНИЕ ИСТОРИИ
+              Последние истории
             </h2>
 
           </div>
@@ -563,46 +562,43 @@
 
           <div class="journalInfo">
 
-            <span>
-              LIVE
+            <span class="sectionIndex">
+              03 / 06
             </span>
 
-            <i></i>
-
-            <span>
-              VK EDITION
-            </span>
+            <p>
+              Свежие публикации
+              сообщества National Geographic.
+            </p>
 
           </div>
 
         </div>
 
 
-        <div
-          id="feedStatus"
-          class="feedStatus"
-        >
-          Загружаем последние материалы…
+        <!-- API STATUS -->
+
+        <div id="feedStatus" class="feedStatus">
+          Загружаем истории…
         </div>
 
 
-        <div
-          id="posts"
-          class="postsGrid"
-        ></div>
+        <!-- POSTS -->
+
+        <div id="posts" class="postsGrid">
+        </div>
 
 
-        <div
-          id="loadMoreWrap"
-          class="loadMoreWrap"
-        >
+        <!-- LOAD MORE -->
+
+        <div id="loadMoreWrap" class="loadMoreWrap">
 
           <button
             id="loadMore"
-            class="loadMoreButton"
+            class="darkButton"
             type="button"
           >
-            ЗАГРУЗИТЬ ЕЩЁ
+            Показать ещё
             <span>↓</span>
           </button>
 
@@ -613,9 +609,9 @@
     </section>
 
 
-    <!-- =====================================
+    <!-- =========================
          COMMUNITY
-    ====================================== -->
+    ========================== -->
 
     <section class="communitySection">
 
@@ -624,22 +620,27 @@
         <div class="communityCard">
 
           <div class="communityLogo">
-            NG
+
+            <span></span>
+
           </div>
 
 
           <div class="communityText">
 
-            <span>
-              OFFICIAL COMMUNITY
+            <span class="sectionKicker">
+              FOLLOW THE JOURNEY
             </span>
 
             <h2>
-              NATIONAL GEOGRAPHIC
+              National Geographic
+              ВКонтакте
             </h2>
 
             <p>
-              Природа · путешествия · планета
+              Природа, путешествия,
+              животные и удивительные
+              места планеты каждый день.
             </p>
 
           </div>
@@ -648,10 +649,10 @@
           <a
             href="https://vk.ru/national.geograph1c"
             target="_blank"
-            rel="noopener"
-            class="communityButton"
+            rel="noopener noreferrer"
+            class="darkButton communityButton"
           >
-            ОТКРЫТЬ VK
+            Открыть сообщество
             <span>↗</span>
           </a>
 
@@ -662,28 +663,31 @@
     </section>
 
 
-    <!-- =====================================
+    <!-- =========================
          ABOUT
-    ====================================== -->
+    ========================== -->
 
-    <section
-      class="aboutSection"
-      id="about"
-    >
+    <section class="aboutSection" id="about">
 
       <div class="pageContainer">
 
         <div class="aboutGrid">
 
+
           <div class="aboutTitle">
 
-            <span>
-              04
+            <span class="sectionKicker">
+              ABOUT
+            </span>
+
+            <span class="sectionIndex">
+              04 / 06
             </span>
 
             <h2>
-              О<br>
-              ПРОЕКТЕ
+              Смотреть.
+              Исследовать.
+              Запоминать.
             </h2>
 
           </div>
@@ -693,22 +697,24 @@
 
             <p class="aboutLead">
               National Geographic —
-              цифровой журнал о нашей планете.
+              цифровое пространство
+              о нашей планете.
             </p>
 
             <p>
-              Здесь встречаются большие
-              путешествия и маленькие открытия:
-              дикие места, редкие животные,
-              необычные города, горы, океаны
-              и истории людей.
+              Мы собираем здесь красивые
+              места, природные явления,
+              путешествия, фотографии
+              и истории, которые хочется
+              сохранить.
             </p>
 
             <p>
-              Мы верим, что интерес к миру
-              начинается с любопытства.
-              Поэтому просто открывайте,
-              смотрите и отправляйтесь дальше.
+              Наша задача проста:
+              показывать мир таким,
+              чтобы после каждого материала
+              хотелось открыть карту
+              и отправиться дальше.
             </p>
 
           </div>
@@ -719,13 +725,12 @@
 
     </section>
 
-
   </main>
 
 
-  <!-- =====================================
+  <!-- =========================
        FOOTER
-  ====================================== -->
+  ========================== -->
 
   <footer class="siteFooter">
 
@@ -734,15 +739,21 @@
       <div class="footerTop">
 
         <div class="footerLogo">
-          <span>NG</span>
-          NATIONAL<br>
-          GEOGRAPHIC
+
+          <span class="brandMark">
+            <span></span>
+          </span>
+
+          <div>
+            <strong>NATIONAL</strong>
+            <small>GEOGRAPHIC</small>
+          </div>
+
         </div>
 
 
         <div class="footerPhrase">
-          THE WORLD<br>
-          IS WAITING.
+          THE WORLD IS WAITING.
         </div>
 
       </div>
@@ -751,12 +762,16 @@
       <div class="footerBottom">
 
         <span>
-          NATIONAL GEOGRAPHIC DIGITAL EDITION
+          © 2026 National Geographic
         </span>
 
         <span>
-          © 2026
+          DIGITAL EDITION
         </span>
+
+        <a href="#home">
+          НАВЕРХ ↑
+        </a>
 
       </div>
 
@@ -765,9 +780,9 @@
   </footer>
 
 
-  <!-- =====================================
+  <!-- =========================
        MOBILE BOTTOM NAV
-  ====================================== -->
+  ========================== -->
 
   <nav class="mobileBottomNav">
 
@@ -781,7 +796,7 @@
       Мир
     </a>
 
-    <a href="#feed">
+    <a href="#journal">
       <span>03</span>
       Журнал
     </a>
@@ -794,9 +809,9 @@
   </nav>
 
 
-  <!-- =====================================
-       TOP BUTTON
-  ====================================== -->
+  <!-- =========================
+       BACK TO TOP
+  ========================== -->
 
   <button
     id="backToTop"
@@ -808,20 +823,17 @@
   </button>
 
 
-  <!-- =====================================
+  <!-- =========================
        TOAST
-  ====================================== -->
+  ========================== -->
 
   <div
     id="toast"
     class="toast"
+    role="status"
     aria-live="polite"
   ></div>
 
-
-  <!-- =====================================
-       SCRIPTS
-  ====================================== -->
 
   <script src="./script.js"></script>
 
