@@ -3,17 +3,16 @@
 :root {
   --bg: #050505;
   --surface: #0c0c0c;
-  --surface-2: #111111;
+  --surface-2: #111;
   --surface-3: #171717;
-  --text: #f3f3f3;
-  --muted: #8b8b8b;
+  --text: #f4f4f4;
+  --muted: #888;
   --muted-2: #626262;
   --yellow: #ffcc00;
   --line: rgba(255,255,255,.09);
-  --line-yellow: rgba(255,204,0,.25);
-  --radius: 16px;
+  --line-yellow: rgba(255,204,0,.3);
+  --radius: 14px;
   --max: 1240px;
-  --shadow: 0 18px 55px rgba(0,0,0,.28);
 }
 
 * {
@@ -28,11 +27,7 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(
-      circle at 50% -15%,
-      rgba(255,204,0,.045),
-      transparent 32%
-    ),
+    radial-gradient(circle at 50% -15%, rgba(255,204,0,.04), transparent 32%),
     var(--bg);
   color: var(--text);
   font-family: Inter, Arial, sans-serif;
@@ -61,7 +56,7 @@ header {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: rgba(5,5,5,.86);
+  background: rgba(5,5,5,.9);
   border-bottom: 1px solid var(--line);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -69,7 +64,7 @@ header {
 
 .nav {
   width: min(var(--max), calc(100% - 40px));
-  height: 72px;
+  height: 68px;
   margin: auto;
   display: flex;
   align-items: center;
@@ -87,8 +82,8 @@ header {
 }
 
 .logo i {
-  width: 19px;
-  height: 31px;
+  width: 18px;
+  height: 29px;
   display: block;
   border: 4px solid var(--yellow);
 }
@@ -128,7 +123,7 @@ nav a:hover {
 /* HERO */
 
 .hero {
-  min-height: 680px;
+  min-height: 555px;
   position: relative;
   display: flex;
   align-items: flex-end;
@@ -136,14 +131,14 @@ nav a:hover {
   background:
     linear-gradient(
       90deg,
-      rgba(0,0,0,.9) 0%,
-      rgba(0,0,0,.5) 48%,
-      rgba(0,0,0,.12) 100%
+      rgba(0,0,0,.88),
+      rgba(0,0,0,.42) 55%,
+      rgba(0,0,0,.12)
     ),
     linear-gradient(
       0deg,
-      #050505 0%,
-      transparent 42%
+      #050505,
+      transparent 48%
     ),
     url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2000&q=90")
     center / cover;
@@ -154,7 +149,7 @@ nav a:hover {
   z-index: 2;
   width: min(var(--max), calc(100% - 40px));
   margin: auto;
-  padding: 100px 0 90px;
+  padding: 70px 0 65px;
 }
 
 .hero small,
@@ -165,16 +160,16 @@ nav a:hover {
   color: var(--yellow);
   font-size: 10px;
   font-weight: 900;
-  letter-spacing: 2.2px;
+  letter-spacing: 2px;
   text-transform: uppercase;
 }
 
 h1 {
-  max-width: 880px;
-  margin: 14px 0 22px;
-  font-size: clamp(50px, 7vw, 94px);
+  max-width: 760px;
+  margin: 12px 0 18px;
+  font-size: clamp(44px, 6vw, 78px);
   line-height: .92;
-  letter-spacing: -5px;
+  letter-spacing: -4px;
   font-weight: 900;
 }
 
@@ -184,44 +179,66 @@ h1 em {
 }
 
 .hero p {
-  max-width: 550px;
-  margin: 0 0 28px;
-  color: #c7c7c7;
-  font-size: 17px;
-  line-height: 1.65;
+  max-width: 500px;
+  margin: 0 0 24px;
+  color: #c5c5c5;
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 
-/* BUTTONS */
+/* BUTTON SYSTEM */
 
 .btn {
+  min-width: 142px;
+  height: 44px;
+  padding: 0 18px;
+  margin: 0 8px 0 0;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 46px;
-  padding: 0 18px;
-  margin-right: 7px;
+
   border: 1px solid var(--yellow);
+  border-radius: 7px;
+
+  background: transparent;
   color: var(--yellow);
+
   font-size: 10px;
   font-weight: 900;
-  letter-spacing: .6px;
+  letter-spacing: .7px;
   text-transform: uppercase;
+
+  vertical-align: middle;
+
   transition:
     background .2s ease,
     color .2s ease,
-    transform .2s ease;
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.btn:last-child {
+  margin-right: 0;
 }
 
 .btn:hover {
   background: var(--yellow);
   color: #000;
   transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(255,204,0,.15);
 }
 
-.yellow {
+.btn.yellow {
   background: var(--yellow);
   color: #000;
+}
+
+.btn.yellow:hover {
+  background: #fff;
+  border-color: #fff;
+  box-shadow: 0 8px 22px rgba(255,255,255,.12);
 }
 
 
@@ -237,8 +254,8 @@ h1 em {
 }
 
 .cats a {
-  min-height: 120px;
-  padding: 25px;
+  min-height: 105px;
+  padding: 22px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -252,14 +269,14 @@ h1 em {
 
 .cats b {
   display: block;
-  margin-top: 7px;
-  font-size: 14px;
+  margin-top: 6px;
+  font-size: 13px;
 }
 
 .cats small {
   display: block;
   color: var(--muted-2);
-  font-size: 11px;
+  font-size: 10px;
 }
 
 
@@ -268,28 +285,28 @@ h1 em {
 .section {
   width: min(var(--max), calc(100% - 40px));
   margin: auto;
-  padding: 90px 0;
+  padding: 78px 0;
 }
 
 .heading {
-  margin-bottom: 32px;
+  margin-bottom: 28px;
 }
 
 .heading h2,
 .about h2 {
-  margin: 9px 0 0;
-  font-size: clamp(34px, 5vw, 50px);
+  margin: 8px 0 0;
+  font-size: clamp(32px, 4vw, 46px);
   line-height: 1;
-  letter-spacing: -3px;
+  letter-spacing: -2.5px;
 }
 
 
-/* OLD CONTENT CARDS */
+/* CARDS */
 
 .grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0,1fr));
-  gap: 16px;
+  gap: 15px;
 }
 
 .post {
@@ -308,7 +325,7 @@ h1 em {
 }
 
 .postImg {
-  height: 230px;
+  height: 215px;
   position: relative;
   background-size: cover;
   background-position: center;
@@ -316,36 +333,36 @@ h1 em {
 
 .tag {
   position: absolute;
-  top: 13px;
-  left: 13px;
+  top: 12px;
+  left: 12px;
   padding: 6px 9px;
   background: var(--yellow);
   color: #000;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 900;
   letter-spacing: .5px;
 }
 
 .postBody {
-  padding: 20px;
+  padding: 19px;
 }
 
 .post h3 {
-  margin: 0 0 9px;
-  font-size: 20px;
+  margin: 0 0 8px;
+  font-size: 19px;
   line-height: 1.2;
 }
 
 .post p {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .post a,
 .yellowText {
   display: inline-block;
-  margin-top: 16px;
+  margin-top: 15px;
   color: var(--yellow);
   font-size: 10px;
   font-weight: 800;
@@ -357,32 +374,32 @@ h1 em {
 /* BANNER */
 
 .banner {
-  min-height: 510px;
+  min-height: 450px;
   display: flex;
   align-items: center;
-  padding: 80px max(20px, calc((100% - 1240px) / 2));
+  padding: 70px max(20px, calc((100% - 1240px) / 2));
   background:
     linear-gradient(
       90deg,
       rgba(0,0,0,.86),
-      rgba(0,0,0,.3)
+      rgba(0,0,0,.28)
     ),
     url("https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=2000&q=90")
     center / cover;
 }
 
 .banner h2 {
-  max-width: 780px;
-  margin: 12px 0;
-  font-size: clamp(42px, 6vw, 72px);
+  max-width: 720px;
+  margin: 10px 0;
+  font-size: clamp(38px, 5vw, 64px);
   line-height: .95;
-  letter-spacing: -4px;
+  letter-spacing: -3px;
 }
 
 .banner p {
-  max-width: 520px;
+  max-width: 500px;
   color: #ccc;
-  line-height: 1.7;
+  line-height: 1.65;
 }
 
 
@@ -391,12 +408,12 @@ h1 em {
 .travel {
   display: grid;
   grid-template-columns: repeat(3, minmax(0,1fr));
-  gap: 16px;
+  gap: 15px;
 }
 
 .travel article {
-  min-height: 215px;
-  padding: 25px;
+  min-height: 205px;
+  padding: 23px;
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -412,34 +429,34 @@ h1 em {
 
 .travel article > b {
   color: var(--yellow);
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: .8px;
   text-transform: uppercase;
 }
 
 .travel h3 {
-  margin: 48px 0 5px;
-  font-size: 25px;
+  margin: 44px 0 5px;
+  font-size: 24px;
 }
 
 .travel p {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 
 /* PLACE */
 
 .place {
-  padding: 50px;
+  padding: 44px;
   display: flex;
   justify-content: space-between;
-  gap: 30px;
+  gap: 28px;
   background:
     radial-gradient(
       circle at 90% 0,
-      rgba(255,204,0,.07),
+      rgba(255,204,0,.06),
       transparent 35%
     ),
     var(--surface-2);
@@ -448,21 +465,22 @@ h1 em {
 }
 
 .place h2 {
-  margin: 9px 0;
-  font-size: clamp(36px, 5vw, 52px);
+  margin: 8px 0;
+  font-size: clamp(34px, 4vw, 48px);
   line-height: 1;
-  letter-spacing: -3px;
+  letter-spacing: -2.5px;
 }
 
 .place p {
-  max-width: 560px;
+  max-width: 540px;
   margin-bottom: 0;
   color: var(--muted);
+  font-size: 13px;
 }
 
 .place > strong {
   color: #555;
-  font-size: 11px;
+  font-size: 10px;
   text-align: right;
   white-space: nowrap;
 }
@@ -477,15 +495,15 @@ h1 em {
 }
 
 .photo {
-  height: 340px;
+  height: 315px;
   position: relative;
   display: flex;
   align-items: flex-end;
-  padding: 20px;
+  padding: 19px;
   overflow: hidden;
   background-size: cover;
   background-position: center;
-  border-radius: 10px;
+  border-radius: 9px;
 }
 
 .photo:after {
@@ -501,7 +519,7 @@ h1 em {
 .photo b {
   position: relative;
   z-index: 1;
-  font-size: 10px;
+  font-size: 9px;
   letter-spacing: 1px;
 }
 
@@ -524,19 +542,20 @@ h1 em {
 /* ABOUT */
 
 .about {
-  padding: 75px max(20px, calc((100% - 1240px) / 2));
+  padding: 68px max(20px, calc((100% - 1240px) / 2));
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  gap: 55px;
   background: var(--surface);
   border-block: 1px solid var(--line);
 }
 
 .about p {
-  max-width: 540px;
+  max-width: 520px;
   margin-bottom: 0;
   color: var(--muted);
-  line-height: 1.8;
+  font-size: 13px;
+  line-height: 1.75;
 }
 
 
@@ -545,7 +564,7 @@ h1 em {
 footer {
   width: min(var(--max), calc(100% - 40px));
   margin: auto;
-  padding: 34px 0;
+  padding: 30px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -558,9 +577,7 @@ footer a {
 }
 
 
-/* =====================================================
-   VK FEED
-===================================================== */
+/* VK FEED */
 
 #posts {
   width: 100%;
@@ -568,12 +585,12 @@ footer a {
 
 .post-card {
   width: min(850px, 100%);
-  margin: 0 auto 18px;
-  padding: 20px;
+  margin: 0 auto 17px;
+  padding: 19px;
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: 0 12px 40px rgba(0,0,0,.16);
+  box-shadow: 0 10px 35px rgba(0,0,0,.15);
   transition:
     border-color .2s ease,
     box-shadow .2s ease;
@@ -581,23 +598,20 @@ footer a {
 
 .post-card:hover {
   border-color: rgba(255,255,255,.13);
-  box-shadow: var(--shadow);
+  box-shadow: 0 16px 45px rgba(0,0,0,.22);
 }
-
-
-/* POST HEADER */
 
 .post-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 4px;
+  gap: 11px;
+  margin-bottom: 3px;
 }
 
 .post-avatar {
-  width: 44px;
-  height: 44px;
-  flex: 0 0 44px;
+  width: 43px;
+  height: 43px;
+  flex: 0 0 43px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -626,14 +640,11 @@ footer a {
   font-size: 10px;
 }
 
-
-/* POST TEXT */
-
 .post-text {
-  margin: 15px 0;
+  margin: 14px 0;
   color: #e5e5e5;
   font-size: 15px;
-  line-height: 1.65;
+  line-height: 1.62;
   word-wrap: break-word;
   overflow-wrap: anywhere;
 }
@@ -648,7 +659,6 @@ footer a {
   color: var(--yellow) !important;
   text-decoration: none;
   word-break: break-all;
-  transition: opacity .2s ease;
 }
 
 .post-link:hover {
@@ -658,7 +668,7 @@ footer a {
 
 .read-more-btn {
   display: block;
-  margin-top: 9px;
+  margin-top: 8px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -673,13 +683,13 @@ footer a {
 }
 
 
-/* GALLERIES */
+/* GALLERY */
 
 .post-gallery {
   width: 100%;
-  margin: 16px 0;
+  margin: 15px 0;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 11px;
   display: grid;
   gap: 3px;
   background: #000;
@@ -703,11 +713,11 @@ footer a {
 
 .gallery-one {
   display: block;
-  max-height: 650px;
+  max-height: 620px;
 }
 
 .gallery-one img {
-  max-height: 650px;
+  max-height: 620px;
   object-fit: contain;
   background: #050505;
 }
@@ -773,7 +783,7 @@ footer a {
   justify-content: center;
   background: rgba(0,0,0,.58);
   color: #fff;
-  font-size: 30px;
+  font-size: 29px;
   font-weight: 900;
   pointer-events: none;
 }
@@ -783,16 +793,16 @@ footer a {
 
 .post-video {
   width: 100%;
-  margin: 16px 0;
+  margin: 15px 0;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 11px;
   background: #000;
   border: 1px solid var(--line);
 }
 
 .post-video video {
   width: 100%;
-  max-height: 650px;
+  max-height: 620px;
   display: block;
   background: #000;
 }
@@ -803,12 +813,12 @@ footer a {
 
 .vk-video a {
   position: relative;
-  min-height: 230px;
+  min-height: 220px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 11px;
+  gap: 10px;
   overflow: hidden;
   color: #fff;
   background: #111;
@@ -830,15 +840,15 @@ footer a {
 }
 
 .video-play {
-  width: 60px;
-  height: 60px;
+  width: 58px;
+  height: 58px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background: var(--yellow);
   color: #000;
-  font-size: 22px;
+  font-size: 21px;
 }
 
 .vk-video span {
@@ -847,26 +857,27 @@ footer a {
 }
 
 
-/* ACTIONS */
+/* POST BUTTONS */
 
 .post-actions {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding-top: 14px;
+  padding-top: 13px;
   border-top: 1px solid var(--line);
 }
 
 .post-actions button,
 .post-actions a {
-  min-height: 36px;
+  min-width: 92px;
+  height: 35px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   padding: 0 11px;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: 7px;
   background: #171717;
   color: #888;
   font-size: 10px;
@@ -875,7 +886,8 @@ footer a {
   transition:
     background .2s ease,
     color .2s ease,
-    border-color .2s ease;
+    border-color .2s ease,
+    transform .2s ease;
 }
 
 .post-actions button:hover,
@@ -883,6 +895,7 @@ footer a {
   background: #202020;
   color: #fff;
   border-color: #303030;
+  transform: translateY(-1px);
 }
 
 .post-actions .liked {
@@ -893,7 +906,7 @@ footer a {
 /* LOADING */
 
 .loading {
-  min-height: 200px;
+  min-height: 190px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -904,8 +917,8 @@ footer a {
 }
 
 .loader {
-  width: 30px;
-  height: 30px;
+  width: 29px;
+  height: 29px;
   border: 3px solid #292929;
   border-top-color: var(--yellow);
   border-radius: 50%;
@@ -932,8 +945,10 @@ footer a {
 
 .error button {
   margin-top: 14px;
-  padding: 10px 17px;
-  border: 0;
+  min-width: 120px;
+  height: 40px;
+  border: 1px solid var(--yellow);
+  border-radius: 7px;
   background: var(--yellow);
   color: #000;
   font-weight: 800;
@@ -941,7 +956,7 @@ footer a {
 }
 
 
-/* FULLSCREEN */
+/* IMAGE VIEWER */
 
 #imageViewer {
   position: fixed;
@@ -1017,20 +1032,20 @@ footer a {
 .viewer-close {
   top: 20px;
   right: 22px;
-  width: 46px;
-  height: 46px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
-  font-size: 30px;
+  font-size: 29px;
 }
 
 .viewer-prev,
 .viewer-next {
   top: 50%;
   width: 50px;
-  height: 68px;
-  margin-top: -34px;
-  border-radius: 11px;
-  font-size: 44px;
+  height: 67px;
+  margin-top: -33px;
+  border-radius: 10px;
+  font-size: 43px;
 }
 
 .viewer-prev {
@@ -1047,13 +1062,13 @@ footer a {
 @media (max-width: 900px) {
 
   .nav {
-    height: 68px;
+    height: 64px;
   }
 
   nav {
     display: none;
     position: absolute;
-    top: 68px;
+    top: 64px;
     left: 0;
     right: 0;
     padding: 20px;
@@ -1061,7 +1076,7 @@ footer a {
     border-bottom: 1px solid var(--line);
     flex-direction: column;
     align-items: flex-start;
-    gap: 18px;
+    gap: 17px;
   }
 
   nav.open {
@@ -1073,11 +1088,11 @@ footer a {
   }
 
   .hero {
-    min-height: 600px;
+    min-height: 500px;
   }
 
   .heroText {
-    padding: 80px 0 70px;
+    padding: 60px 0 55px;
   }
 
   .cats {
@@ -1094,7 +1109,7 @@ footer a {
   }
 
   .photo {
-    height: 260px;
+    height: 250px;
   }
 
   .about {
@@ -1104,7 +1119,7 @@ footer a {
 
   .place {
     flex-direction: column;
-    padding: 40px 30px;
+    padding: 38px 28px;
   }
 
   .place > strong {
@@ -1122,21 +1137,29 @@ footer a {
   }
 
   .hero {
-    min-height: 570px;
+    min-height: 475px;
   }
 
   .heroText {
     width: calc(100% - 30px);
-    padding: 65px 0 60px;
+    padding: 55px 0 48px;
   }
 
   h1 {
-    font-size: 50px;
-    letter-spacing: -3px;
+    font-size: 44px;
+    letter-spacing: -2.5px;
   }
 
   .hero p {
-    font-size: 15px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .btn {
+    min-width: 132px;
+    height: 42px;
+    margin: 0 5px 5px 0;
+    padding: 0 15px;
   }
 
   .cats {
@@ -1144,13 +1167,13 @@ footer a {
   }
 
   .cats a {
-    min-height: 100px;
-    padding: 18px;
+    min-height: 92px;
+    padding: 17px;
   }
 
   .section {
     width: calc(100% - 30px);
-    padding: 65px 0;
+    padding: 62px 0;
   }
 
   .grid,
@@ -1159,44 +1182,44 @@ footer a {
   }
 
   .postImg {
-    height: 215px;
+    height: 210px;
   }
 
   .banner {
-    min-height: 430px;
-    padding: 65px 20px;
+    min-height: 400px;
+    padding: 60px 20px;
   }
 
   .banner h2 {
-    font-size: 46px;
-    letter-spacing: -3px;
+    font-size: 43px;
+    letter-spacing: -2.5px;
   }
 
   .place {
-    padding: 32px 22px;
+    padding: 30px 21px;
   }
 
   .place h2 {
-    font-size: 36px;
+    font-size: 35px;
   }
 
   .about {
-    padding: 65px 20px;
+    padding: 60px 20px;
   }
 
   .post-card {
-    padding: 16px;
-    border-radius: 14px;
+    padding: 15px;
+    border-radius: 13px;
   }
 
   .post-text {
-    font-size: 15px;
-    line-height: 1.6;
+    font-size: 14px;
+    line-height: 1.58;
   }
 
   .gallery-one,
   .gallery-one img {
-    max-height: 500px;
+    max-height: 480px;
   }
 
   .gallery-three {
@@ -1208,7 +1231,7 @@ footer a {
   }
 
   .more-overlay {
-    font-size: 24px;
+    font-size: 23px;
   }
 
   .post-actions {
@@ -1222,45 +1245,46 @@ footer a {
 
   .post-actions button,
   .post-actions a {
+    min-width: 88px;
     flex: 0 0 auto;
   }
 
   .vk-video a {
-    min-height: 185px;
+    min-height: 180px;
   }
 
   .viewer-prev,
   .viewer-next {
-    width: 40px;
-    height: 56px;
-    margin-top: -28px;
-    font-size: 34px;
+    width: 39px;
+    height: 55px;
+    margin-top: -27px;
+    font-size: 33px;
   }
 
   .viewer-prev {
-    left: 6px;
+    left: 5px;
   }
 
   .viewer-next {
-    right: 6px;
+    right: 5px;
   }
 
   .viewer-close {
-    top: 10px;
-    right: 10px;
-    width: 41px;
-    height: 41px;
-    font-size: 27px;
+    top: 9px;
+    right: 9px;
+    width: 40px;
+    height: 40px;
+    font-size: 26px;
   }
 
   #viewerImage {
     max-width: 96vw;
-    max-height: 77vh;
+    max-height: 76vh;
   }
 
   footer {
     width: calc(100% - 30px);
-    padding: 28px 0;
+    padding: 27px 0;
     flex-direction: column;
     align-items: flex-start;
   }
@@ -1272,20 +1296,25 @@ footer a {
 @media (max-width: 380px) {
 
   h1 {
-    font-size: 43px;
+    font-size: 40px;
   }
 
   .cats {
     grid-template-columns: 1fr;
   }
 
+  .btn {
+    min-width: 125px;
+  }
+
   .post-card {
-    padding: 14px;
+    padding: 13px;
   }
 
   .post-actions button,
   .post-actions a {
-    padding: 0 9px;
+    min-width: 84px;
+    padding: 0 8px;
     font-size: 9px;
   }
 }
