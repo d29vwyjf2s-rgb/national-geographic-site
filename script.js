@@ -4,6 +4,8 @@ const API_URL =
 const VK_GROUP_URL =
   "https://vk.ru/national.geograph1c";
 
+const VK_OWNER_ID = "-222376958";
+
 const postsContainer =
   document.getElementById("posts");
 
@@ -12,17 +14,9 @@ let allPosts = [];
 let currentImages = [];
 let currentImageIndex = 0;
 
-
-/* =========================================
-   ЗАГРУЗКА ПОСТОВ
-========================================= */
-
 async function loadPosts() {
-
   try {
-
     if (postsContainer) {
-
       postsContainer.innerHTML = `
         <div class="loading">
           <div class="loader"></div>
@@ -51,17 +45,17 @@ async function loadPosts() {
     renderPosts(allPosts);
 
   } catch (error) {
-
     console.error(error);
 
     if (postsContainer) {
-
       postsContainer.innerHTML = `
         <div class="error">
           <h3>Не удалось загрузить публикации</h3>
           <p>Попробуйте обновить страницу.</p>
 
-          <button onclick="loadPosts()">
+          <button
+            class="reload-button"
+            onclick="loadPosts()">
             Обновить
           </button>
         </div>
@@ -70,25 +64,16 @@ async function loadPosts() {
   }
 }
 
-
-/* =========================================
-   ПОЛУЧЕНИЕ ФОТО
-========================================= */
-
 function getImages(post) {
-
   if (
     Array.isArray(post.images) &&
     post.images.length
   ) {
-
     return post.images.filter(Boolean);
   }
 
   if (post.images_json) {
-
     try {
-
       const images =
         typeof post.images_json === "string"
           ? JSON.parse(post.images_json)
@@ -98,12 +83,10 @@ function getImages(post) {
         Array.isArray(images) &&
         images.length
       ) {
-
         return images.filter(Boolean);
       }
 
     } catch (error) {
-
       console.warn(
         "Ошибка images_json",
         error
@@ -118,19 +101,10 @@ function getImages(post) {
   return [];
 }
 
-
-/* =========================================
-   СПИСОК ПОСТОВ
-========================================= */
-
 function renderPosts(posts) {
-
-  if (!postsContainer) {
-    return;
-  }
+  if (!postsContainer) return;
 
   if (!posts.length) {
-
     postsContainer.innerHTML = `
       <div class="empty">
         Публикаций пока нет
@@ -141,30 +115,28 @@ function renderPosts(posts) {
   }
 
   postsContainer.innerHTML =
-    posts.map(post => createPost(post)).join("");
+    posts
+      .map(post => createPost(post))
+      .join("");
 }
 
-
-/* =========================================
-   СОЗДАНИЕ ПОСТА
-========================================= */
-
 function createPost(post) {
-
-  const images =
-    getImages(post);
+  const images = getImages(post);
 
   const date =
     post.post_date
       ? new Date(
           post.post_date * 1000
-        ).toLocaleString("ru-RU", {
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit"
-        })
+        ).toLocaleString(
+          "ru-RU",
+          {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+          }
+        )
       : "";
 
   const text =
@@ -184,11 +156,15 @@ function createPost(post) {
   const video =
     createVideo(post);
 
+  const vkPostUrl =
+    post.vk_id
+      ? `https://vk.ru/wall${VK_OWNER_ID}_${post.vk_id}`
+      : VK_GROUP_URL;
+
   return `
     <article
       class="post-card"
-      id="post-${post.id}"
-    >
+      id="post-${post.id}">
 
       <div class="post-header">
 
@@ -197,7 +173,6 @@ function createPost(post) {
         </div>
 
         <div class="post-meta">
-
           <strong>
             National Geographic
           </strong>
@@ -205,7 +180,6 @@ function createPost(post) {
           <span>
             ${date}
           </span>
-
         </div>
 
       </div>
@@ -219,27 +193,48 @@ function createPost(post) {
       <div class="post-actions">
 
         <button
-          class="post-like"
-          onclick="toggleLike(${post.id}, this)"
-        >
-          ♡
-          <span>Нравится</span>
-        </button>
+          class="post-action post-like"
+          onclick="toggleLike(${post.id}, this)">
 
-        <button
-          onclick="sharePost(${post.id})"
-        >
-          ↗
-          <span>Поделиться</span>
+          <span class="action-icon">
+            ♡
+          </span>
+
+          <span>
+            Нравится
+          </span>
+
         </button>
 
         <a
-          href="${VK_GROUP_URL}"
+          class="post-action"
+          href="${vkPostUrl}"
           target="_blank"
-          rel="noopener noreferrer"
-        >
-          VK
+          rel="noopener noreferrer">
+
+          <span class="action-icon">
+            💬
+          </span>
+
+          <span>
+            Комментарии
+          </span>
+
         </a>
+
+        <button
+          class="post-action"
+          onclick="sharePost(${post.id})">
+
+          <span class="action-icon">
+            ↗
+          </span>
+
+          <span>
+            Поделиться
+          </span>
+
+        </button>
 
       </div>
 
@@ -247,43 +242,27 @@ function createPost(post) {
   `;
 }
 
-
-/* =========================================
-   ТЕКСТ ПОСТА
-========================================= */
-
 function createPostText(
   text,
   postId
 ) {
-
-  if (!text) {
-    return "";
-  }
+  if (!text) return "";
 
   const maxLength = 500;
 
   const cleanText =
     String(text).trim();
 
-  /*
-     Короткий пост
-  */
-
   if (
-    cleanText.length <= maxLength
+    cleanText.length <=
+    maxLength
   ) {
-
     return `
       <div class="post-text">
         ${formatText(cleanText)}
       </div>
     `;
   }
-
-  /*
-     Длинный пост
-  */
 
   const shortText =
     cleanText.substring(
@@ -294,19 +273,15 @@ function createPostText(
   return `
     <div
       class="post-text post-text-collapsed"
-      id="post-text-${postId}"
-    >
+      id="post-text-${postId}">
 
       <div class="post-short-text">
-
         ${formatText(shortText)}…
-
       </div>
 
       <div
         class="post-full-text"
-        style="display:none"
-      >
+        style="display:none">
 
         ${formatText(cleanText)}
 
@@ -314,36 +289,26 @@ function createPostText(
 
       <button
         class="read-more-btn"
-        onclick="togglePostText(
-          ${postId},
-          this
-        )"
-      >
+        onclick="togglePostText(${postId}, this)">
+
         Показать полностью
+
       </button>
 
     </div>
   `;
 }
 
-
-/* =========================================
-   РАСКРЫТИЕ ТЕКСТА
-========================================= */
-
 function togglePostText(
   postId,
   button
 ) {
-
   const container =
     document.getElementById(
       `post-text-${postId}`
     );
 
-  if (!container) {
-    return;
-  }
+  if (!container) return;
 
   const shortText =
     container.querySelector(
@@ -356,9 +321,9 @@ function togglePostText(
     );
 
   if (
-    fullText.style.display === "none"
+    fullText.style.display ===
+    "none"
   ) {
-
     shortText.style.display =
       "none";
 
@@ -369,7 +334,6 @@ function togglePostText(
       "Свернуть";
 
   } else {
-
     shortText.style.display =
       "block";
 
@@ -381,13 +345,7 @@ function togglePostText(
   }
 }
 
-
-/* =========================================
-   КЛИКАБЕЛЬНЫЕ ССЫЛКИ
-========================================= */
-
 function formatText(text) {
-
   const escaped =
     escapeHtml(text);
 
@@ -400,18 +358,13 @@ function formatText(text) {
       match => {
 
         let url = match;
-
-        /*
-           Убираем знаки препинания
-           с конца ссылки
-        */
-
         let ending = "";
 
         while (
-          /[.,!?;:)\]}»]$/.test(url)
+          /[.,!?;:)\]}»]$/.test(
+            url
+          )
         ) {
-
           ending =
             url.slice(-1) +
             ending;
@@ -423,7 +376,6 @@ function formatText(text) {
         if (
           url.startsWith("www.")
         ) {
-
           url =
             "https://" + url;
         }
@@ -434,8 +386,11 @@ function formatText(text) {
             target="_blank"
             rel="noopener noreferrer"
             class="post-link"
-            onclick="event.stopPropagation()"
-          >${url}</a>${ending}
+            onclick="event.stopPropagation()">
+
+            ${url}
+
+          </a>${ending}
         `;
       }
     )
@@ -445,15 +400,11 @@ function formatText(text) {
     );
 }
 
-
-/* =========================================
-   ЗАЩИТА HTML
-========================================= */
-
 function escapeHtml(text) {
-
   const div =
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
   div.textContent =
     text;
@@ -461,74 +412,44 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-
-/* =========================================
-   ГАЛЕРЕЯ
-========================================= */
-
 function createGallery(
   images,
   postId
 ) {
-
   const count =
     images.length;
 
-  /*
-     1 ФОТО
-  */
-
   if (count === 1) {
-
     return `
       <div
-        class="post-gallery gallery-one"
-      >
+        class="post-gallery gallery-one">
 
         <img
           src="${images[0]}"
           alt="National Geographic"
           loading="lazy"
-          onclick='openGallery(
-            ${JSON.stringify(images)},
-            0
-          )'
-          onerror="
-            this.style.display='none'
-          "
-        >
+          onclick='openGallery(${JSON.stringify(images)},0)'
+          onerror="this.style.display='none'">
 
       </div>
     `;
   }
 
-
-  /*
-     2 ФОТО
-  */
-
   if (count === 2) {
-
     return `
       <div
-        class="post-gallery gallery-two"
-      >
+        class="post-gallery gallery-two">
 
         ${images.map(
           (image, index) => `
             <div
               class="gallery-item"
-              onclick='openGallery(
-                ${JSON.stringify(images)},
-                ${index}
-              )'
-            >
+              onclick='openGallery(${JSON.stringify(images)},${index})'>
 
               <img
                 src="${image}"
                 alt="Фото ${index + 1}"
-                loading="lazy"
-              >
+                loading="lazy">
 
             </div>
           `
@@ -538,63 +459,41 @@ function createGallery(
     `;
   }
 
-
-  /*
-     3 ФОТО
-  */
-
   if (count === 3) {
-
     return `
       <div
-        class="post-gallery gallery-three"
-      >
+        class="post-gallery gallery-three">
 
         <div
           class="gallery-main"
-          onclick='openGallery(
-            ${JSON.stringify(images)},
-            0
-          )'
-        >
+          onclick='openGallery(${JSON.stringify(images)},0)'>
 
           <img
             src="${images[0]}"
             alt="Фото 1"
-            loading="lazy"
-          >
+            loading="lazy">
 
         </div>
 
         <div class="gallery-side">
 
           <div
-            onclick='openGallery(
-              ${JSON.stringify(images)},
-              1
-            )'
-          >
+            onclick='openGallery(${JSON.stringify(images)},1)'>
 
             <img
               src="${images[1]}"
               alt="Фото 2"
-              loading="lazy"
-            >
+              loading="lazy">
 
           </div>
 
           <div
-            onclick='openGallery(
-              ${JSON.stringify(images)},
-              2
-            )'
-          >
+            onclick='openGallery(${JSON.stringify(images)},2)'>
 
             <img
               src="${images[2]}"
               alt="Фото 3"
-              loading="lazy"
-            >
+              loading="lazy">
 
           </div>
 
@@ -604,11 +503,6 @@ function createGallery(
     `;
   }
 
-
-  /*
-     4 И БОЛЬШЕ
-  */
-
   const visibleImages =
     images.slice(0, 4);
 
@@ -617,8 +511,7 @@ function createGallery(
 
   return `
     <div
-      class="post-gallery gallery-grid"
-    >
+      class="post-gallery gallery-grid">
 
       ${visibleImages.map(
         (image, index) => {
@@ -634,17 +527,12 @@ function createGallery(
                   ? "gallery-more"
                   : ""
               }"
-              onclick='openGallery(
-                ${JSON.stringify(images)},
-                ${index}
-              )'
-            >
+              onclick='openGallery(${JSON.stringify(images)},${index})'>
 
               <img
                 src="${image}"
                 alt="Фото ${index + 1}"
-                loading="lazy"
-              >
+                loading="lazy">
 
               ${
                 isLast
@@ -665,16 +553,10 @@ function createGallery(
   `;
 }
 
-
-/* =========================================
-   ПОЛНОЭКРАННАЯ ГАЛЕРЕЯ
-========================================= */
-
 function openGallery(
   images,
   index = 0
 ) {
-
   currentImages =
     Array.isArray(images)
       ? images
@@ -689,52 +571,57 @@ function openGallery(
     );
 
   if (!viewer) {
-
     viewer =
-      document.createElement("div");
+      document.createElement(
+        "div"
+      );
 
     viewer.id =
       "imageViewer";
 
     viewer.innerHTML = `
-      <div class="viewer-bg"></div>
+      <div
+        class="viewer-bg">
+      </div>
 
       <button
         class="viewer-close"
         onclick="closeGallery()"
-        aria-label="Закрыть"
-      >
+        aria-label="Закрыть">
+
         ×
+
       </button>
 
       <button
         class="viewer-prev"
         onclick="prevImage()"
-        aria-label="Предыдущая"
-      >
+        aria-label="Предыдущая">
+
         ‹
+
       </button>
 
       <div class="viewer-content">
 
         <img
           id="viewerImage"
-          alt=""
-        >
+          alt="">
 
         <div
           id="viewerCounter"
-          class="viewer-counter"
-        ></div>
+          class="viewer-counter">
+        </div>
 
       </div>
 
       <button
         class="viewer-next"
         onclick="nextImage()"
-        aria-label="Следующая"
-      >
+        aria-label="Следующая">
+
         ›
+
       </button>
     `;
 
@@ -742,9 +629,9 @@ function openGallery(
       viewer
     );
 
-    viewer
-      .querySelector(".viewer-bg")
-      .onclick =
+    viewer.querySelector(
+      ".viewer-bg"
+    ).onclick =
       closeGallery;
   }
 
@@ -758,13 +645,7 @@ function openGallery(
     "hidden";
 }
 
-
-/* =========================================
-   ОБНОВЛЕНИЕ ПРОСМОТРА
-========================================= */
-
 function updateViewer() {
-
   const image =
     document.getElementById(
       "viewerImage"
@@ -775,11 +656,10 @@ function updateViewer() {
       "viewerCounter"
     );
 
-  if (!image) {
-    return;
-  }
-
-  if (!currentImages.length) {
+  if (
+    !image ||
+    !currentImages.length
+  ) {
     return;
   }
 
@@ -789,27 +669,18 @@ function updateViewer() {
     ];
 
   if (counter) {
-
     counter.textContent =
       `${currentImageIndex + 1} / ${currentImages.length}`;
   }
 }
 
-
-/* =========================================
-   ЗАКРЫТЬ ГАЛЕРЕЮ
-========================================= */
-
 function closeGallery() {
-
   const viewer =
     document.getElementById(
       "imageViewer"
     );
 
-  if (!viewer) {
-    return;
-  }
+  if (!viewer) return;
 
   viewer.classList.remove(
     "active"
@@ -819,14 +690,10 @@ function closeGallery() {
     "";
 }
 
-
-/* =========================================
-   СЛЕДУЮЩЕЕ ФОТО
-========================================= */
-
 function nextImage() {
-
-  if (!currentImages.length) {
+  if (
+    !currentImages.length
+  ) {
     return;
   }
 
@@ -836,21 +703,16 @@ function nextImage() {
     currentImageIndex >=
     currentImages.length
   ) {
-
     currentImageIndex = 0;
   }
 
   updateViewer();
 }
 
-
-/* =========================================
-   ПРЕДЫДУЩЕЕ ФОТО
-========================================= */
-
 function prevImage() {
-
-  if (!currentImages.length) {
+  if (
+    !currentImages.length
+  ) {
     return;
   }
 
@@ -859,18 +721,12 @@ function prevImage() {
   if (
     currentImageIndex < 0
   ) {
-
     currentImageIndex =
       currentImages.length - 1;
   }
 
   updateViewer();
 }
-
-
-/* =========================================
-   КЛАВИАТУРА
-========================================= */
 
 document.addEventListener(
   "keydown",
@@ -887,37 +743,32 @@ document.addEventListener(
         "active"
       )
     ) {
-
       return;
     }
 
     if (
-      event.key === "Escape"
+      event.key ===
+      "Escape"
     ) {
-
       closeGallery();
     }
 
     if (
-      event.key === "ArrowRight"
+      event.key ===
+      "ArrowRight"
     ) {
-
       nextImage();
     }
 
     if (
-      event.key === "ArrowLeft"
+      event.key ===
+      "ArrowLeft"
     ) {
-
       prevImage();
     }
+
   }
 );
-
-
-/* =========================================
-   СВАЙП НА ТЕЛЕФОНЕ
-========================================= */
 
 let touchStartX = 0;
 
@@ -928,18 +779,17 @@ document.addEventListener(
     if (
       !event.touches.length
     ) {
-
       return;
     }
 
     touchStartX =
       event.touches[0].clientX;
+
   },
   {
     passive: true
   }
 );
-
 
 document.addEventListener(
   "touchend",
@@ -956,12 +806,12 @@ document.addEventListener(
         "active"
       )
     ) {
-
       return;
     }
 
     const touchEndX =
-      event.changedTouches[0].clientX;
+      event.changedTouches[0]
+        .clientX;
 
     const diff =
       touchStartX -
@@ -970,36 +820,26 @@ document.addEventListener(
     if (
       Math.abs(diff) < 50
     ) {
-
       return;
     }
 
     if (diff > 0) {
-
       nextImage();
-
     } else {
-
       prevImage();
     }
+
   },
   {
     passive: true
   }
 );
 
-
-/* =========================================
-   ВИДЕО
-========================================= */
-
 function createVideo(post) {
-
   if (
     !post.video_url &&
     !post.video_vk_url
   ) {
-
     return "";
   }
 
@@ -1017,13 +857,11 @@ function createVideo(post) {
           controls
           preload="metadata"
           playsinline
-          ${poster}
-        >
+          ${poster}>
 
           <source
             src="${post.video_url}"
-            type="video/mp4"
-          >
+            type="video/mp4">
 
         </video>
 
@@ -1032,15 +870,14 @@ function createVideo(post) {
   }
 
   if (post.video_vk_url) {
-
     return `
-      <div class="post-video vk-video">
+      <div
+        class="post-video vk-video">
 
         <a
           href="${post.video_vk_url}"
           target="_blank"
-          rel="noopener noreferrer"
-        >
+          rel="noopener noreferrer">
 
           ${
             post.video_preview
@@ -1048,8 +885,7 @@ function createVideo(post) {
                 <img
                   src="${post.video_preview}"
                   alt="Видео"
-                  loading="lazy"
-                >
+                  loading="lazy">
               `
               : ""
           }
@@ -1059,7 +895,7 @@ function createVideo(post) {
           </div>
 
           <span>
-            Смотреть видео VK
+            Смотреть видео
           </span>
 
         </a>
@@ -1071,32 +907,37 @@ function createVideo(post) {
   return "";
 }
 
-
-/* =========================================
-   ЛАЙК
-========================================= */
-
 function toggleLike(
   postId,
   button
 ) {
-
   const key =
     `ng_like_${postId}`;
 
   const active =
-    localStorage.getItem(key) === "1";
+    localStorage.getItem(
+      key
+    ) === "1";
+
+  const icon =
+    button.querySelector(
+      ".action-icon"
+    );
 
   if (active) {
 
-    localStorage.removeItem(key);
+    localStorage.removeItem(
+      key
+    );
 
     button.classList.remove(
       "liked"
     );
 
-    button.firstChild.textContent =
-      "♡";
+    if (icon) {
+      icon.textContent =
+        "♡";
+    }
 
   } else {
 
@@ -1109,26 +950,21 @@ function toggleLike(
       "liked"
     );
 
-    button.firstChild.textContent =
-      "♥";
+    if (icon) {
+      icon.textContent =
+        "♥";
+    }
+
   }
 }
-
-
-/* =========================================
-   ПОДЕЛИТЬСЯ
-========================================= */
 
 async function sharePost(
   postId
 ) {
-
   const url =
     `${window.location.origin}${window.location.pathname}#post-${postId}`;
 
-  if (
-    navigator.share
-  ) {
+  if (navigator.share) {
 
     try {
 
@@ -1144,8 +980,9 @@ async function sharePost(
 
     try {
 
-      await navigator.clipboard
-        .writeText(url);
+      await navigator.clipboard.writeText(
+        url
+      );
 
       alert(
         "Ссылка скопирована"
@@ -1157,21 +994,12 @@ async function sharePost(
         "Скопируйте ссылку:",
         url
       );
+
     }
   }
 }
 
-
-/* =========================================
-   ЗАПУСК
-========================================= */
-
 loadPosts();
-
-
-/* =========================================
-   АВТООБНОВЛЕНИЕ
-========================================= */
 
 setInterval(
   loadPosts,
